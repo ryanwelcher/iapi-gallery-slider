@@ -27,7 +27,12 @@ $context = array_merge(
 	<?php echo data_wp_context( $context ); ?>
 
 >
-	<div class="slider-container" data-wp-style--transform="state.currentPos" data-wp-on-touchmove="action.swipe">
+	<div
+		class="slider-container"
+		data-wp-style--transform="state.currentPos"
+		data-wp-on--touchstart="actions.onTouchStart"
+		data-wp-on--touchend="actions.onTouchEnd"
+	>
 		<?php echo wp_kses_post( $content ); ?>
 	</div>
 	<div class="buttons">
