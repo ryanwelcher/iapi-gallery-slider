@@ -3,8 +3,7 @@
  */
 import { store, getElement, getContext } from '@wordpress/interactivity';
 
-const { state, actions, cache } = store( 'iapi-gallery', {
-	cache: {},
+const { state, actions } = store( 'iapi-gallery', {
 	state: {
 		get noPrevSlide() {
 			const ctx = getContext();
@@ -14,14 +13,14 @@ const { state, actions, cache } = store( 'iapi-gallery', {
 			return ctx.currentSlide === 0;
 		},
 		get noNextSlide() {
-			const ctx = cache.ctx || getContext();
+			const ctx = getContext();
 			if ( ctx.continuous ) {
 				return false;
 			}
 			return ctx.currentSlide === ctx.totalSlides - 1;
 		},
 		get currentPos() {
-			const ctx = cache.ctx || getContext();
+			const ctx = getContext();
 			return `translateX(-${ ctx.currentSlide * 100 }%)`;
 		},
 		get imageIndex() {
@@ -39,18 +38,15 @@ const { state, actions, cache } = store( 'iapi-gallery', {
 			ctx.currentSlide--;
 		},
 		nextImage: () => {
-			const ctx = cache.ctx || getContext();
+			const ctx = getContext();
 			if (
 				( ctx.continuous || ctx.autoplay ) &&
 				ctx.currentSlide === ctx.totalSlides - 1
 			) {
 				ctx.currentSlide = 0;
-				cache.ctx = ctx;
 				return;
 			}
-			console.log( 'running', debugLog( cache ) );
 			ctx.currentSlide++;
-			cache.ctx = ctx;
 		},
 		onKeyDown: ( e ) => {
 			switch ( e.key ) {
@@ -88,13 +84,9 @@ const { state, actions, cache } = store( 'iapi-gallery', {
 	callbacks: {
 		initSlideShow: () => {
 			const ctx = getContext();
-			cache.ctx = ctx;
-			debugLog( ctx );
 			if ( ctx.autoplay ) {
 				setInterval( () => {
-					debugLog( ctx );
-					actions.nextImage( ctx );
-					debugLog( ctx );
+					actions.nextImage();
 				}, 3000 );
 			}
 		},
