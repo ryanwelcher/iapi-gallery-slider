@@ -21,11 +21,16 @@
 		"autoplay": {
 			"type": "boolean",
 			"default": false
+		},
+		"speed": {
+			"type": "string",
+			"default": "3"
 		}
 	},
 	"textdomain": "iapi-gallery-slider",
 	"editorScript": "file:./index.js",
 	"editorStyle": "file:./index.css",
+	"render": "file:./render.php",
 	"style": "file:./style-index.css",
 	"viewScriptModule": "file:./view.js"
 }

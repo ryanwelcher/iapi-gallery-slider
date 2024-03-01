@@ -6,7 +6,11 @@ import {
 	useInnerBlocksProps,
 	InspectorControls,
 } from '@wordpress/block-editor';
-import { PanelBody, ToggleControl } from '@wordpress/components';
+import {
+	PanelBody,
+	ToggleControl,
+	__experimentalNumberControl as NumberControl,
+} from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
 /**
@@ -20,7 +24,7 @@ import { __ } from '@wordpress/i18n';
  * @return {Element} Element to render.
  */
 export default function Edit( {
-	attributes: { continuous, autoplay },
+	attributes: { continuous, autoplay, speed },
 	setAttributes,
 } ) {
 	const blockProps = useBlockProps();
@@ -31,7 +35,7 @@ export default function Edit( {
 	return (
 		<div { ...blockProps }>
 			<div { ...innerBlockProps }></div>
-			<div class="buttons">
+			<div className="buttons">
 				<button aria-label="go to previous slide">&lt;</button>
 				<p data-wp-text="state.imageIndex">1/10</p>
 				<button aria-label="go to next slide">&gt;</button>
@@ -58,6 +62,20 @@ export default function Edit( {
 							setAttributes( { autoplay: ! autoplay } )
 						}
 					/>
+					{ autoplay && (
+						<NumberControl
+							label={ __( 'Slide Duration' ) }
+							help={ __(
+								'The duration of each slide in seconds.'
+							) }
+							min={ 1 }
+							max={ 10 }
+							value={ speed }
+							onChange={ ( newSpeed ) =>
+								setAttributes( { speed: newSpeed } )
+							}
+						/>
+					) }
 				</PanelBody>
 			</InspectorControls>
 		</div>

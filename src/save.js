@@ -22,18 +22,17 @@ import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
  *
  * @return {WPElement} Element to render.
  */
-export default function save( { attributes: { continuous, autoplay } } ) {
-	// const context = {
-	// 	...attributes,
-	// 	slides: [],
-	// 	currentSlide: 0,
-	// 	totalSlides: 0,
-	// 	s,
-	// };
+export default function save( { attributes } ) {
+	const context = {
+		...attributes,
+		slides: [],
+		currentSlide: 0,
+		totalSlides: 0,
+	};
 	const blockProps = useBlockProps.save( {
 		'data-wp-interactive': '{ "namespace": "iapi-gallery" }',
 		'data-wp-on-document--keydown': 'actions.onKeyDown',
-		'data-wp-context': `{"continuous":${ continuous },"autoplay":${ autoplay },"slides":[],"currentSlide":0,"totalSlides":0,"swipe":0}`,
+		'data-wp-context': `${ JSON.stringify( context ) }`,
 		'data-wp-init': 'callbacks.initSlideShow',
 	} );
 

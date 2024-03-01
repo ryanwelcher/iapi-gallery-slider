@@ -1,7 +1,12 @@
 /**
  * WordPress dependencies
  */
-import { store, getElement, getContext } from '@wordpress/interactivity';
+import {
+	store,
+	getElement,
+	getContext,
+	withScope,
+} from '@wordpress/interactivity';
 
 const { state, actions } = store( 'iapi-gallery', {
 	state: {
@@ -26,6 +31,11 @@ const { state, actions } = store( 'iapi-gallery', {
 		get imageIndex() {
 			const ctx = getContext();
 			return `${ ctx.currentSlide + 1 }/${ ctx.totalSlides }`;
+		},
+
+		get transitionsSpeed() {
+			const ctx = getContext();
+			return Number( ctx.speed ) * 1000;
 		},
 	},
 	actions: {
@@ -85,9 +95,12 @@ const { state, actions } = store( 'iapi-gallery', {
 		initSlideShow: () => {
 			const ctx = getContext();
 			if ( ctx.autoplay ) {
-				setInterval( () => {
-					actions.nextImage();
-				}, 3000 );
+				setInterval(
+					withScope( () => {
+						actions.nextImage();
+					} ),
+					state.transitionsSpeed
+				);
 			}
 		},
 		initSlide: () => {
@@ -107,5 +120,13 @@ const { state, actions } = store( 'iapi-gallery', {
 	},
 } );
 
+/**
+ * Helper to log the data in a readable format. Useful for debugging parts of the store.
+ *
+ * Use console.log for non-store values.
+ *
+ * @param {*} data
+ * @returns
+ */
 const debugLog = ( data ) =>
 	console.log( JSON.parse( JSON.stringify( data ) ) );

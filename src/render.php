@@ -18,12 +18,13 @@ $context = array_merge(
 		'totalSlides'  => 0,
 	)
 );
-
 ?>
+
 <div <?php echo wp_kses_data( get_block_wrapper_attributes() ); ?>
 	data-wp-interactive='{ "namespace": "iapi-gallery" }'
 	data-wp-on-document--keydown="actions.onKeyDown"
-	data-wp-context=`<?php echo wp_json_encode( $context ); ?>`
+	data-wp-init="callbacks.initSlideShow"
+	<?php echo data_wp_context( $context ); ?>
 
 >
 	<div class="slider-container" data-wp-style--transform="state.currentPos" data-wp-on-touchmove="action.swipe">
