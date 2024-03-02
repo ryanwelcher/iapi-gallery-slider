@@ -37,7 +37,7 @@ function add_directives_to_inner_blocks( $block_content ) {
 	$covers         = new \WP_HTML_Tag_Processor( $block_content );
 
 	while ( $covers->next_tag() ) {
-		$classes = explode( ' ', $covers->get_attribute( 'class' ) );
+		$classes = explode( ' ', $covers->get_attribute( 'class' ) ?? '' );
 
 		foreach ( $allowed_blocks as $block_class ) {
 			if ( in_array( $block_class, $classes, true ) ) {

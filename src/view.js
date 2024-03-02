@@ -94,14 +94,18 @@ const { state, actions } = store( 'iapi-gallery', {
 	callbacks: {
 		initSlideShow: () => {
 			const ctx = getContext();
-			if ( ctx.autoplay ) {
-				setInterval(
-					withScope( () => {
-						actions.nextImage();
-					} ),
-					state.transitionsSpeed
-				);
-			}
+			if ( ! ctx.autoplay ) return;
+			let start = null;
+			const update = withScope( ( timestamp ) => {
+				if ( ! start ) start = timestamp;
+				const elapsedTime = timestamp - start;
+				if ( elapsedTime > state.transitionsSpeed ) {
+					actions.nextImage();
+					start = null;
+				}
+				requestAnimationFrame( update );
+			} );
+			requestAnimationFrame( update );
 		},
 		initSlide: () => {
 			const ctx = getContext();
