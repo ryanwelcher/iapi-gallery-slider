@@ -19,7 +19,6 @@ $context = array_merge(
 	)
 );
 ?>
-
 <div <?php echo wp_kses_data( get_block_wrapper_attributes() ); ?>
 	data-wp-interactive='{ "namespace": "iapi-gallery" }'
 	data-wp-on-document--keydown="actions.onKeyDown"
