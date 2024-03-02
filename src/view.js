@@ -94,14 +94,10 @@ const { state, actions } = store( 'iapi-gallery', {
 	callbacks: {
 		initSlideShow: () => {
 			const ctx = getContext();
-			if ( ctx.autoplay ) {
-				setInterval(
-					withScope( () => {
-						actions.nextImage();
-					} ),
-					state.transitionsSpeed
-				);
-			}
+			if ( ! ctx.autoplay ) return;
+			interval( () => {
+				actions.nextImage();
+			}, state.transitionsSpeed );
 		},
 		initSlide: () => {
 			const ctx = getContext();
@@ -130,3 +126,24 @@ const { state, actions } = store( 'iapi-gallery', {
  */
 const debugLog = ( data ) =>
 	console.log( JSON.parse( JSON.stringify( data ) ) );
+
+/**
+ * Helper for a more performant setInterval.
+ *
+ * @param {function} callback
+ * @param {number} interval
+ * @returns
+ */
+const interval = ( callback, interval ) => {
+	let start = null;
+	const update = withScope( ( timestamp ) => {
+		if ( ! start ) start = timestamp;
+		const elapsedTime = timestamp - start;
+		if ( elapsedTime > interval ) {
+			callback();
+			start = null;
+		}
+		requestAnimationFrame( update );
+	} );
+	requestAnimationFrame( update );
+};
