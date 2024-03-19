@@ -87,7 +87,7 @@ function add_directives_to_inner_blocks( $block_content, $block ) {
 		)
 	);
 
-	$slides->set_attribute( 'data-wp-context', wp_json_encode( $context ) );
+	$slides->set_attribute( 'data-wp-context',  wp_json_encode( $context, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP ) );
 	// Update the HTML.
 	$block_content = $slides->get_updated_html();
 	return $block_content;
