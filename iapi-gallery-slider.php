@@ -37,7 +37,7 @@ add_action( 'init', 'iapi_gallery_slider_iapi_gallery_slider_block_init' );
 function add_directives_to_inner_blocks( $block_content, $block ) {
 	$allowed_blocks = array( 'wp-block-cover', 'wp-block-image', 'wp-block-media-text' );
 	$slides         = new \WP_HTML_Tag_Processor( $block_content );
-	$counter        = 0;
+	$total_slides   = 0;
 
 	// Get the main element.
 	$slides->next_tag( array( 'class_name' => 'wp-block-block-developer-cookbook-iapi-gallery-slider' ) );
@@ -50,7 +50,7 @@ function add_directives_to_inner_blocks( $block_content, $block ) {
 			if ( in_array( $class_name, $allowed_blocks, true ) ) {
 				$slides->set_attribute( 'data-wp-interactive', 'iapi-gallery' );
 				$slides->set_attribute( 'data-wp-init', 'callbacks.initSlide' );
-				$counter++;
+				$total_slides++;
 				// If we find a class, we can move on - this is still not very performant as the worst case is that we loop all classes against all allowed classes.
 				// Not an issue with the tag processor, rather the code I wrote with it.
 				continue;
@@ -61,9 +61,32 @@ function add_directives_to_inner_blocks( $block_content, $block ) {
 	// Go to the bookmark and release it.
 	$slides->seek( 'main' );
 	$slides->release_bookmark( 'main' );
-	// Update the context attributes to include the new slide count.
-	$context = json_decode( $slides->get_attribute( 'data-wp-context' ) );
-	$context->totalSlides = $counter;
+
+
+	// Generate the context for the slider block.
+	$context = array_merge(
+		array(
+			'autoplay'   => $block['attrs']['autoplay'] ?? false,
+			'continuous' => $block['attrs']['continuous'] ?? false,
+			'speed'      => $block['attrs']['speed'] ?? '3',
+		),
+		array(
+			'slides'       => array(),
+			'currentSlide' => 1,
+			'totalSlides'  => $total_slides,
+		)
+	);
+
+	// Define some global state for all instances based on attributes.
+	// These will be updated by the appropriate getters but this will avoid the content flash in the client
+	wp_interactivity_state(
+		'iapi-gallery',
+		array(
+			'noPrevSlide' => ! $context['continuous'],
+			'imageIndex'  => "{$context['currentSlide']}/{$context['totalSlides']}"
+		)
+	);
+
 	$slides->set_attribute( 'data-wp-context', wp_json_encode( $context ) );
 	// Update the HTML.
 	$block_content = $slides->get_updated_html();
