@@ -34,22 +34,39 @@ add_action( 'init', 'iapi_gallery_slider_iapi_gallery_slider_block_init' );
  *
  * @param string $block_content The content being rendered by the block.
  */
-function add_directives_to_inner_blocks( $block_content ) {
+function add_directives_to_inner_blocks( $block_content, $block ) {
 	$allowed_blocks = array( 'wp-block-cover', 'wp-block-image', 'wp-block-media-text' );
-	$covers         = new \WP_HTML_Tag_Processor( $block_content );
+	$slides         = new \WP_HTML_Tag_Processor( $block_content );
+	$counter        = 0;
 
-	while ( $covers->next_tag() ) {
+	// Get the main element.
+	$slides->next_tag( array( 'class_name' => 'wp-block-block-developer-cookbook-iapi-gallery-slider' ) );
+	// Set a bookmark so we can go back and update the context after counting the slides.
+	$slides->set_bookmark( 'main' );
+
+	while ( $slides->next_tag() ) {
 		// Retrieve and iterate over the classes assigned.
-		foreach ( $covers->class_list() as $class_name ) {
+		foreach ( $slides->class_list() as $class_name ) {
 			if ( in_array( $class_name, $allowed_blocks, true ) ) {
-				$covers->set_attribute( 'data-wp-interactive', '{"namespace":"iapi-gallery"}' );
-				$covers->set_attribute( 'data-wp-init', 'callbacks.initSlide' );
-				// If we find a class, we can move on - this is still not very performant as the worst case is that we loop all classes against all allowed classes. Not an issue with the tag processor, rather the code I wrote with it.
+				$slides->set_attribute( 'data-wp-interactive', 'iapi-gallery' );
+				$slides->set_attribute( 'data-wp-init', 'callbacks.initSlide' );
+				$counter++;
+				// If we find a class, we can move on - this is still not very performant as the worst case is that we loop all classes against all allowed classes.
+				// Not an issue with the tag processor, rather the code I wrote with it.
 				continue;
 			}
 		}
 	}
-	$block_content = $covers->get_updated_html();
+
+	// Go to the bookmark and release it.
+	$slides->seek( 'main' );
+	$slides->release_bookmark( 'main' );
+	// Update the context attributes to include the new slide count.
+	$context = json_decode( $slides->get_attribute( 'data-wp-context' ) );
+	$context->totalSlides = $counter;
+	$slides->set_attribute( 'data-wp-context', wp_json_encode( $context ) );
+	// Update the HTML.
+	$block_content = $slides->get_updated_html();
 	return $block_content;
 }
-add_filter( 'render_block_block-developer-cookbook/iapi-gallery-slider', 'add_directives_to_inner_blocks' );
+add_filter( 'render_block_block-developer-cookbook/iapi-gallery-slider', 'add_directives_to_inner_blocks', 10, 2 );

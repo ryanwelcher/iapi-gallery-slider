@@ -14,13 +14,13 @@ $context = array_merge(
 	$attributes,
 	array(
 		'slides'       => array(),
-		'currentSlide' => 0,
+		'currentSlide' => 1,
 		'totalSlides'  => 0,
 	)
 );
 ?>
 <div <?php echo wp_kses_data( get_block_wrapper_attributes() ); ?>
-	data-wp-interactive='{ "namespace": "iapi-gallery" }'
+	data-wp-interactive='iapi-gallery'
 	data-wp-on-document--keydown="actions.onKeyDown"
 	data-wp-init="callbacks.initSlideShow"
 	<?php echo wp_interactivity_data_wp_context( $context ); ?>
@@ -36,7 +36,9 @@ $context = array_merge(
 	</div>
 	<div class="buttons">
 		<button data-wp-on--click="actions.prevImage" data-wp-bind--disabled="state.noPrevSlide" aria-label="go to previous slide">&lt;</button>
-		<p data-wp-text="state.imageIndex"></p>
+		<div class="counter-container">
+			<span data-wp-text="context.currentSlide"></span>/<span data-wp-text="context.totalSlides"></span>
+		</div>
 		<button data-wp-on--click="actions.nextImage"data-wp-bind--disabled="state.noNextSlide" aria-label="go to next slide">&gt;</button>
 	</div>
 </div>
