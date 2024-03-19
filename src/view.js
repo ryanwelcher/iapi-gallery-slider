@@ -95,12 +95,14 @@ const { state, actions } = store( 'iapi-gallery', {
 		initSlideShow: () => {
 			const ctx = getContext();
 			if ( ctx.autoplay ) {
-				setInterval(
+				const int = setInterval(
 					withScope( () => {
 						actions.nextImage();
 					} ),
 					state.transitionsSpeed
 				);
+				// The returned function executes when the element is removed from the DOM.
+				return () => clearInterval( int );
 			}
 		},
 		initSlide: () => {

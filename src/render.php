@@ -24,7 +24,7 @@ $context = array_merge(
 	data-wp-interactive='{ "namespace": "iapi-gallery" }'
 	data-wp-on-document--keydown="actions.onKeyDown"
 	data-wp-init="callbacks.initSlideShow"
-	<?php echo data_wp_context( $context ); ?>
+	<?php echo wp_interactivity_data_wp_context( $context ); ?>
 
 >
 	<div
