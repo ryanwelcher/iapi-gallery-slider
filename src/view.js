@@ -8,6 +8,11 @@ import {
 	withScope,
 } from '@wordpress/interactivity';
 
+const bc = new BroadcastChannel( 'iapi-gallery' );
+bc.onmessage = ( eventMessage ) => {
+	console.log( eventMessage );
+};
+
 const { state, actions } = store( 'iapi-gallery', {
 	state: {
 		get isPresenting() {
@@ -101,6 +106,11 @@ const { state, actions } = store( 'iapi-gallery', {
 				'.wp-block-block-developer-cookbook-iapi-gallery-slider'
 			);
 			if ( elem ) {
+				// window.open(
+				// 	window.location + '/notes',
+				// 	'notes',
+				// 	'height=200,width=200'
+				// );
 				elem.requestFullscreen();
 			}
 		},

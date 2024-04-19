@@ -94,3 +94,21 @@ function add_directives_to_inner_blocks( $block_content, $block ) {
 	return $block_content;
 }
 add_filter( 'render_block_block-developer-cookbook/iapi-gallery-slider', 'add_directives_to_inner_blocks', 10, 2 );
+
+add_action(
+	'init',
+	function () {
+		add_rewrite_endpoint( 'notes', EP_PERMALINK );
+	}
+);
+
+add_filter(
+	'template_include',
+	function( $template ) {
+		if ( isset( $GLOBALS['notes'] ) && get_post()->post_type === 'post' ) {
+			return plugin_dir_path(__FILE__) . 'notes-template.php';
+		}
+		return $template;
+	}
+
+);
