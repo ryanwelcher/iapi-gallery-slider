@@ -83,7 +83,8 @@ function add_directives_to_inner_blocks( $block_content, $block ) {
 		'iapi-gallery',
 		array(
 			'noPrevSlide' => ! $context['continuous'],
-			'imageIndex'  => "{$context['currentSlide']}/{$context['totalSlides']}"
+			'imageIndex'  => "{$context['currentSlide']}/{$context['totalSlides']}",
+			'presenting'  => false,
 		)
 	);
 

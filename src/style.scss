@@ -7,10 +7,14 @@
 
 .wp-block-block-developer-cookbook-iapi-gallery-slider {
 	overflow: hidden;
+	background-color: white;
+
 
 	.slider-container {
 		display: flex;
 		transition: 0.5s;
+		height: 100vh;
+		width: 100vw;
 
 		[class*="wp-block-"] {
 			flex: 1 0 100%;

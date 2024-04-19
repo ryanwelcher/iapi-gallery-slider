@@ -10,6 +10,9 @@ import {
 
 const { state, actions } = store( 'iapi-gallery', {
 	state: {
+		get isPresenting() {
+			return state.presenting;
+		},
 		get noPrevSlide() {
 			const ctx = getContext();
 			if ( ctx.continuous ) {
@@ -74,6 +77,9 @@ const { state, actions } = store( 'iapi-gallery', {
 				}
 			}
 		},
+		onFullScreenChange: ( e ) => {
+			state.presenting = ! state.presenting;
+		},
 		onTouchStart: ( e ) => {
 			const ctx = getContext();
 			ctx.swipe = e.changedTouches[ 0 ].clientX;
@@ -88,6 +94,14 @@ const { state, actions } = store( 'iapi-gallery', {
 				if ( ! state.noPrevSlide ) {
 					actions.prevImage();
 				}
+			}
+		},
+		startPresentation: () => {
+			const elem = document.querySelector(
+				'.wp-block-block-developer-cookbook-iapi-gallery-slider'
+			);
+			if ( elem ) {
+				elem.requestFullscreen();
 			}
 		},
 	},

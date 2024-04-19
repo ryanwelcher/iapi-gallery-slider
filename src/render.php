@@ -14,8 +14,10 @@
 <div <?php echo wp_kses_data( get_block_wrapper_attributes() ); ?>
 	data-wp-interactive='iapi-gallery'
 	data-wp-on-document--keydown="actions.onKeyDown"
+	data-wp-on-document--fullscreenchange="actions.onFullScreenChange"
 	data-wp-init="callbacks.initSlideShow"
 >
+	<button data-wp-on--click="actions.startPresentation" data-wp-bind--hidden="state.isPresenting">Start Presentation</button>
 	<div
 		class="slider-container"
 		data-wp-style--transform="state.currentPos"
@@ -24,7 +26,7 @@
 	>
 		<?php echo wp_kses_post( $content ); ?>
 	</div>
-	<div class="buttons">
+	<div class="buttons" data-wp-bind--hidden="state.isPresenting">
 		<button data-wp-on--click="actions.prevImage" data-wp-bind--disabled="state.noPrevSlide" aria-label="go to previous slide">&lt;</button>
 		<p data-wp-text="state.imageIndex"></p>
 		<button data-wp-on--click="actions.nextImage"data-wp-bind--disabled="state.noNextSlide" aria-label="go to next slide">&gt;</button>
