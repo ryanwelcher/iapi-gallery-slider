@@ -33,6 +33,7 @@ add_action( 'init', 'iapi_gallery_slider_iapi_gallery_slider_block_init' );
  * Filter the render_block to add the needed directives to the inner cover blocks.
  *
  * @param string $block_content The content being rendered by the block.
+ * @param array  $block         The instance of the block being rendered.
  */
 function add_directives_to_inner_blocks( $block_content, $block ) {
 	$allowed_blocks = array( 'wp-block-cover', 'wp-block-image', 'wp-block-media-text' );
@@ -48,9 +49,8 @@ function add_directives_to_inner_blocks( $block_content, $block ) {
 		// Retrieve and iterate over the classes assigned.
 		foreach ( $slides->class_list() as $class_name ) {
 			if ( in_array( $class_name, $allowed_blocks, true ) ) {
-				$slides->set_attribute( 'data-wp-interactive', 'iapi-gallery' );
 				$slides->set_attribute( 'data-wp-init', 'callbacks.initSlide' );
-				$total_slides++;
+				++$total_slides;
 				// If we find a class, we can move on - this is still not very performant as the worst case is that we loop all classes against all allowed classes.
 				// Not an issue with the tag processor, rather the code I wrote with it.
 				continue;
@@ -61,7 +61,6 @@ function add_directives_to_inner_blocks( $block_content, $block ) {
 	// Go to the bookmark and release it.
 	$slides->seek( 'main' );
 	$slides->release_bookmark( 'main' );
-
 
 	// Generate the context for the slider block.
 	$context = array_merge(
@@ -83,11 +82,11 @@ function add_directives_to_inner_blocks( $block_content, $block ) {
 		'iapi-gallery',
 		array(
 			'noPrevSlide' => ! $context['continuous'],
-			'imageIndex'  => "{$context['currentSlide']}/{$context['totalSlides']}"
+			'imageIndex'  => "{$context['currentSlide']}/{$context['totalSlides']}",
 		)
 	);
 
-	$slides->set_attribute( 'data-wp-context',  wp_json_encode( $context, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP ) );
+	$slides->set_attribute( 'data-wp-context', wp_json_encode( $context, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP ) );
 	// Update the HTML.
 	$block_content = $slides->get_updated_html();
 	return $block_content;
