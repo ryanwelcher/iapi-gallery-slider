@@ -18,10 +18,10 @@
 		"[^.]*"
 	],
 	"dependencies": {
-		"@wordpress/interactivity": "^5.1.0"
+		"@wordpress/interactivity": "^6.34.0"
 	},
 	"devDependencies": {
-		"@wordpress/scripts": "^27.3.0"
+		"@wordpress/scripts": "^30.27.0"
 	},
 	"prettier": "@wordpress/prettier-config"
 }
