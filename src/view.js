@@ -58,22 +58,6 @@ const { state, actions } = store( 'iapi-gallery', {
 			}
 			ctx.currentSlide++;
 		},
-		onKeyDown: ( e ) => {
-			switch ( e.key ) {
-				case 'ArrowLeft': {
-					if ( ! state.noPrevSlide ) {
-						actions.prevImage();
-					}
-					break;
-				}
-				case 'ArrowRight': {
-					if ( ! state.noNextSlide ) {
-						actions.nextImage();
-					}
-					break;
-				}
-			}
-		},
 		onTouchStart: ( e ) => {
 			const ctx = getContext();
 			ctx.swipe = e.changedTouches[ 0 ].clientX;
