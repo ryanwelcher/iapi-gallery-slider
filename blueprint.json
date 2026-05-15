@@ -1,0 +1,37 @@
+{
+  "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+  "preferredVersions": {
+    "php": "8.2",
+    "wp": "latest"
+  },
+  "features": {
+    "networking": true
+  },
+  "plugins": [],
+  "extraLibraries": ["wp-cli"],
+  "login": true,
+  "landingPage": "/wp-admin/",
+  "steps": [
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "url",
+        "url": "https://github.com/ryanwelcher/iapi-gallery-slider/archive/refs/heads/trunk.zip"
+      }
+    },
+    {
+      "step": "activatePlugin",
+      "pluginPath": "iapi-gallery-slider-trunk/iapi-gallery-slider.php"
+    },
+    {
+      "step": "activateTheme",
+      "themeFolderName": "twentytwentyfive"
+    },
+    {
+      "step": "setSiteOptions",
+      "options": {
+        "blogname": "Building Interactive Blocks with the Interactivity API"
+      }
+    }
+  ]
+}
