@@ -44,11 +44,13 @@ function add_directives_to_inner_blocks( $block_content, $block ) {
 	// Set a bookmark so we can go back and update the context after counting the slides.
 	$slides->set_bookmark( 'main' );
 
+	// Count the inner slide blocks. We do NOT set data-wp-interactive on them:
+	// the wrapper already declares the `iapi-gallery` namespace and descendants
+	// inherit it, so any directive on (or added to) an inner block resolves
+	// against `iapi-gallery` automatically.
 	while ( $slides->next_tag() ) {
-		// Retrieve and iterate over the classes assigned.
 		foreach ( $slides->class_list() as $class_name ) {
 			if ( in_array( $class_name, $allowed_blocks, true ) ) {
-				$slides->set_attribute( 'data-wp-interactive', 'iapi-gallery' );
 				$total_slides++;
 				break;
 			}

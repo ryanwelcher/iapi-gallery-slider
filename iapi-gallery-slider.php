@@ -40,8 +40,13 @@ function add_directives_to_inner_blocks( $block_content, $block ) {
 	$total_slides   = 0;
 	$found_container = false;
 
-	// Walk the markup once: bookmark the wrapper, mark inner slide blocks as
-	// interactive, count them, and bookmark the .slider-container for later.
+	// Walk the markup once: bookmark the wrapper, count inner slide blocks,
+	// and bookmark the .slider-container for later.
+	//
+	// Note: we do NOT set data-wp-interactive on the inner blocks. The wrapper
+	// already declares the namespace and descendants inherit it, so any
+	// data-wp-* directive on (or added to) an inner block would resolve
+	// against `iapi-gallery` automatically.
 	$tags->next_tag( array( 'class_name' => 'wp-block-block-developer-cookbook-iapi-gallery-slider' ) );
 	$tags->set_bookmark( 'main' );
 
@@ -53,7 +58,6 @@ function add_directives_to_inner_blocks( $block_content, $block ) {
 				continue;
 			}
 			if ( in_array( $class_name, $allowed_blocks, true ) ) {
-				$tags->set_attribute( 'data-wp-interactive', 'iapi-gallery' );
 				$total_slides++;
 				break;
 			}

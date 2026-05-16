@@ -95,13 +95,16 @@
 
 ### Section 5 — Server-Side: Injecting Directives
 
-**Goal:** Server-side filter adds directives to inner blocks and seeds initial state with no client flash.
+**Goal:** Server-side filter walks inner blocks (counts them, seeds context on the wrapper) and seeds initial state with no client flash.
 
 **Talking points:**
-- TBD
+- **Namespace inheritance — the headline concept of this section.** `data-wp-interactive` is declared once on the wrapper; every descendant inherits that namespace. That's why the tag walk only *counts* inner blocks — we deliberately don't call `set_attribute( 'data-wp-interactive', ... )` on each one. Setting it again would be redundant and would suggest (incorrectly) that every interactive element needs its own namespace declaration. Inheritance is what makes server-injected directives work without any extra ceremony.
+- The exception: if a descendant uses a directive from a *different* store, it either needs its own `data-wp-interactive` or it can use the cross-namespace value form `namespace::action` on the directive itself. Section 7 demonstrates this with `iapi-gallery-router::actions.navigate`.
+- Bookmarks (`set_bookmark`/`seek`) let us do a single pass: count slides while walking, then jump back to the wrapper to set `data-wp-context` with the final count.
 
 **Common sticking points:**
 - `WP_HTML_Tag_Processor` cursor model and bookmarks; matching only the allowed inner block classes. (The Tag Processor escapes attribute values for you, so plain `wp_json_encode()` is enough for `data-wp-context` — no `JSON_HEX_*` flags needed.)
+- Misconception that every directive-bearing element needs `data-wp-interactive`. Reinforce: it's declared once per namespace scope, and descendants inherit.
 
 **If running short:** Hardcode `totalSlides` instead of counting; skip the bookmark dance and reseed via a second pass.
 
