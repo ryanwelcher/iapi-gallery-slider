@@ -49,11 +49,8 @@ function add_directives_to_inner_blocks( $block_content, $block ) {
 		foreach ( $slides->class_list() as $class_name ) {
 			if ( in_array( $class_name, $allowed_blocks, true ) ) {
 				$slides->set_attribute( 'data-wp-interactive', 'iapi-gallery' );
-				$slides->set_attribute( 'data-wp-init', 'callbacks.initSlide' );
 				$total_slides++;
-				// If we find a class, we can move on - this is still not very performant as the worst case is that we loop all classes against all allowed classes.
-				// Not an issue with the tag processor, rather the code I wrote with it.
-				continue;
+				break;
 			}
 		}
 	}
@@ -71,7 +68,6 @@ function add_directives_to_inner_blocks( $block_content, $block ) {
 			'speed'      => $block['attrs']['speed'] ?? '3',
 		),
 		array(
-			'slides'       => array(),
 			'currentSlide' => 1,
 			'totalSlides'  => $total_slides,
 		)
@@ -87,7 +83,8 @@ function add_directives_to_inner_blocks( $block_content, $block ) {
 		)
 	);
 
-	$slides->set_attribute( 'data-wp-context',  wp_json_encode( $context, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP ) );
+	// The Tag Processor handles HTML attribute escaping, so plain JSON is fine.
+	$slides->set_attribute( 'data-wp-context', wp_json_encode( $context ) );
 	// Update the HTML.
 	$block_content = $slides->get_updated_html();
 	return $block_content;

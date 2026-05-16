@@ -17,6 +17,10 @@ Layer four independent enhancements onto the working slider. Attendees who fall 
 
 End-of-section snapshot will live in `code-reference/section-6/`.
 
-## What's Next
+## Wrap-up
 
-→ [Section 7 — Picture-in-Picture with the Interactivity Router](./section-7.md)
+This is the **core finish line** for the workshop. The slider is complete: server-rendered with directives, navigable by click/keyboard/touch, optionally autoplaying, and optionally continuous. Everyone walking away at this point has built a real, working interactive block.
+
+## Bonus (if time permits)
+
+→ [Section 7 — Deep-Linkable Slides with the Interactivity Router](./section-7.md) — optional advanced material covering the Interactivity Router, per-slide URLs, and a share-link toast. Skip without guilt if the room is at capacity.

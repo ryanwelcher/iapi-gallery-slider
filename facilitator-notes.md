@@ -29,7 +29,9 @@
 | 4       | Wiring Up Navigation                               | TBD         | TBD        |
 | 5       | Server-Side: Injecting Directives                  | TBD         | TBD        |
 | 6       | Enhancements: Autoplay, Keyboard, Touch, Continuous| TBD         | TBD        |
-| 7       | Picture-in-Picture with the Interactivity Router   | TBD         | TBD        |
+| 7 (bonus) | Deep-Linkable Slides with the Interactivity Router | TBD       | TBD        |
+
+**Sections 1–6 are the core workshop and deliver a complete, working slider.** Section 7 is bonus material — only run it if the room is on time and energised at the end of section 6. If you skip it, point attendees to `code-reference/section-7/` and `workshop-outline/section-7.md` for self-study.
 
 ---
 
@@ -99,7 +101,7 @@
 - TBD
 
 **Common sticking points:**
-- `WP_HTML_Tag_Processor` cursor model and bookmarks; JSON-escaping context with the right flags; matching only the allowed inner block classes.
+- `WP_HTML_Tag_Processor` cursor model and bookmarks; matching only the allowed inner block classes. (The Tag Processor escapes attribute values for you, so plain `wp_json_encode()` is enough for `data-wp-context` — no `JSON_HEX_*` flags needed.)
 
 **If running short:** Hardcode `totalSlides` instead of counting; skip the bookmark dance and reseed via a second pass.
 
@@ -119,17 +121,27 @@
 
 ---
 
-### Section 7 — Picture-in-Picture with the Interactivity Router
+### Section 7 — Deep-Linkable Slides with the Interactivity Router (bonus)
 
-**Goal:** Slider keeps playing in a floating panel across client-side navigations.
+**Status:** Optional / bonus material. The workshop's core arc is complete after section 6. Only run this if section 6 wrapped on time and the room still has energy. Otherwise, demo the finished product briefly and point attendees at `code-reference/section-7/` for self-study.
+
+**Goal:** URL is the source of truth for which slide is showing. Two distinct router uses: explicit `history.pushState` for per-slide URLs (preserves the CSS animation) and a separate `iapi-gallery-router` store for delegated cross-page link clicks. Finish with a share-link toast.
 
 **Talking points:**
-- TBD
+- Why `history.pushState` for prev/next instead of `routerActions.navigate()`: replacing the region's HTML on every slide change kills the CSS transition. `pushState` updates the URL without touching the DOM, so the animation runs.
+- `popstate` listener with `withScope` so back/forward stay in sync with `ctx.currentSlide`.
+- `firstPaint` flag — single source of truth for "suppress the transition right now," server-seeded and flipped to `false` on first interaction. Avoids the DOM-walk hack of removing a class imperatively.
+- Cross-namespace directive values: `data-wp-on-document--click="iapi-gallery-router::actions.navigate"`. A directive on an element with `data-wp-interactive='iapi-gallery'` can still reference an action defined in a different store.
+- Per the docs, "client-side state is never automatically overwritten by the server" — that's *why* state in the store survives router-driven page navigations. Per-instance `context` does not; it's replaced with the new server-rendered values.
+- The router falls back to a full page reload if the destination page has no matching `data-wp-router-region` ID — and a full reload destroys the JS store, so client state is lost.
 
 **Common sticking points:**
-- Understanding which region the router swaps; element persistence across route changes; focus management when a floating element survives navigation.
+- `state.firstPaint` flips to `false` on first prev/next click but if `wp_interactivity_state()` doesn't seed it as `true`, the no-transition class won't be present during the first paint.
+- Forgetting `withScope` around the `setTimeout` callback that resets `state.shareCopied` — without it, scope is lost and the assignment is a no-op.
+- Using a regular `async` function for `shareSlide` instead of a generator — scope is lost across `await`, so the post-clipboard state writes silently fail. Use `function*` + `yield`.
+- Cookie/localStorage rabbit holes for cross-page state. Don't go there; the router preserves store state for free as long as the region matches.
 
-**If running short:** Demo only — show the finished `actions.navigate()` + pop-out behavior without attendees typing.
+**If running short:** Skip the share-toast step (just `console.log` after the clipboard write) and skip the `router.js` extraction (inline the `*navigate` action in `view.js` and reference it from the wrapper without a namespace prefix).
 
 ---
 

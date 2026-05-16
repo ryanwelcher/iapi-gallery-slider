@@ -5,25 +5,36 @@
  * Replace them with your own styles or remove the file completely.
  */
 
+.iapi-gallery-toast {
+	position: fixed;
+	bottom: 2rem;
+	left: 50%;
+	transform: translateX(-50%);
+	background: rgba(0, 0, 0, 0.85);
+	color: #fff;
+	padding: 0.5rem 1rem;
+	border-radius: 4px;
+	font-size: 0.9rem;
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.2s ease-in-out;
+	z-index: 9999;
+
+	&.is-visible {
+		opacity: 1;
+	}
+}
+
 .wp-block-block-developer-cookbook-iapi-gallery-slider {
 	overflow: hidden;
 
-	&.is-popped-out {
-		position: fixed;
-		bottom: 1rem;
-		right: 1rem;
-		width: 320px;
-		max-width: 40vw;
-		z-index: 9999;
-		background: #fff;
-		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
-		border-radius: 8px;
-		overflow: hidden;
-	}
-
-	.slider-container {
+.slider-container {
 		display: flex;
 		transition: 0.5s;
+
+		&.no-transition {
+			transition: none;
+		}
 
 		[class*="wp-block-"] {
 			flex: 1 0 100%;

@@ -66,7 +66,7 @@
 
 ---
 
-## Section 7 — Picture-in-Picture with the Interactivity Router
+## Section 7 — Deep-Linkable Slides with the Interactivity Router (bonus / optional)
 
 <!-- TODO. -->
 

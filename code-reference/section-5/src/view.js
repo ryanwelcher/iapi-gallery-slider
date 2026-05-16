@@ -1,7 +1,7 @@
 /**
  * WordPress dependencies
  */
-import { store, getElement, getContext } from '@wordpress/interactivity';
+import { store, getContext } from '@wordpress/interactivity';
 
 const { state, actions } = store( 'iapi-gallery', {
 	state: {
@@ -30,16 +30,6 @@ const { state, actions } = store( 'iapi-gallery', {
 		nextImage: () => {
 			const ctx = getContext();
 			ctx.currentSlide++;
-		},
-	},
-	callbacks: {
-		initSlide: () => {
-			const ctx = getContext();
-			const { ref } = getElement();
-			ctx.slides.push( ref );
-			return () => {
-				ctx.slides = ctx.slides.filter( ( s ) => s !== ref );
-			};
 		},
 	},
 } );
