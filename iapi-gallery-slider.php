@@ -36,60 +36,69 @@ add_action( 'init', 'iapi_gallery_slider_iapi_gallery_slider_block_init' );
  */
 function add_directives_to_inner_blocks( $block_content, $block ) {
 	$allowed_blocks = array( 'wp-block-cover', 'wp-block-image', 'wp-block-media-text' );
-	$slides         = new \WP_HTML_Tag_Processor( $block_content );
+	$tags           = new \WP_HTML_Tag_Processor( $block_content );
 	$total_slides   = 0;
+	$found_container = false;
 
-	// Get the main element.
-	$slides->next_tag( array( 'class_name' => 'wp-block-block-developer-cookbook-iapi-gallery-slider' ) );
-	// Set a bookmark so we can go back and update the context after counting the slides.
-	$slides->set_bookmark( 'main' );
+	// Walk the markup once: bookmark the wrapper, mark inner slide blocks as
+	// interactive, count them, and bookmark the .slider-container for later.
+	$tags->next_tag( array( 'class_name' => 'wp-block-block-developer-cookbook-iapi-gallery-slider' ) );
+	$tags->set_bookmark( 'main' );
 
-	while ( $slides->next_tag() ) {
-		// Retrieve and iterate over the classes assigned.
-		foreach ( $slides->class_list() as $class_name ) {
-			if ( in_array( $class_name, $allowed_blocks, true ) ) {
-				$slides->set_attribute( 'data-wp-interactive', 'iapi-gallery' );
-				$slides->set_attribute( 'data-wp-init', 'callbacks.initSlide' );
-				$total_slides++;
-				// If we find a class, we can move on - this is still not very performant as the worst case is that we loop all classes against all allowed classes.
-				// Not an issue with the tag processor, rather the code I wrote with it.
+	while ( $tags->next_tag() ) {
+		foreach ( $tags->class_list() as $class_name ) {
+			if ( 'slider-container' === $class_name && ! $found_container ) {
+				$tags->set_bookmark( 'container' );
+				$found_container = true;
 				continue;
+			}
+			if ( in_array( $class_name, $allowed_blocks, true ) ) {
+				$tags->set_attribute( 'data-wp-interactive', 'iapi-gallery' );
+				$total_slides++;
+				break;
 			}
 		}
 	}
 
-	// Go to the bookmark and release it.
-	$slides->seek( 'main' );
-	$slides->release_bookmark( 'main' );
+	// Resolve the active slide from the ?slide= query param. Clamped to range.
+	$requested_slide = isset( $_GET['slide'] ) ? absint( wp_unslash( $_GET['slide'] ) ) : 1;
+	$current_slide   = min( max( 1, $total_slides ), max( 1, $requested_slide ) );
 
-
-	// Generate the context for the slider block.
-	$context = array_merge(
-		array(
-			'autoplay'   => $block['attrs']['autoplay'] ?? false,
-			'continuous' => $block['attrs']['continuous'] ?? false,
-			'speed'      => $block['attrs']['speed'] ?? '3',
-		),
-		array(
-			'slides'       => array(),
-			'currentSlide' => 1,
-			'totalSlides'  => $total_slides,
-		)
+	$context = array(
+		'autoplay'     => $block['attrs']['autoplay'] ?? false,
+		'continuous'   => $block['attrs']['continuous'] ?? false,
+		'speed'        => $block['attrs']['speed'] ?? '3',
+		'currentSlide' => $current_slide,
+		'totalSlides'  => $total_slides,
 	);
 
-	// Define some global state for all instances based on attributes.
-	// These will be updated by the appropriate getters but this will avoid the content flash in the client
+	// Seed global state so the very first paint (before JS hydrates) matches
+	// what the client-side getters will produce. firstPaint suppresses the
+	// CSS transition during hydration; it's flipped to false on first click.
 	wp_interactivity_state(
 		'iapi-gallery',
 		array(
 			'noPrevSlide' => ! $context['continuous'],
-			'imageIndex'  => "{$context['currentSlide']}/{$context['totalSlides']}"
+			'imageIndex'  => "{$context['currentSlide']}/{$context['totalSlides']}",
+			'firstPaint'  => true,
 		)
 	);
 
-	$slides->set_attribute( 'data-wp-context',  wp_json_encode( $context, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP ) );
-	// Update the HTML.
-	$block_content = $slides->get_updated_html();
-	return $block_content;
+	// Attach context to the wrapper. Tag Processor handles attribute escaping.
+	$tags->seek( 'main' );
+	$tags->set_attribute( 'data-wp-context', wp_json_encode( $context ) );
+
+	// Inline the initial transform on .slider-container so its rendered
+	// position matches data-wp-style--transform on hydration.
+	if ( $found_container ) {
+		$tags->seek( 'container' );
+		$offset = ( $current_slide - 1 ) * 100;
+		$tags->set_attribute( 'style', "transform: translateX(-{$offset}%)" );
+		$tags->add_class( 'no-transition' );
+		$tags->release_bookmark( 'container' );
+	}
+	$tags->release_bookmark( 'main' );
+
+	return $tags->get_updated_html();
 }
 add_filter( 'render_block_block-developer-cookbook/iapi-gallery-slider', 'add_directives_to_inner_blocks', 10, 2 );
