@@ -48,19 +48,31 @@
 
 ---
 
-## Section 4 — Wiring Up Navigation
+## Section 4 — Hello, Store
 
 <!-- TODO. -->
 
 ---
 
-## Section 5 — Server-Side: Injecting Directives
+## Section 5 — Sliding + Bounds
 
 <!-- TODO. -->
 
 ---
 
-## Section 6 — Enhancements: Autoplay, Keyboard, Touch, Continuous
+## Section 6 — Server-Side Directive Injection
+
+<!-- TODO. -->
+
+---
+
+## Section 7 — Autoplay
+
+<!-- TODO. -->
+
+---
+
+## Section 8 — Polish: Keyboard, Touch, Continuous
 
 <!-- TODO. -->
 

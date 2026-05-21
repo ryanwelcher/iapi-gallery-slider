@@ -3,7 +3,7 @@
  */
 import { store, getContext } from '@wordpress/interactivity';
 
-const { state, actions } = store( 'iapi-gallery', {
+store( 'iapi-gallery', {
 	state: {
 		get noPrevSlide() {
 			const ctx = getContext();

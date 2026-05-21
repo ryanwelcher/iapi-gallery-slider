@@ -11,6 +11,7 @@
 ?>
 <div <?php echo wp_kses_data( get_block_wrapper_attributes() ); ?>
 	data-wp-interactive='iapi-gallery'
+	data-wp-init="callbacks.initSlideShow"
 >
 	<div
 		class="slider-container"

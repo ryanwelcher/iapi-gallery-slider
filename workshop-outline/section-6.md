@@ -1,24 +1,46 @@
-# Section 6 — Enhancements: Autoplay, Keyboard, Touch, Continuous
+# Section 6 — Server-Side Directive Injection
 
 **Type:** coding
 
 ## Goal
 
-Layer four independent enhancements onto the working slider. Attendees who fall behind on one enhancement can still land on the next.
+Stop hardcoding `totalSlides`. Use a `render_block_*` filter with `WP_HTML_Tag_Processor` to count the inner blocks at render time and seed the wrapper's `data-wp-context` with the real number. Then use `wp_interactivity_state()` to seed initial global state so the first paint matches the interactive state with no client-side flash.
+
+This is the section where the slider becomes adaptive to whatever inner blocks the editor placed in it.
+
+## Concepts introduced
+
+- `render_block_<block-name>` filter — hooking after the block renders to mutate its HTML.
+- `WP_HTML_Tag_Processor` — `next_tag`, `class_list`, `set_attribute`.
+- `set_bookmark` / `seek` / `release_bookmark` — single-pass walk that returns to the wrapper after counting.
+- **Namespace inheritance** — the teaching headline of this section. `data-wp-interactive` is declared once on the wrapper; every descendant resolves directives against that namespace. We do *not* call `set_attribute( 'data-wp-interactive', … )` on inner blocks. Setting it again would be redundant and would suggest (incorrectly) that every interactive element needs its own namespace declaration.
+- `wp_interactivity_state()` — seeding global state to avoid client-side flash. Different from `wp_interactivity_data_wp_context()`: state is shared across instances; context is per-instance.
 
 ## Steps
 
-1. **Autoplay** — `callbacks.initSlideShow` with `setInterval` + `withScope`, returning a cleanup function. Speed driven by the `speed` attribute via `state.transitionsSpeed`.
-2. **Keyboard** — `actions.onKeyDown` for ArrowLeft / ArrowRight, gated by `noPrevSlide` / `noNextSlide`. Wire with `data-wp-on--keydown`.
-3. **Touch** — `actions.onTouchStart` / `actions.onTouchEnd` capturing `clientX` to detect swipe direction.
-4. **Continuous mode** — wrap-around logic in `prevImage` / `nextImage`, and adjust `noPrevSlide` / `noNextSlide` getters so the buttons stay enabled when `continuous` is true.
+1. In `src/render.php`, remove the hardcoded `$context` block and the `wp_interactivity_data_wp_context()` call. The wrapper still has `data-wp-interactive='iapi-gallery'`. Context will arrive via the filter.
+2. In `iapi-gallery-slider.php`, add the `add_directives_to_inner_blocks( $block_content, $block )` function:
+   - Construct a `WP_HTML_Tag_Processor` from `$block_content`.
+   - `next_tag( array( 'class_name' => 'wp-block-block-developer-cookbook-iapi-gallery-slider' ) )` to land on the wrapper.
+   - `set_bookmark( 'main' )`.
+   - Loop `while ( $slides->next_tag() )` and check `class_list()` against `array( 'wp-block-cover', 'wp-block-image', 'wp-block-media-text' )`; increment `$total_slides` on a match.
+   - `seek( 'main' )` then `release_bookmark( 'main' )`.
+   - `set_attribute( 'data-wp-context', wp_json_encode( array( 'currentSlide' => 1, 'totalSlides' => $total_slides ) ) )`.
+   - `return $slides->get_updated_html()`.
+3. Register: `add_filter( 'render_block_block-developer-cookbook/iapi-gallery-slider', 'add_directives_to_inner_blocks', 10, 2 );`.
+4. **Demo stage A** — reload. The slider now counts inner blocks correctly. But: do a hard reload and watch carefully. The counter briefly shows "1/3" (the static markup from `render.php`) before snapping to the right value. *That's the flash.*
+5. **Demo stage B** — add `wp_interactivity_state( 'iapi-gallery', array( 'noPrevSlide' => true, 'imageIndex' => "1/{$total_slides}" ) )` before the `set_attribute` call. Reload. Flash gone.
+
+## Verification
+
+- Add/remove inner blocks in the editor → save → reload front end. Counter and disable behavior follow the new total automatically.
+- Hard-reload several times. No counter flash on first paint.
+- Inspect the DOM: no inner block has `data-wp-interactive` — only the wrapper does. Namespace inheritance is doing the work.
 
 ## Code reference
 
-End-of-section snapshot will live in `code-reference/section-6/`.
+End-of-section snapshot lives in `code-reference/section-6/`.
 
-## Wrap-up
+## What's Next
 
-This is the finish line for the workshop. The slider is complete: server-rendered with directives, navigable by click/keyboard/touch, optionally autoplaying, and optionally continuous. Everyone walking away at this point has built a real, working interactive block.
-
-→ Return to [README](../README.md).
+→ [Section 7 — Autoplay](./section-7.md)

@@ -1,24 +1,54 @@
-# Section 4 — Wiring Up Navigation
+# Section 4 — Hello, Store
 
 **Type:** coding
 
 ## Goal
 
-Make the slider actually move. By the end, prev/next buttons advance the slider, the current slide indicator updates, and the buttons disable correctly at the ends.
+Get the smallest possible Interactivity API round-trip working: a directive on HTML reads from context, a button click mutates context, and the page re-renders. Everything in sections 5–8 sits on top of this loop, so we land it cleanly first before stacking more concepts.
+
+By the end of this section, clicking the next button bumps a counter displayed on the page from 1 → 2 → 3 → 4 → … (no upper bound yet — that's the bug §5 fixes). The slides themselves do *not* visibly move — we haven't told the page how to *react* visually yet. That's deliberate; it's the §5 lesson.
+
+## Concepts introduced
+
+- The `store()` shape — `state`, `actions`, `callbacks` (we only fill `actions` this section).
+- `data-wp-interactive` — sets the namespace once on the wrapper; descendants inherit (preview of the §6 inheritance teaching).
+- `data-wp-context` — seeded from the server with `wp_interactivity_data_wp_context()`.
+- `data-wp-on--click` — wires a DOM event to a store action.
+- `data-wp-text` — binds the text content of an element to a value.
+- `getContext()` and mutating context inside an action (`ctx.currentSlide++`).
 
 ## Steps
 
-1. Add `data-wp-context` to the wrapper with `currentSlide`, `totalSlides`.
-2. Implement `actions.prevImage` and `actions.nextImage`.
-3. Add state getters: `noPrevSlide`, `noNextSlide`, `currentPos`, `imageIndex`.
-4. Bind buttons with `data-wp-on--click` and disable state with `data-wp-bind--disabled`.
-5. Use `data-wp-style--transform` (or a class) to translate the track based on `currentPos`.
-6. Test end-to-end in the browser.
+1. In `src/render.php`, define a hardcoded `$context = array( 'currentSlide' => 1, 'totalSlides' => 3 )` and emit it on the wrapper via `<?php echo wp_interactivity_data_wp_context( $context ); ?>`. The wrapper already has `data-wp-interactive='iapi-gallery'`.
+2. Change the counter `<p>` to `<p data-wp-text="context.currentSlide"></p>`. Reload — it should render `1`.
+3. Wire only the next button: `<button data-wp-on--click="actions.nextImage" …>`. Leave the prev button without a handler for now.
+4. In `src/view.js`, create the store shell:
+   ```js
+   import { store, getContext } from '@wordpress/interactivity';
+
+   store( 'iapi-gallery', {
+       state: {},
+       actions: {
+           nextImage: () => {
+               const ctx = getContext();
+               ctx.currentSlide++;
+           },
+       },
+   } );
+   ```
+5. `npm run start` if you haven't already. Reload the post. Clicking next should bump the counter.
+
+## Verification
+
+- Counter renders "1" on first paint (no flash).
+- Clicking next bumps it to 2, 3, 4 — and keeps going past 3. That's expected; §5 adds the disable logic.
+- Prev button is inert.
+- No console errors.
 
 ## Code reference
 
-End-of-section snapshot will live in `code-reference/section-4/`.
+End-of-section snapshot lives in `code-reference/section-4/`.
 
 ## What's Next
 
-→ [Section 5 — Server-Side: Injecting Directives](./section-5.md)
+→ [Section 5 — Sliding + Bounds](./section-5.md)

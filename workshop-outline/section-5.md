@@ -1,28 +1,46 @@
-# Section 5 — Server-Side: Injecting Directives onto Inner Blocks
+# Section 5 — Sliding + Bounds
 
 **Type:** coding
 
 ## Goal
 
-Use the `render_block_*` filter and `WP_HTML_Tag_Processor` to inject Interactivity API directives onto inner blocks (Cover, Image, Media+Text) so attendees don't have to author them by hand, and seed initial state on the server.
+Make the slider actually slide, and stop you from going past either end. Both prev and next buttons work; the buttons gray out at the ends; the counter shows "X/3" instead of just "X". Still using a hardcoded `totalSlides: 3`.
+
+This section is where `state` enters the picture — distinct from `context`. Context is per-instance data; state is derived/computed values shared across instances of the store.
+
+## Concepts introduced
+
+- `state` — getters on the store that compute values from context.
+- `data-wp-style--transform` — binds a CSS transform to a state value (one of many `data-wp-style--<property>` forms).
+- `data-wp-bind--disabled` — binds an HTML attribute (here, the disabled property of a button) to a state value.
+- Why disable logic belongs in `state` not `context`: it's *derived* from other context values, so it lives where computed values live.
 
 ## Steps
 
-1. Hook into `render_block_block-developer-cookbook/iapi-gallery-slider`.
-2. Walk the inner blocks with `WP_HTML_Tag_Processor`, matching the allowed inner block classes, and count them.
-3. Use `set_bookmark` / `seek` to return to the wrapper and attach `data-wp-context` with `currentSlide` and `totalSlides` (the Tag Processor escapes attribute values for you, so plain `wp_json_encode()` is enough).
-4. Seed `wp_interactivity_state()` so initial state (e.g. `noPrevSlide`, `imageIndex`) renders correctly with no client-side flash.
+1. In `src/view.js`, fill in `state` with four getters:
+   - `noPrevSlide` — `ctx.currentSlide === 1`
+   - `noNextSlide` — `ctx.currentSlide === ctx.totalSlides`
+   - `currentPos` — `` `translateX(-${ ( ctx.currentSlide - 1 ) * 100 }%)` ``
+   - `imageIndex` — `` `${ ctx.currentSlide }/${ ctx.totalSlides }` ``
+2. Add `actions.prevImage` that decrements `ctx.currentSlide`.
+3. In `src/render.php`:
+   - Add `data-wp-style--transform="state.currentPos"` on `.slider-container`.
+   - Wire prev button: `data-wp-on--click="actions.prevImage"`.
+   - Add `data-wp-bind--disabled="state.noPrevSlide"` to the prev button and `data-wp-bind--disabled="state.noNextSlide"` to the next button.
+   - Change the counter to `data-wp-text="state.imageIndex"` — note the teaching beat here: we used to read `context.currentSlide` directly; now we read derived state.
+4. Reload and test.
 
-## Key concept: namespace inheritance
+## Verification
 
-Directives inherit the `data-wp-interactive` namespace from the nearest ancestor that declares one. Our wrapper in `render.php` already has `data-wp-interactive='iapi-gallery'`, so every descendant — including the inner Cover/Image/Media+Text blocks and anything we attach directives to inside them — resolves against `iapi-gallery` automatically. We only need to set `data-wp-interactive` again on a descendant when switching to a *different* namespace.
-
-This is why the tag walk in step 2 only *counts* the inner blocks — it does not add `data-wp-interactive` to each one. That would be redundant and obscures how namespace scoping actually works.
+- The three slides visibly slide left/right when you click.
+- Prev button is disabled on slide 1; next button is disabled on slide 3.
+- Counter reads X/3.
+- Add a 4th cover/image block in the editor → save → reload. Counter still says X/3 and you can't reach the 4th slide. That's the §6 bug.
 
 ## Code reference
 
-End-of-section snapshot will live in `code-reference/section-5/`.
+End-of-section snapshot lives in `code-reference/section-5/`.
 
 ## What's Next
 
-→ [Section 6 — Enhancements: Autoplay, Keyboard, Touch, Continuous](./section-6.md)
+→ [Section 6 — Server-Side Directive Injection](./section-6.md)

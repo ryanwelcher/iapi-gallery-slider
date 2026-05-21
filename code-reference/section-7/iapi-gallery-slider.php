@@ -64,9 +64,18 @@ function add_directives_to_inner_blocks( $block_content, $block ) {
 	$slides->seek( 'main' );
 	$slides->release_bookmark( 'main' );
 
-	$context = array(
-		'currentSlide' => 1,
-		'totalSlides'  => $total_slides,
+	// Merge block attributes the client needs to read at runtime into the
+	// per-instance context. Autoplay and speed both drive the new
+	// callbacks.initSlideShow lifecycle we're adding this section.
+	$context = array_merge(
+		array(
+			'autoplay' => $block['attrs']['autoplay'] ?? false,
+			'speed'    => $block['attrs']['speed'] ?? '3',
+		),
+		array(
+			'currentSlide' => 1,
+			'totalSlides'  => $total_slides,
+		)
 	);
 
 	// Seed initial global state to match what the client getters would compute,

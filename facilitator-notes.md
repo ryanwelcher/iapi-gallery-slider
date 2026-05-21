@@ -21,14 +21,16 @@
 
 <!-- TODO: fill in once sections are declared. -->
 
-| Section | Title                                              | Target Time | Cumulative |
-| ------- | -------------------------------------------------- | ----------- | ---------- |
-| 1       | Welcome & Setup                                    | TBD         | TBD        |
-| 2       | Anatomy of the Starter                             | TBD         | TBD        |
-| 3       | Interactivity API Primer                           | TBD         | TBD        |
-| 4       | Wiring Up Navigation                               | TBD         | TBD        |
-| 5       | Server-Side: Injecting Directives                  | TBD         | TBD        |
-| 6       | Enhancements: Autoplay, Keyboard, Touch, Continuous| TBD         | TBD        |
+| Section | Title                                          | Target Time | Cumulative |
+| ------- | ---------------------------------------------- | ----------- | ---------- |
+| 1       | Welcome & Setup                                | TBD         | TBD        |
+| 2       | Anatomy of the Starter                         | TBD         | TBD        |
+| 3       | Interactivity API Primer                       | TBD         | TBD        |
+| 4       | Hello, Store                                   | TBD         | TBD        |
+| 5       | Sliding + Bounds                               | TBD         | TBD        |
+| 6       | Server-Side Directive Injection                | TBD         | TBD        |
+| 7       | Autoplay                                       | TBD         | TBD        |
+| 8       | Polish: Keyboard, Touch, Continuous            | TBD         | TBD        |
 
 ---
 
@@ -76,48 +78,99 @@
 
 ---
 
-### Section 4 — Wiring Up Navigation
+### Section 4 — Hello, Store
 
-**Goal:** Slider visibly moves; prev/next disable at ends.
+**Goal:** Smallest IAPI round-trip working end-to-end. A button click mutates context; a `data-wp-text` reflects it. No visible sliding yet.
 
 **Talking points:**
-- TBD
+- This is the loop every other section sits on top of: directive reads context, action mutates context, DOM re-renders.
+- `data-wp-interactive` on the wrapper sets the *namespace* for everything inside. Mention "we set it once" — full payoff lands in §6.
+- Why we don't add `data-wp-style--transform` yet: the lesson is that data changing doesn't automatically mean the page reacts visually. That separation lands cleanly in §5.
 
 **Common sticking points:**
-- Forgetting `data-wp-interactive` on the wrapper; mutating `state` instead of `context`; binding to `disabled` without `data-wp-bind--disabled`.
+- Forgetting `data-wp-interactive` on the wrapper → directives silently no-op.
+- Mutating `state` instead of `context` from inside an action — `state` getters are read-only computed values.
+- `wp_interactivity_data_wp_context()` vs writing `data-wp-context='...'` by hand. The helper handles escaping for you.
 
-**If running short:** Skip the `currentPos` transform; use opacity/visibility per slide instead.
+**If running short:** Skip the "no upper bound" reveal at the end of §4 and just transition into §5 immediately.
 
 ---
 
-### Section 5 — Server-Side: Injecting Directives
+### Section 5 — Sliding + Bounds
 
-**Goal:** Server-side filter walks inner blocks (counts them, seeds context on the wrapper) and seeds initial state with no client flash.
+**Goal:** Slider visibly slides; prev/next disable at ends; counter switches to derived state.
 
 **Talking points:**
-- **Namespace inheritance — the headline concept of this section.** `data-wp-interactive` is declared once on the wrapper; every descendant inherits that namespace. That's why the tag walk only *counts* inner blocks — we deliberately don't call `set_attribute( 'data-wp-interactive', ... )` on each one. Setting it again would be redundant and would suggest (incorrectly) that every interactive element needs its own namespace declaration. Inheritance is what makes server-injected directives work without any extra ceremony.
-- The exception: if a descendant uses a directive from a *different* store, it either needs its own `data-wp-interactive` or it can use the cross-namespace value form `namespace::action` on the directive itself.
+- `state` vs `context`: context is per-instance data; state holds derived/computed values that everyone reads from. The disable booleans are derived → they belong in state.
+- `data-wp-style--transform` is one of many `data-wp-style--<property>` forms — show that.
+- The switch from `context.currentSlide` to `state.imageIndex` in the counter is a great hook to point out the difference between reading raw context and reading derived state.
+
+**Common sticking points:**
+- Trying to assign to a `state` getter from an action (it's a getter, not a field — won't work).
+- Binding to the boolean `disabled` HTML attribute without `data-wp-bind--disabled`.
+- Off-by-one in `currentPos`: `(currentSlide - 1) * 100`, not `currentSlide * 100`.
+
+**If running short:** Skip the `currentPos` transform; use opacity/visibility per slide instead. Loses the smooth animation but keeps the state/disable lesson.
+
+---
+
+### Section 6 — Server-Side Directive Injection
+
+**Goal:** Render filter walks inner blocks, counts them, seeds context. Then `wp_interactivity_state()` kills the first-paint flash. Namespace inheritance lands as the headline mental model.
+
+**Talking points:**
+- **Namespace inheritance — the headline concept of this section.** `data-wp-interactive` is declared once on the wrapper; every descendant inherits that namespace. That's why the tag walk only *counts* inner blocks — we deliberately don't call `set_attribute( 'data-wp-interactive', ... )` on each one. Setting it again would be redundant and would suggest (incorrectly) that every interactive element needs its own namespace declaration.
+- The exception: a descendant using a directive from a *different* store needs its own `data-wp-interactive` (or the cross-namespace `namespace::action` value form on the directive).
 - Bookmarks (`set_bookmark`/`seek`) let us do a single pass: count slides while walking, then jump back to the wrapper to set `data-wp-context` with the final count.
+- The two-stage demo (count without state seeding → see the flash → add `wp_interactivity_state` → flash gone) is the whole reason state seeding earns its place in this section.
 
 **Common sticking points:**
-- `WP_HTML_Tag_Processor` cursor model and bookmarks; matching only the allowed inner block classes. (The Tag Processor escapes attribute values for you, so plain `wp_json_encode()` is enough for `data-wp-context` — no `JSON_HEX_*` flags needed.)
+- `WP_HTML_Tag_Processor` cursor model and bookmarks; matching only the allowed inner block classes. (The Tag Processor escapes attribute values for you, so plain `wp_json_encode()` is enough for `data-wp-context`.)
 - Misconception that every directive-bearing element needs `data-wp-interactive`. Reinforce: it's declared once per namespace scope, and descendants inherit.
+- Forgetting that `wp_interactivity_state()` mirrors what the client getters compute — both sides need to agree on the initial value or you'll get a flicker the other way.
 
-**If running short:** Hardcode `totalSlides` instead of counting; skip the bookmark dance and reseed via a second pass.
+**If running short:** Skip the bookmark dance — count in a first pass, then construct a new `WP_HTML_Tag_Processor` for the wrapper write. Slower but easier to follow.
 
 ---
 
-### Section 6 — Enhancements: Autoplay, Keyboard, Touch, Continuous
+### Section 7 — Autoplay
 
-**Goal:** Layer four independent enhancements; people can drop off at any layer.
+**Goal:** Autoplay toggle drives `setInterval` via a `callbacks.initSlideShow` lifecycle. Cleanup function returns from the callback. `withScope` enters the picture.
 
 **Talking points:**
-- TBD
+- `callbacks` is the third slot on the store — distinct from `state` (computed) and `actions` (event handlers). Callbacks run on element lifecycle.
+- Why `withScope`: a `setInterval` tick fires outside the Interactivity scope. Any code in that tick that calls actions or reads state/context needs `withScope` to re-enter the scope.
+- The cleanup contract: returning a function from a callback registers cleanup. Interactivity calls it when the element is removed.
+- Why we destructure `const { state, actions } = store(…)` here: callbacks live inside the store definition but need to call actions back into themselves; the destructured reference gives us that.
+- Attribute-driven context: the render filter is the bridge between editor toggles and the client store.
 
 **Common sticking points:**
-- Forgetting `withScope` in `setInterval`; not returning a cleanup function from `callbacks.initSlideShow`; swipe-direction sign errors.
+- Forgetting `withScope` → `actions.nextImage()` doesn't see the right `getContext()`.
+- Not returning the cleanup function → leaked intervals after navigation.
+- Trying to call `actions.nextImage()` directly inside `setInterval(…)` instead of `withScope( () => actions.nextImage() )`.
+- Forgetting to extend `actions.nextImage` to wrap on the last slide when autoplay is on — without that, autoplay stops at the end.
 
-**If running short:** Cut touch (last layer); leave continuous as a discussion-only walkthrough.
+**If running short:** Hardcode `state.transitionsSpeed` to a constant (e.g. 3000) and skip the `speed` attribute wiring. Keeps the callbacks/withScope lesson intact.
+
+---
+
+### Section 8 — Polish: Keyboard, Touch, Continuous
+
+**Goal:** Three additive enhancements as sub-stages. Each is self-contained and drop-friendly if running short. No new IAPI primitives — variations on §4–7 patterns.
+
+**Talking points:**
+- These three live together because none of them introduce a new IAPI concept. Each is a variation on something we've already seen.
+- Keyboard demonstrates `data-wp-on-document--<event>` — directives can target the document, not just the element they live on.
+- Touch demonstrates ephemeral per-instance scratch state (`ctx.swipe`) — context isn't just server-seeded values, it's also where the client stashes per-instance data.
+- Continuous is a great showcase of how a single block attribute can ripple through state, actions, and the initial server seed — the same context value gets read in four different places.
+- Drop policy: if pressed for time, do 8a (keyboard) only. It's the smallest and best-rewards-effort. 8c (continuous) is the touchiest because it modifies existing code in place.
+
+**Common sticking points:**
+- Swipe-direction sign errors in `onTouchEnd` — `clientX < swipe` means swiped left → next slide.
+- Forgetting the `wp_interactivity_state` seed update for `noPrevSlide` when continuous is enabled → flash of disabled prev button on first paint.
+- Mis-ordering the condition in `actions.nextImage` so continuous + non-last-slide doesn't increment.
+
+**If running short:** Demo continuous as a code walkthrough rather than having attendees type it. The two-line getter changes are easier to read than to write live.
 
 ---
 

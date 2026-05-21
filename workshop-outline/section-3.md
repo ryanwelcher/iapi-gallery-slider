@@ -16,4 +16,4 @@ Give attendees the mental model they need before writing code: how directives, c
 
 ## What's Next
 
-→ [Section 4 — Wiring Up Navigation](./section-4.md)
+→ [Section 4 — Hello, Store](./section-4.md)
