@@ -18,8 +18,7 @@
 		"[^.]*"
 	],
 	"dependencies": {
-		"@wordpress/interactivity": "^6.46.0",
-		"@wordpress/interactivity-router": "^2.46.0"
+		"@wordpress/interactivity": "^6.46.0"
 	},
 	"devDependencies": {
 		"@wordpress/scripts": "^32.2.0"

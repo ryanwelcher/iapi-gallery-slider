@@ -15,7 +15,7 @@ Use the `render_block_*` filter and `WP_HTML_Tag_Processor` to inject Interactiv
 
 ## Key concept: namespace inheritance
 
-Directives inherit the `data-wp-interactive` namespace from the nearest ancestor that declares one. Our wrapper in `render.php` already has `data-wp-interactive='iapi-gallery'`, so every descendant — including the inner Cover/Image/Media+Text blocks and anything we attach directives to inside them — resolves against `iapi-gallery` automatically. We only need to set `data-wp-interactive` again on a descendant when switching to a *different* namespace (e.g. the `iapi-gallery-router` store in section 7, referenced via the `namespace::action` form on a directive value).
+Directives inherit the `data-wp-interactive` namespace from the nearest ancestor that declares one. Our wrapper in `render.php` already has `data-wp-interactive='iapi-gallery'`, so every descendant — including the inner Cover/Image/Media+Text blocks and anything we attach directives to inside them — resolves against `iapi-gallery` automatically. We only need to set `data-wp-interactive` again on a descendant when switching to a *different* namespace.
 
 This is why the tag walk in step 2 only *counts* the inner blocks — it does not add `data-wp-interactive` to each one. That would be redundant and obscures how namespace scoping actually works.
 

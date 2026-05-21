@@ -45,7 +45,6 @@ Use `blueprint.local.json` to spin up an empty Studio site, then point Studio at
 
 - [Interactivity API docs](https://developer.wordpress.org/block-editor/reference-guides/interactivity-api/)
 - [@wordpress/interactivity package](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-interactivity/)
-- [@wordpress/interactivity-router package](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-interactivity-router/)
 - [Block Editor Handbook](https://developer.wordpress.org/block-editor/)
 - [WordPress Studio](https://developer.wordpress.com/studio/)
 
@@ -65,16 +64,13 @@ Use `blueprint.local.json` to spin up an empty Studio site, then point Studio at
      Section types: tour / coding / demo / hackathon.
      Only `coding` sections get a `code-reference/section-N/` snapshot. -->
 
-**Sections 1–6 are the core workshop.** Section 7 is bonus material — covered only if time permits.
-
-| Section | Title                                              | Type           | Code reference |
-| ------- | -------------------------------------------------- | -------------- | -------------- |
-| 1       | Welcome & Setup                                    | tour           | —              |
-| 2       | Anatomy of the Starter                             | tour           | —              |
-| 3       | Interactivity API Primer                           | demo           | —              |
-| 4       | Wiring Up Navigation                               | coding         | ✓              |
-| 5       | Server-Side: Injecting Directives                  | coding         | ✓              |
-| 6       | Enhancements: Autoplay, Keyboard, Touch, Continuous| coding         | ✓              |
-| 7       | Deep-Linkable Slides with the Interactivity Router | coding · bonus | ✓              |
+| Section | Title                                              | Type   | Code reference |
+| ------- | -------------------------------------------------- | ------ | -------------- |
+| 1       | Welcome & Setup                                    | tour   | —              |
+| 2       | Anatomy of the Starter                             | tour   | —              |
+| 3       | Interactivity API Primer                           | demo   | —              |
+| 4       | Wiring Up Navigation                               | coding | ✓              |
+| 5       | Server-Side: Injecting Directives                  | coding | ✓              |
+| 6       | Enhancements: Autoplay, Keyboard, Touch, Continuous| coding | ✓              |
 
 Let's go! → [Section 1](./workshop-outline/section-1.md)

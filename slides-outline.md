@@ -66,16 +66,9 @@
 
 ---
 
-## Section 7 — Deep-Linkable Slides with the Interactivity Router (bonus / optional)
-
-<!-- TODO. -->
-
----
-
 ## References
 
 - [Interactivity API docs](https://developer.wordpress.org/block-editor/reference-guides/interactivity-api/)
 - [@wordpress/interactivity package](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-interactivity/)
-- [@wordpress/interactivity-router package](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-interactivity-router/)
 - [Block Editor Handbook](https://developer.wordpress.org/block-editor/)
 - [WordPress Studio](https://developer.wordpress.com/studio/)

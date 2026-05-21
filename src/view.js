@@ -1,20 +1,7 @@
 /**
  * WordPress dependencies
  */
-import {
-	store,
-	getContext,
-	withScope,
-} from '@wordpress/interactivity';
-
-// Register the router store (separate namespace, separate concern).
-import './router';
-
-const slideHref = ( slide ) => {
-	const url = new URL( window.location.href );
-	url.searchParams.set( 'slide', String( slide ) );
-	return url.toString();
-};
+import { store, getContext, withScope } from '@wordpress/interactivity';
 
 const { state, actions } = store( 'iapi-gallery', {
 	state: {
@@ -44,37 +31,26 @@ const { state, actions } = store( 'iapi-gallery', {
 			const ctx = getContext();
 			return Number( ctx.speed ) * 1000;
 		},
-		shareCopied: false,
 	},
 	actions: {
 		prevImage: () => {
 			const ctx = getContext();
-			let next = ctx.currentSlide - 1;
-			if ( ctx.continuous && next < 1 ) {
-				next = ctx.totalSlides;
-			}
-			if ( next < 1 ) {
+			if ( ctx.continuous && ctx.currentSlide === 1 ) {
+				ctx.currentSlide = ctx.totalSlides;
 				return;
 			}
-			state.firstPaint = false;
-			ctx.currentSlide = next;
-			window.history.pushState( {}, '', slideHref( next ) );
+			ctx.currentSlide--;
 		},
 		nextImage: () => {
 			const ctx = getContext();
-			let next = ctx.currentSlide + 1;
 			if (
 				( ctx.continuous || ctx.autoplay ) &&
-				next > ctx.totalSlides
+				ctx.currentSlide === ctx.totalSlides
 			) {
-				next = 1;
-			}
-			if ( next > ctx.totalSlides ) {
+				ctx.currentSlide = 1;
 				return;
 			}
-			state.firstPaint = false;
-			ctx.currentSlide = next;
-			window.history.pushState( {}, '', slideHref( next ) );
+			ctx.currentSlide++;
 		},
 		onKeyDown: ( e ) => {
 			switch ( e.key ) {
@@ -108,50 +84,20 @@ const { state, actions } = store( 'iapi-gallery', {
 				}
 			}
 		},
-		*shareSlide() {
-			try {
-				yield navigator.clipboard.writeText( window.location.href );
-				state.shareCopied = true;
-				setTimeout(
-					withScope( () => {
-						state.shareCopied = false;
-					} ),
-					1500
-				);
-			} catch {}
-		},
 	},
 	callbacks: {
 		initSlideShow: () => {
 			const ctx = getContext();
-
-			// Sync slide to URL on browser back/forward.
-			const onPop = withScope( () => {
-				const url = new URL( window.location.href );
-				const requested = Number( url.searchParams.get( 'slide' ) ) || 1;
-				ctx.currentSlide = Math.max(
-					1,
-					Math.min( ctx.totalSlides, requested )
-				);
-			} );
-			window.addEventListener( 'popstate', onPop );
-
-			let int;
 			if ( ctx.autoplay ) {
-				int = setInterval(
+				const int = setInterval(
 					withScope( () => {
 						actions.nextImage();
 					} ),
 					state.transitionsSpeed
 				);
+				// The returned function runs when the element is removed.
+				return () => clearInterval( int );
 			}
-
-			return () => {
-				window.removeEventListener( 'popstate', onPop );
-				if ( int ) {
-					clearInterval( int );
-				}
-			};
 		},
 	},
 } );

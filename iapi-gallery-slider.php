@@ -36,27 +36,20 @@ add_action( 'init', 'iapi_gallery_slider_iapi_gallery_slider_block_init' );
  */
 function add_directives_to_inner_blocks( $block_content, $block ) {
 	$allowed_blocks = array( 'wp-block-cover', 'wp-block-image', 'wp-block-media-text' );
-	$tags           = new \WP_HTML_Tag_Processor( $block_content );
+	$slides         = new \WP_HTML_Tag_Processor( $block_content );
 	$total_slides   = 0;
-	$found_container = false;
 
-	// Walk the markup once: bookmark the wrapper, count inner slide blocks,
-	// and bookmark the .slider-container for later.
-	//
-	// Note: we do NOT set data-wp-interactive on the inner blocks. The wrapper
-	// already declares the namespace and descendants inherit it, so any
-	// data-wp-* directive on (or added to) an inner block would resolve
+	// Get the main element.
+	$slides->next_tag( array( 'class_name' => 'wp-block-block-developer-cookbook-iapi-gallery-slider' ) );
+	// Set a bookmark so we can go back and update the context after counting the slides.
+	$slides->set_bookmark( 'main' );
+
+	// Count the inner slide blocks. We do NOT set data-wp-interactive on them:
+	// the wrapper already declares the `iapi-gallery` namespace and descendants
+	// inherit it, so any directive on (or added to) an inner block resolves
 	// against `iapi-gallery` automatically.
-	$tags->next_tag( array( 'class_name' => 'wp-block-block-developer-cookbook-iapi-gallery-slider' ) );
-	$tags->set_bookmark( 'main' );
-
-	while ( $tags->next_tag() ) {
-		foreach ( $tags->class_list() as $class_name ) {
-			if ( 'slider-container' === $class_name && ! $found_container ) {
-				$tags->set_bookmark( 'container' );
-				$found_container = true;
-				continue;
-			}
+	while ( $slides->next_tag() ) {
+		foreach ( $slides->class_list() as $class_name ) {
 			if ( in_array( $class_name, $allowed_blocks, true ) ) {
 				$total_slides++;
 				break;
@@ -64,45 +57,38 @@ function add_directives_to_inner_blocks( $block_content, $block ) {
 		}
 	}
 
-	// Resolve the active slide from the ?slide= query param. Clamped to range.
-	$requested_slide = isset( $_GET['slide'] ) ? absint( wp_unslash( $_GET['slide'] ) ) : 1;
-	$current_slide   = min( max( 1, $total_slides ), max( 1, $requested_slide ) );
+	// Go to the bookmark and release it.
+	$slides->seek( 'main' );
+	$slides->release_bookmark( 'main' );
 
-	$context = array(
-		'autoplay'     => $block['attrs']['autoplay'] ?? false,
-		'continuous'   => $block['attrs']['continuous'] ?? false,
-		'speed'        => $block['attrs']['speed'] ?? '3',
-		'currentSlide' => $current_slide,
-		'totalSlides'  => $total_slides,
+
+	// Generate the context for the slider block.
+	$context = array_merge(
+		array(
+			'autoplay'   => $block['attrs']['autoplay'] ?? false,
+			'continuous' => $block['attrs']['continuous'] ?? false,
+			'speed'      => $block['attrs']['speed'] ?? '3',
+		),
+		array(
+			'currentSlide' => 1,
+			'totalSlides'  => $total_slides,
+		)
 	);
 
-	// Seed global state so the very first paint (before JS hydrates) matches
-	// what the client-side getters will produce. firstPaint suppresses the
-	// CSS transition during hydration; it's flipped to false on first click.
+	// Define some global state for all instances based on attributes.
+	// These will be updated by the appropriate getters but this will avoid the content flash in the client
 	wp_interactivity_state(
 		'iapi-gallery',
 		array(
 			'noPrevSlide' => ! $context['continuous'],
-			'imageIndex'  => "{$context['currentSlide']}/{$context['totalSlides']}",
-			'firstPaint'  => true,
+			'imageIndex'  => "{$context['currentSlide']}/{$context['totalSlides']}"
 		)
 	);
 
-	// Attach context to the wrapper. Tag Processor handles attribute escaping.
-	$tags->seek( 'main' );
-	$tags->set_attribute( 'data-wp-context', wp_json_encode( $context ) );
-
-	// Inline the initial transform on .slider-container so its rendered
-	// position matches data-wp-style--transform on hydration.
-	if ( $found_container ) {
-		$tags->seek( 'container' );
-		$offset = ( $current_slide - 1 ) * 100;
-		$tags->set_attribute( 'style', "transform: translateX(-{$offset}%)" );
-		$tags->add_class( 'no-transition' );
-		$tags->release_bookmark( 'container' );
-	}
-	$tags->release_bookmark( 'main' );
-
-	return $tags->get_updated_html();
+	// The Tag Processor handles HTML attribute escaping, so plain JSON is fine.
+	$slides->set_attribute( 'data-wp-context', wp_json_encode( $context ) );
+	// Update the HTML.
+	$block_content = $slides->get_updated_html();
+	return $block_content;
 }
 add_filter( 'render_block_block-developer-cookbook/iapi-gallery-slider', 'add_directives_to_inner_blocks', 10, 2 );
