@@ -1,83 +1,78 @@
-# Section 8 — Polish: Keyboard, Touch, Continuous
+# Section 8 — Autoplay
 
 **Type:** coding
 
 ## Goal
 
-Three additive enhancements that each reuse patterns from §4–7 — no new IAPI primitives. The slider's finish line is here: arrow keys navigate, swipe navigates on touch devices, and continuous mode wraps prev/next around the ends.
+Make the slider advance automatically when the "Autoplay" inspector toggle is on, at the speed the editor chose. When autoplay turns off (or the slider leaves the DOM), the interval cleans itself up — no leaked timers.
 
-This is our last coding section. Now that we know `state`, `actions`, `callbacks`, and the server-side filter, the three sub-stages below are variations on what we've already built:
+This is the section where `callbacks` enter the picture. They're the third slot in the store, distinct from `state` and `actions`. They run at element lifecycle moments rather than DOM events.
 
-- **Keyboard** is the smallest enhancement — one new action, one new directive on the wrapper.
-- **Touch** is a variation on the same action pattern, with two events instead of one.
-- **Continuous** doesn't add new directives at all — it modifies existing actions/getters in place to wrap around the ends.
+## Concepts introduced
 
-## Sub-stage 8a — Keyboard
+- `callbacks` — the lifecycle slot on the store.
+- `data-wp-init` — fires its callback when the element is initialized.
+- `withScope` — wraps a callback so it can read state/context and call actions even when invoked outside the Interactivity scope (a `setInterval` tick is a classic example).
+- **Cleanup functions** — returning a function from a callback registers cleanup; Interactivity calls it when the element is removed from the DOM.
+- **Attribute-driven context** — pulling block attributes (`autoplay`, `speed`) into context via the render filter so the client store can read them through `getContext()`.
+- Destructuring `const { state, actions } = store(…)` so callbacks can call actions on the returned reference.
 
-1. In `src/view.js`, add to the `actions` block:
-   ```js
-   onKeyDown: ( e ) => {
-       switch ( e.key ) {
-           case 'ArrowLeft':
-               if ( ! state.noPrevSlide ) actions.prevImage();
-               break;
-           case 'ArrowRight':
-               if ( ! state.noNextSlide ) actions.nextImage();
-               break;
-       }
-   },
+## Steps
+
+1. In `iapi-gallery-slider.php`, expand the `$context` array from §7:
+   ```php
+   $context = array_merge(
+       array(
+           'autoplay' => $block['attrs']['autoplay'] ?? false,
+           'speed'    => $block['attrs']['speed'] ?? '3',
+       ),
+       array(
+           'currentSlide' => 1,
+           'totalSlides'  => $total_slides,
+       )
+   );
    ```
-2. In `src/render.php`, add `data-wp-on-document--keydown="actions.onKeyDown"` to the wrapper.
-
-**Verify:** arrow keys navigate the slider; they no-op at the ends (gated by `state.noPrev/noNextSlide`).
-
-## Sub-stage 8b — Touch
-
-1. In `src/view.js`, add to the `actions` block:
-   ```js
-   onTouchStart: ( e ) => {
-       const ctx = getContext();
-       ctx.swipe = e.changedTouches[ 0 ].clientX;
-   },
-   onTouchEnd: ( e ) => {
-       const { swipe } = getContext();
-       if ( e.changedTouches[ 0 ].clientX < swipe ) {
-           if ( ! state.noNextSlide ) actions.nextImage();
-       } else if ( ! state.noPrevSlide ) {
-           actions.prevImage();
-       }
-   },
-   ```
-   Note that `ctx.swipe` is *ephemeral* per-instance state — it lives in context because that's where per-instance scratch data goes; we never seed it from the server.
-2. In `src/render.php`, on the `.slider-container`, add `data-wp-on--touchstart="actions.onTouchStart"` and `data-wp-on--touchend="actions.onTouchEnd"`.
-
-**Verify:** in Chrome devtools touch emulation, swiping left/right changes slides.
-
-## Sub-stage 8c — Continuous
-
-1. In `iapi-gallery-slider.php`, add `'continuous' => $block['attrs']['continuous'] ?? false` to the `array_merge` context. Update the `wp_interactivity_state` seed so `'noPrevSlide' => ! $context['continuous']` (when continuous is on, the prev button is enabled from first paint).
 2. In `src/view.js`:
-   - `state.noPrevSlide` and `state.noNextSlide` early-return `false` when `ctx.continuous`:
+   - Add `withScope` to the `@wordpress/interactivity` import.
+   - Change `store( … )` to `const { state, actions } = store( … )`. We need that reference for the callback below.
+   - Add a `transitionsSpeed` state getter: `Number( ctx.speed ) * 1000`.
+   - Update `actions.nextImage` so it wraps when autoplay reaches the end:
      ```js
-     if ( ctx.continuous ) return false;
-     ```
-   - `actions.prevImage` wraps when continuous:
-     ```js
-     if ( ctx.continuous && ctx.currentSlide === 1 ) {
-         ctx.currentSlide = ctx.totalSlides;
+     if ( ctx.autoplay && ctx.currentSlide === ctx.totalSlides ) {
+         ctx.currentSlide = 1;
          return;
      }
      ```
-   - Broaden the existing `actions.nextImage` wrap condition from `ctx.autoplay` to `( ctx.continuous || ctx.autoplay )`.
+   - Add `callbacks.initSlideShow`:
+     ```js
+     callbacks: {
+         initSlideShow: () => {
+             const ctx = getContext();
+             if ( ! ctx.autoplay ) {
+                 return;
+             }
+             const int = setInterval(
+                 withScope( () => {
+                     actions.nextImage();
+                 } ),
+                 state.transitionsSpeed
+             );
+             return () => clearInterval( int );
+         },
+     },
+     ```
+3. In `src/render.php`, add `data-wp-init="callbacks.initSlideShow"` to the wrapper.
 
-**Verify:** toggle Continuous on, click prev from slide 1 → jumps to the last slide; click next from the last → jumps to 1. Buttons stay enabled. Autoplay still works alongside continuous.
+## Verification
+
+- Insert the slider, toggle Autoplay on with speed `2`, save, view the post. Slider advances every 2s and loops at the end.
+- Toggle Autoplay off, save, reload — slider stops; manual buttons still work, and the next button still disables at the last slide.
+- Open devtools, click around, navigate away from the post. No console warnings about leaked timers.
 
 ## Code reference
 
 End-of-section snapshot lives in `code-reference/section-8/`.
 
-## Wrap-up
+## What's Next
 
-This is the finish line. The slider is complete: server-rendered with directives, navigable by click / keyboard / touch, optionally autoplaying, optionally continuous. The interactive layer is roughly 100 lines of `view.js` and a ~40-line render filter — small for what it does.
-
-→ Return to [README](../README.md).
+→ [Section 9 — Polish: Keyboard, Touch, Continuous](./section-9.md)

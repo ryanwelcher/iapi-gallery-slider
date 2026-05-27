@@ -1,41 +1,49 @@
-# Section 5 — Sliding + Bounds
+# Section 5 — Hello, Store
 
 **Type:** coding
 
 ## Goal
 
-Make the slider actually slide, and stop us from going past either end. Both prev and next buttons work; the buttons gray out at the ends; the counter shows "X/3" instead of just "X". Still using a hardcoded `totalSlides: 3`.
+Get the smallest possible Interactivity API round-trip working: a directive on HTML reads from context, a button click mutates context, and the page re-renders. Everything in sections 6–9 sits on top of this loop, so we land it cleanly first before stacking more concepts.
 
-This section is where `state` enters the picture — distinct from `context`. Context is per-instance data; state is derived/computed values shared across instances of the store.
+By the end of this section, clicking the next button bumps a counter displayed on the page from 1 → 2 → 3 → 4 → … (no upper bound yet — we'll fix that in §6). The slides themselves do *not* visibly move yet either — we haven't told the page how to *react* visually. That's coming in §6.
 
 ## Concepts introduced
 
-- `state` — getters on the store that compute values from context.
-- `data-wp-style--transform` — binds a CSS transform to a state value (one of many `data-wp-style--<property>` forms).
-- `data-wp-bind--disabled` — binds an HTML attribute (here, the disabled property of a button) to a state value.
-- Why disable logic belongs in `state` not `context`: it's *derived* from other context values, so it lives where computed values live.
+- The `store()` shape — `state`, `actions`, `callbacks` (we only fill `actions` this section).
+- `data-wp-interactive` — sets the namespace once on the wrapper; descendants inherit (we'll come back to inheritance in §7).
+- `data-wp-context` — seeded from the server with `wp_interactivity_data_wp_context()`.
+- `data-wp-on--click` — wires a DOM event to a store action.
+- `data-wp-text` — binds the text content of an element to a value.
+- `getContext()` and mutating context inside an action (`ctx.currentSlide++`).
 
 ## Steps
 
-1. In `src/view.js`, fill in `state` with four getters:
-   - `noPrevSlide` — `ctx.currentSlide === 1`
-   - `noNextSlide` — `ctx.currentSlide === ctx.totalSlides`
-   - `currentPos` — `` `translateX(-${ ( ctx.currentSlide - 1 ) * 100 }%)` ``
-   - `imageIndex` — `` `${ ctx.currentSlide }/${ ctx.totalSlides }` ``
-2. Add `actions.prevImage` that decrements `ctx.currentSlide`.
-3. In `src/render.php`:
-   - Add `data-wp-style--transform="state.currentPos"` on `.slider-container`.
-   - Wire prev button: `data-wp-on--click="actions.prevImage"`.
-   - Add `data-wp-bind--disabled="state.noPrevSlide"` to the prev button and `data-wp-bind--disabled="state.noNextSlide"` to the next button.
-   - Change the counter to `data-wp-text="state.imageIndex"`. Notice the shift: we used to read `context.currentSlide` directly; now we read derived state.
-4. Reload and test.
+1. In `src/render.php`, define a hardcoded `$context = array( 'currentSlide' => 1, 'totalSlides' => 3 )` and emit it on the wrapper via `<?php echo wp_interactivity_data_wp_context( $context ); ?>`. The wrapper already has `data-wp-interactive='iapi-gallery'`.
+2. Change the counter `<p>` to `<p data-wp-text="context.currentSlide"></p>`. Reload — it should render `1`.
+3. Wire only the next button: `<button data-wp-on--click="actions.nextImage" …>`. Leave the prev button without a handler for now.
+4. In `src/view.js`, create the store shell:
+   ```js
+   import { store, getContext } from '@wordpress/interactivity';
+
+   store( 'iapi-gallery', {
+       state: {},
+       actions: {
+           nextImage: () => {
+               const ctx = getContext();
+               ctx.currentSlide++;
+           },
+       },
+   } );
+   ```
+5. `npm run start` if you haven't already. Reload the post. Clicking next should bump the counter.
 
 ## Verification
 
-- The three slides visibly slide left/right when you click.
-- Prev button is disabled on slide 1; next button is disabled on slide 3.
-- Counter reads X/3.
-- Add a 4th cover/image block in the editor → save → reload. Counter still says X/3 and you can't reach the 4th slide. That's the §6 bug.
+- Counter renders "1" on first paint (no flash).
+- Clicking next bumps it to 2, 3, 4 — and keeps going past 3. That's expected; §6 adds the disable logic.
+- Prev button is inert.
+- No console errors.
 
 ## Code reference
 
@@ -43,4 +51,4 @@ End-of-section snapshot lives in `code-reference/section-5/`.
 
 ## What's Next
 
-→ [Section 6 — Server-Side Directive Injection](./section-6.md)
+→ [Section 6 — Sliding + Bounds](./section-6.md)

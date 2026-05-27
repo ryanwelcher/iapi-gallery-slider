@@ -60,15 +60,16 @@ A WordPress block called **Gallery Slider** that turns any group of inner blocks
 
 ## Structure
 
-| Section | Title                                          | Type   | Code reference |
-| ------- | ---------------------------------------------- | ------ | -------------- |
-| 1       | Welcome & Setup                                | tour   | —              |
-| 2       | Anatomy of the Starter                         | tour   | —              |
-| 3       | Interactivity API Primer                       | demo   | —              |
-| 4       | Hello, Store                                   | coding | ✓              |
-| 5       | Sliding + Bounds                               | coding | ✓              |
-| 6       | Server-Side Directive Injection                | coding | ✓              |
-| 7       | Autoplay                                       | coding | ✓              |
-| 8       | Polish: Keyboard, Touch, Continuous            | coding | ✓              |
+| Section | Title                                          | Type    | Code reference |
+| ------- | ---------------------------------------------- | ------- | -------------- |
+| 1       | Welcome & Setup                                | tour    | —              |
+| 2       | Anatomy of the Starter                         | tour    | —              |
+| 3       | Editor Controls                                | coding  | ✓              |
+| 4       | Interactivity API Primer                       | reading | —              |
+| 5       | Hello, Store                                   | coding  | ✓              |
+| 6       | Sliding + Bounds                               | coding  | ✓              |
+| 7       | Server-Side Directive Injection                | coding  | ✓              |
+| 8       | Autoplay                                       | coding  | ✓              |
+| 9       | Polish: Keyboard, Touch, Continuous            | coding  | ✓              |
 
 Let's go! → [Section 1](./workshop-outline/section-1.md)

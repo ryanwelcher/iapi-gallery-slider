@@ -8,9 +8,17 @@
  *     $block (WP_Block): The block instance.
  */
 
+// Still hardcoded in section 5. Section 6 replaces this with a server-side
+// filter that walks the inner blocks and counts them dynamically.
+$context = array(
+	'currentSlide' => 1,
+	'totalSlides'  => 3,
+);
+
 ?>
 <div <?php echo wp_kses_data( get_block_wrapper_attributes() ); ?>
 	data-wp-interactive='iapi-gallery'
+	<?php echo wp_interactivity_data_wp_context( $context ); ?>
 >
 	<div
 		class="slider-container"

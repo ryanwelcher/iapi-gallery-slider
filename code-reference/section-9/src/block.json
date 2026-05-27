@@ -13,6 +13,20 @@
 		"align": true,
 		"alignWide": true
 	},
+	"attributes": {
+		"continuous": {
+			"type": "boolean",
+			"default": false
+		},
+		"autoplay": {
+			"type": "boolean",
+			"default": false
+		},
+		"speed": {
+			"type": "string",
+			"default": "3"
+		}
+	},
 	"textdomain": "iapi-gallery-slider",
 	"editorScript": "file:./index.js",
 	"editorStyle": "file:./index.css",

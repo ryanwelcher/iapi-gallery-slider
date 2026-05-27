@@ -69,14 +69,13 @@ function add_directives_to_inner_blocks( $block_content, $block ) {
 	$slides->seek( 'main' );
 	$slides->release_bookmark( 'main' );
 
-	// Merge every block attribute the client needs to read at runtime into
-	// the per-instance context. Continuous joins autoplay/speed in this
-	// section so wrap-around mode is driven by an editor toggle.
+	// Merge block attributes the client needs to read at runtime into the
+	// per-instance context. Autoplay and speed both drive the new
+	// callbacks.initSlideShow lifecycle we're adding this section.
 	$context = array_merge(
 		array(
-			'autoplay'   => $block['attrs']['autoplay'] ?? false,
-			'continuous' => $block['attrs']['continuous'] ?? false,
-			'speed'      => $block['attrs']['speed'] ?? '3',
+			'autoplay' => $block['attrs']['autoplay'] ?? false,
+			'speed'    => $block['attrs']['speed'] ?? '3',
 		),
 		array(
 			'currentSlide' => 1,
@@ -84,13 +83,12 @@ function add_directives_to_inner_blocks( $block_content, $block ) {
 		)
 	);
 
-	// Seed initial global state to match what the client getters would
-	// compute. Continuous mode keeps both ends navigable from first paint,
-	// so noPrevSlide tracks the inverse of the continuous flag.
+	// Seed initial global state to match what the client getters would compute,
+	// so the first paint has the correct disabled button and counter — no flash.
 	wp_interactivity_state(
 		'iapi-gallery',
 		array(
-			'noPrevSlide' => ! $context['continuous'],
+			'noPrevSlide' => true,
 			'imageIndex'  => "{$context['currentSlide']}/{$context['totalSlides']}",
 		)
 	);

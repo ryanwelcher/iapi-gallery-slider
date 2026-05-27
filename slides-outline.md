@@ -42,37 +42,43 @@
 
 ---
 
-## Section 3 — Interactivity API Primer
+## Section 3 — Editor Controls
 
 <!-- TODO. -->
 
 ---
 
-## Section 4 — Hello, Store
+## Section 4 — Interactivity API Primer
 
 <!-- TODO. -->
 
 ---
 
-## Section 5 — Sliding + Bounds
+## Section 5 — Hello, Store
 
 <!-- TODO. -->
 
 ---
 
-## Section 6 — Server-Side Directive Injection
+## Section 6 — Sliding + Bounds
 
 <!-- TODO. -->
 
 ---
 
-## Section 7 — Autoplay
+## Section 7 — Server-Side Directive Injection
 
 <!-- TODO. -->
 
 ---
 
-## Section 8 — Polish: Keyboard, Touch, Continuous
+## Section 8 — Autoplay
+
+<!-- TODO. -->
+
+---
+
+## Section 9 — Polish: Keyboard, Touch, Continuous
 
 <!-- TODO. -->
 

@@ -12,13 +12,10 @@
 <div <?php echo wp_kses_data( get_block_wrapper_attributes() ); ?>
 	data-wp-interactive='iapi-gallery'
 	data-wp-init="callbacks.initSlideShow"
-	data-wp-on-document--keydown="actions.onKeyDown"
 >
 	<div
 		class="slider-container"
 		data-wp-style--transform="state.currentPos"
-		data-wp-on--touchstart="actions.onTouchStart"
-		data-wp-on--touchend="actions.onTouchEnd"
 	>
 		<?php echo wp_kses_post( $content ); ?>
 	</div>

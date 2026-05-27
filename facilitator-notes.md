@@ -25,12 +25,13 @@
 | ------- | ---------------------------------------------- | ----------- | ---------- |
 | 1       | Welcome & Setup                                | TBD         | TBD        |
 | 2       | Anatomy of the Starter                         | TBD         | TBD        |
-| 3       | Interactivity API Primer                       | TBD         | TBD        |
-| 4       | Hello, Store                                   | TBD         | TBD        |
-| 5       | Sliding + Bounds                               | TBD         | TBD        |
-| 6       | Server-Side Directive Injection                | TBD         | TBD        |
-| 7       | Autoplay                                       | TBD         | TBD        |
-| 8       | Polish: Keyboard, Touch, Continuous            | TBD         | TBD        |
+| 3       | Editor Controls                                | TBD         | TBD        |
+| 4       | Interactivity API Primer                       | TBD         | TBD        |
+| 5       | Hello, Store                                   | TBD         | TBD        |
+| 6       | Sliding + Bounds                               | TBD         | TBD        |
+| 7       | Server-Side Directive Injection                | TBD         | TBD        |
+| 8       | Autoplay                                       | TBD         | TBD        |
+| 9       | Polish: Keyboard, Touch, Continuous            | TBD         | TBD        |
 
 ---
 
@@ -68,12 +69,34 @@
 
 ---
 
-### Section 3 — Interactivity API Primer
+### Section 3 — Editor Controls
+
+**Goal:** Learner builds `src/edit.js` from a near-empty stub up to the full editor preview + InspectorControls panel. No IAPI in this section — just block editor APIs.
+
+**Talking points:**
+- `useBlockProps` is the bridge between our component and the editor — without it WordPress doesn't recognize the wrapper as the block root.
+- `allowedBlocks` on `useInnerBlocksProps` is the contract that keeps the slider sane; the IAPI render filter in §7 will rely on those same class names (`wp-block-cover`, `wp-block-image`, `wp-block-media-text`) to count slides.
+- `__experimentalNumberControl` — the `__experimental` prefix is its current public import path; we're not doing anything risky by using it.
+- Conditional rendering: showing **Slide Duration** only when **Autoplay** is on keeps the inspector tidy and previews how attribute-driven UI works.
+- The `data-wp-text` on the editor counter is dormant — IAPI doesn't run in the editor, so this is just a literal attribute. We keep it for parity with the front-end markup we'll build in §6.
+
+**Common sticking points:**
+- Forgetting `useBlockProps` → block doesn't register / wrapper missing block-editor classes.
+- Spreading `blockProps` onto something other than the outer element.
+- Trying to mutate `attributes` directly instead of using `setAttributes( { key: value } )`.
+- Mixing up imports: `InspectorControls` is from `@wordpress/block-editor`, but `PanelBody`/`ToggleControl`/`NumberControl` are from `@wordpress/components`.
+- Using `NumberControl` without the `__experimentalNumberControl as NumberControl` alias.
+
+**If running short:** Skip the conditional `NumberControl` rendering — always show it. Or drop the Continuous toggle entirely and add it back when §9c needs it. Either trims a couple of minutes without losing the InspectorControls teaching beat.
+
+---
+
+### Section 4 — Interactivity API Primer
 
 **Goal:** Mental model for directives, store shape, and server-side state seeding.
 
 **Facilitator actions (not in learner outline):**
-- Run a live minimal-example demo before attendees write any code themselves — the learner-facing §3 is concept reading only, so the demo is yours to add in person.
+- Run a live minimal-example demo before attendees write any code themselves — the learner-facing §4 is concept reading only, so the demo is yours to add in person.
 
 **Talking points:**
 - TBD
@@ -85,25 +108,25 @@
 
 ---
 
-### Section 4 — Hello, Store
+### Section 5 — Hello, Store
 
 **Goal:** Smallest IAPI round-trip working end-to-end. A button click mutates context; a `data-wp-text` reflects it. No visible sliding yet.
 
 **Talking points:**
 - This is the loop every other section sits on top of: directive reads context, action mutates context, DOM re-renders.
-- `data-wp-interactive` on the wrapper sets the *namespace* for everything inside. Mention "we set it once" — full payoff lands in §6.
-- Why we don't add `data-wp-style--transform` yet: the lesson is that data changing doesn't automatically mean the page reacts visually. That separation lands cleanly in §5.
+- `data-wp-interactive` on the wrapper sets the *namespace* for everything inside. Mention "we set it once" — full payoff lands in §7.
+- Why we don't add `data-wp-style--transform` yet: the lesson is that data changing doesn't automatically mean the page reacts visually. That separation lands cleanly in §6.
 
 **Common sticking points:**
 - Forgetting `data-wp-interactive` on the wrapper → directives silently no-op.
 - Mutating `state` instead of `context` from inside an action — `state` getters are read-only computed values.
 - `wp_interactivity_data_wp_context()` vs writing `data-wp-context='...'` by hand. The helper handles escaping for you.
 
-**If running short:** Skip the "no upper bound" reveal at the end of §4 and just transition into §5 immediately.
+**If running short:** Skip the "no upper bound" reveal at the end of §5 and just transition into §6 immediately.
 
 ---
 
-### Section 5 — Sliding + Bounds
+### Section 6 — Sliding + Bounds
 
 **Goal:** Slider visibly slides; prev/next disable at ends; counter switches to derived state.
 
@@ -121,7 +144,7 @@
 
 ---
 
-### Section 6 — Server-Side Directive Injection
+### Section 7 — Server-Side Directive Injection
 
 **Goal:** Render filter walks inner blocks, counts them, seeds context. Then `wp_interactivity_state()` kills the first-paint flash. Namespace inheritance lands as the headline mental model.
 
@@ -140,7 +163,7 @@
 
 ---
 
-### Section 7 — Autoplay
+### Section 8 — Autoplay
 
 **Goal:** Autoplay toggle drives `setInterval` via a `callbacks.initSlideShow` lifecycle. Cleanup function returns from the callback. `withScope` enters the picture.
 
@@ -161,9 +184,9 @@
 
 ---
 
-### Section 8 — Polish: Keyboard, Touch, Continuous
+### Section 9 — Polish: Keyboard, Touch, Continuous
 
-**Goal:** Three additive enhancements as sub-stages. Each is self-contained and drop-friendly if running short. No new IAPI primitives — variations on §4–7 patterns.
+**Goal:** Three additive enhancements as sub-stages. Each is self-contained and drop-friendly if running short. No new IAPI primitives — variations on §5–8 patterns.
 
 **Talking points:**
 - These three live together because none of them introduce a new IAPI concept. Each is a variation on something we've already seen.
