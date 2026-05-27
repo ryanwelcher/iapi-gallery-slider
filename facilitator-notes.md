@@ -40,6 +40,10 @@
 
 **Goal:** Confirm everyone has a working Studio site, demo the finished product, set pacing expectations.
 
+**Facilitator actions (not in learner outline):**
+- Demo the finished slider on your machine before attendees start building — they're only told to set up their environment.
+- Walk through the day's structure and pacing out loud.
+
 **Talking points:**
 - TBD
 
@@ -67,6 +71,9 @@
 ### Section 3 — Interactivity API Primer
 
 **Goal:** Mental model for directives, store shape, and server-side state seeding.
+
+**Facilitator actions (not in learner outline):**
+- Run a live minimal-example demo before attendees write any code themselves — the learner-facing §3 is concept reading only, so the demo is yours to add in person.
 
 **Talking points:**
 - TBD

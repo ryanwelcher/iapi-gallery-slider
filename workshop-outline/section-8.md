@@ -4,17 +4,13 @@
 
 ## Goal
 
-Three additive enhancements that each reuse patterns from §4–7 — no new IAPI primitives. Group them so attendees who fall behind on one still land on the next. The slider's finish line is here: arrow keys navigate, swipe navigates on touch devices, and continuous mode wraps prev/next around the ends.
+Three additive enhancements that each reuse patterns from §4–7 — no new IAPI primitives. The slider's finish line is here: arrow keys navigate, swipe navigates on touch devices, and continuous mode wraps prev/next around the ends.
 
-This is the workshop's last coding section.
-
-## Why these three together
+This is our last coding section. Now that we know `state`, `actions`, `callbacks`, and the server-side filter, the three sub-stages below are variations on what we've already built:
 
 - **Keyboard** is the smallest enhancement — one new action, one new directive on the wrapper.
 - **Touch** is a variation on the same action pattern, with two events instead of one.
 - **Continuous** doesn't add new directives at all — it modifies existing actions/getters in place to wrap around the ends.
-
-None of these introduce a new IAPI concept, so they fit naturally in one section. The teaching beat is "now that you know `state`, `actions`, `callbacks`, and the server-side filter, here's what variations on those look like."
 
 ## Sub-stage 8a — Keyboard
 

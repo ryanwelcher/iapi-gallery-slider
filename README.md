@@ -52,17 +52,13 @@ Use `blueprint.local.json` to spin up an empty Studio site, then point Studio at
 
 ## Welcome!
 
-<!-- TODO: short welcome paragraph — duration, structure, pace. -->
+This is a self-guided walkthrough. Each section lives in [`workshop-outline/`](./workshop-outline/) and links to the next, so we can move at our own pace. Coding sections include an end-of-section snapshot under `code-reference/section-N/` — if we get stuck or fall behind, we can copy that snapshot over `src/` and pick up at the next section.
 
 ## What Are We Building?
 
-<!-- TODO: describe the end product the audience will have built. -->
+A WordPress block called **Gallery Slider** that turns any group of inner blocks (Image, Cover, Media & Text) into an interactive slider — clickable prev/next buttons, an optional autoplay with a configurable speed, optional continuous looping, plus keyboard and touch navigation. By the end we'll have built it from a static starter into a fully interactive block using nothing but the Interactivity API.
 
 ## Structure
-
-<!-- TODO: declare your sections, then update this table.
-     Section types: tour / coding / demo / hackathon.
-     Only `coding` sections get a `code-reference/section-N/` snapshot. -->
 
 | Section | Title                                          | Type   | Code reference |
 | ------- | ---------------------------------------------- | ------ | -------------- |

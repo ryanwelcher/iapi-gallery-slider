@@ -6,12 +6,12 @@
 
 Get the smallest possible Interactivity API round-trip working: a directive on HTML reads from context, a button click mutates context, and the page re-renders. Everything in sections 5–8 sits on top of this loop, so we land it cleanly first before stacking more concepts.
 
-By the end of this section, clicking the next button bumps a counter displayed on the page from 1 → 2 → 3 → 4 → … (no upper bound yet — that's the bug §5 fixes). The slides themselves do *not* visibly move — we haven't told the page how to *react* visually yet. That's deliberate; it's the §5 lesson.
+By the end of this section, clicking the next button bumps a counter displayed on the page from 1 → 2 → 3 → 4 → … (no upper bound yet — we'll fix that in §5). The slides themselves do *not* visibly move yet either — we haven't told the page how to *react* visually. That's coming in §5.
 
 ## Concepts introduced
 
 - The `store()` shape — `state`, `actions`, `callbacks` (we only fill `actions` this section).
-- `data-wp-interactive` — sets the namespace once on the wrapper; descendants inherit (preview of the §6 inheritance teaching).
+- `data-wp-interactive` — sets the namespace once on the wrapper; descendants inherit (we'll come back to inheritance in §6).
 - `data-wp-context` — seeded from the server with `wp_interactivity_data_wp_context()`.
 - `data-wp-on--click` — wires a DOM event to a store action.
 - `data-wp-text` — binds the text content of an element to a value.

@@ -1,18 +1,19 @@
 # Section 3 — Interactivity API Primer
 
-**Type:** demo
+**Type:** reading
 
 ## Goal
 
-Give attendees the mental model they need before writing code: how directives, context, state, actions, and callbacks fit together, and how the server seeds initial state.
+Build up the mental model we'll need before writing code: how directives, context, state, actions, and callbacks fit together, and how the server seeds initial state.
 
-## Steps
+## Concepts
 
-1. Directives at a glance: `data-wp-interactive`, `data-wp-context`, `data-wp-bind`, `data-wp-on`, `data-wp-class`, `data-wp-style`, `data-wp-init`.
-2. The `store()` shape: `state` (getters), `actions` (event handlers), `callbacks` (lifecycle).
-3. Local context vs global state — when to reach for which.
-4. Server-side state seeding with `wp_interactivity_state()` to avoid content flash.
-5. Live demo of a minimal example before the attendees write any code themselves.
+1. **Directives at a glance** — `data-wp-interactive`, `data-wp-context`, `data-wp-bind`, `data-wp-on`, `data-wp-class`, `data-wp-style`, `data-wp-init`.
+2. **The `store()` shape** — `state` (getters), `actions` (event handlers), `callbacks` (lifecycle).
+3. **Local context vs global state** — when to reach for which.
+4. **Server-side state seeding** with `wp_interactivity_state()` to avoid content flash on first paint.
+
+We'll see each of these show up in the coding sections that follow — this is just the map before we start moving.
 
 ## What's Next
 

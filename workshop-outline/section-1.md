@@ -4,14 +4,13 @@
 
 ## Goal
 
-Make sure everyone has a working Studio site running the workshop plugin, set expectations for the day, and show the finished product so attendees know where we're going.
+Get our dev environment ready so we can start building.
 
 ## Steps
 
-1. Confirm Studio site is running and the plugin is active.
-2. Verify Node 20+ and `npm install` completed in the plugin directory.
-3. Demo the finished slider on the facilitator's machine.
-4. Walk through the day's structure and pacing.
+1. Create a new Studio site from the provided `blueprint.json` (Studio → **Add site → Start from a blueprint → Choose blueprint file**).
+2. Make sure our Studio site is running and the `iapi-gallery-slider` plugin is active.
+3. Confirm we're on Node 20+ and that `npm install` has finished in the plugin directory.
 
 ## What's Next
 

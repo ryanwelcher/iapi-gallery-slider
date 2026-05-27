@@ -4,7 +4,7 @@
 
 ## Goal
 
-Make the slider actually slide, and stop you from going past either end. Both prev and next buttons work; the buttons gray out at the ends; the counter shows "X/3" instead of just "X". Still using a hardcoded `totalSlides: 3`.
+Make the slider actually slide, and stop us from going past either end. Both prev and next buttons work; the buttons gray out at the ends; the counter shows "X/3" instead of just "X". Still using a hardcoded `totalSlides: 3`.
 
 This section is where `state` enters the picture — distinct from `context`. Context is per-instance data; state is derived/computed values shared across instances of the store.
 
@@ -27,7 +27,7 @@ This section is where `state` enters the picture — distinct from `context`. Co
    - Add `data-wp-style--transform="state.currentPos"` on `.slider-container`.
    - Wire prev button: `data-wp-on--click="actions.prevImage"`.
    - Add `data-wp-bind--disabled="state.noPrevSlide"` to the prev button and `data-wp-bind--disabled="state.noNextSlide"` to the next button.
-   - Change the counter to `data-wp-text="state.imageIndex"` — note the teaching beat here: we used to read `context.currentSlide` directly; now we read derived state.
+   - Change the counter to `data-wp-text="state.imageIndex"`. Notice the shift: we used to read `context.currentSlide` directly; now we read derived state.
 4. Reload and test.
 
 ## Verification
