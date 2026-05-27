@@ -21,13 +21,13 @@ This is the section where the slider becomes adaptive to whatever inner blocks t
 1. In `src/render.php`, remove the hardcoded `$context` block and the `wp_interactivity_data_wp_context()` call. The wrapper still has `data-wp-interactive='iapi-gallery'`. Context will arrive via the filter.
 2. In `iapi-gallery-slider.php`, add the `add_directives_to_inner_blocks( $block_content, $block )` function:
    - Construct a `WP_HTML_Tag_Processor` from `$block_content`.
-   - `next_tag( array( 'class_name' => 'wp-block-block-developer-cookbook-iapi-gallery-slider' ) )` to land on the wrapper.
+   - `next_tag( array( 'class_name' => 'wp-block-iapi-gallery-slider' ) )` to land on the wrapper.
    - `set_bookmark( 'main' )`.
    - Loop `while ( $slides->next_tag() )` and check `class_list()` against `array( 'wp-block-cover', 'wp-block-image', 'wp-block-media-text' )`; increment `$total_slides` on a match.
    - `seek( 'main' )` then `release_bookmark( 'main' )`.
    - `set_attribute( 'data-wp-context', wp_json_encode( array( 'currentSlide' => 1, 'totalSlides' => $total_slides ) ) )`.
    - `return $slides->get_updated_html()`.
-3. Register: `add_filter( 'render_block_block-developer-cookbook/iapi-gallery-slider', 'add_directives_to_inner_blocks', 10, 2 );`.
+3. Register: `add_filter( 'render_block_iapi/gallery-slider', 'add_directives_to_inner_blocks', 10, 2 );`.
 4. **Demo stage A** — reload. The slider now counts inner blocks correctly. But: do a hard reload and watch carefully. The counter briefly shows "1/3" (the static markup from `render.php`) before snapping to the right value. *That's the flash.*
 5. **Demo stage B** — add `wp_interactivity_state( 'iapi-gallery', array( 'noPrevSlide' => true, 'imageIndex' => "1/{$total_slides}" ) )` before the `set_attribute` call. Reload. Flash gone.
 

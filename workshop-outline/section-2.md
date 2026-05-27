@@ -8,7 +8,7 @@ Orient attendees to the plugin's file layout and the moving parts of an Interact
 
 ## Steps
 
-1. **`iapi-gallery-slider.php`** — `register_block_type_from_metadata`. The `render_block_*` filter that walks inner blocks lives here too in the finished slider; we'll write it in §6.
+1. **`iapi-gallery-slider.php`** — `register_block_type`. The `render_block_*` filter that walks inner blocks lives here too in the finished slider; we'll write it in §6.
 2. **`src/block.json`** — `supports.interactivity: true`, `viewScriptModule: "file:./view.js"`, and three attributes (`continuous`, `autoplay`, `speed`) that drive the Inspector controls. Attendees won't touch this file in the workshop — it's already done.
 3. **`src/edit.js`** — Inspector controls for the three attributes. Also already done; we won't touch it.
 4. **`src/render.php`** — the server-rendered markup of the block. This is the file directives live on; we'll edit it in §4, §5, §6, §7, and §8.
