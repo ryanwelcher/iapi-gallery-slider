@@ -14,9 +14,10 @@ Directives are plain HTML attributes the Interactivity API runtime reads to bind
 
 | Directive | Purpose | Tiny example |
 |---|---|---|
-| `data-wp-interactive` | Marks the root of an interactive region and binds it to a namespaced store | `<div data-wp-interactive="iapi/gallery-slider">` |
+| `data-wp-interactive` | Marks the root of an interactive region and binds it to a namespaced store | `<div data-wp-interactive="iapi-gallery">` |
 | `data-wp-context` | Seeds **local** state for this instance (JSON) | `data-wp-context='{"currentSlide":0}'` |
 | `data-wp-on--<event>` | Wires a DOM event to a store action | `data-wp-on--click="actions.next"` |
+| `data-wp-text` | Binds the text content of an element to a value | `<p data-wp-text="state.label"></p>` |
 | `data-wp-bind--<attr>` | Binds an HTML attribute to a store getter | `data-wp-bind--hidden="!state.isOpen"` |
 | `data-wp-style--<prop>` | Sets an inline style from a getter | `data-wp-style--transform="state.translate"` |
 | `data-wp-class--<name>` | Toggles a class from a getter | `data-wp-class--is-active="state.isActive"` |
@@ -28,7 +29,7 @@ A store has three branches. **State** holds values (often getters) the DOM reads
 
 ```mermaid
 flowchart LR
-    Store["store( 'iapi/gallery-slider', { … } )"]
+    Store["store( 'iapi-gallery', { … } )"]
     Store --> State["state<br/>values & getters"]
     Store --> Actions["actions<br/>event handlers"]
     Store --> Callbacks["callbacks<br/>lifecycle (init, watch)"]
