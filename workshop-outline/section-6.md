@@ -17,12 +17,35 @@ This section is where `state` enters the picture — distinct from `context`. Co
 
 ## Steps
 
-1. In `src/view.js`, fill in `state` with four getters:
-   - `noPrevSlide` — `ctx.currentSlide === 1`
-   - `noNextSlide` — `ctx.currentSlide === ctx.totalSlides`
-   - `currentPos` — `` `translateX(-${ ( ctx.currentSlide - 1 ) * 100 }%)` ``
-   - `imageIndex` — `` `${ ctx.currentSlide }/${ ctx.totalSlides }` ``
-2. Add `actions.prevImage` that decrements `ctx.currentSlide`.
+1. In `src/view.js`, fill in the (currently empty) `state` block with four getters. Each one reads context and returns a derived value:
+   ```js
+   state: {
+       get noPrevSlide() {
+           const ctx = getContext();
+           return ctx.currentSlide === 1;
+       },
+       get noNextSlide() {
+           const ctx = getContext();
+           return ctx.currentSlide === ctx.totalSlides;
+       },
+       get currentPos() {
+           const ctx = getContext();
+           return `translateX(-${ ( ctx.currentSlide - 1 ) * 100 }%)`;
+       },
+       get imageIndex() {
+           const ctx = getContext();
+           return `${ ctx.currentSlide }/${ ctx.totalSlides }`;
+       },
+   },
+   ```
+   The `get` keyword turns each one into a getter — directives that reference `state.imageIndex` invoke this function every time they re-evaluate, so the returned value always reflects current context.
+2. Add `actions.prevImage` alongside the existing `nextImage`:
+   ```js
+   prevImage: () => {
+       const ctx = getContext();
+       ctx.currentSlide--;
+   },
+   ```
 3. In `src/render.php`:
    - Add `data-wp-style--transform="state.currentPos"` on `.slider-container`.
    - Wire prev button: `data-wp-on--click="actions.prevImage"`.

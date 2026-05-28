@@ -35,7 +35,13 @@ This is the section where `callbacks` enter the picture. They're the third slot 
 2. In `src/view.js`:
    - Add `withScope` to the `@wordpress/interactivity` import.
    - Change `store( … )` to `const { state, actions } = store( … )`. We need that reference for the callback below.
-   - Add a `transitionsSpeed` state getter: `Number( ctx.speed ) * 1000`.
+   - Add a `transitionsSpeed` getter to the existing `state` block:
+     ```js
+     get transitionsSpeed() {
+         const ctx = getContext();
+         return Number( ctx.speed ) * 1000;
+     },
+     ```
    - Update `actions.nextImage` so it wraps when autoplay reaches the end:
      ```js
      if ( ctx.autoplay && ctx.currentSlide === ctx.totalSlides ) {

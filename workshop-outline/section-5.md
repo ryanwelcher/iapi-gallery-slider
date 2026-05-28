@@ -23,7 +23,7 @@ By the end of this section, clicking the next button bumps a counter displayed o
 
    A quick note on that string: our block's name is `iapi/gallery-slider` (per `block.json`), but the Interactivity store namespace is `iapi-gallery`. They don't have to match — the store namespace is just a label we pick to scope directives and the `store()` call. We chose a shorter one here. The only contract is that the value in `data-wp-interactive` and the first argument to `store(…)` agree.
 2. Change the counter `<p>` to `<p data-wp-text="context.currentSlide"></p>`. Reload — it should render `1`.
-3. Wire only the next button: `<button data-wp-on--click="actions.nextImage" …>`. Leave the prev button without a handler for now.
+3. Wire only the next button by adding `data-wp-on--click="actions.nextImage"` to its opening tag — keep the existing `aria-label` and `&gt;` content in place. Leave the prev button without a handler for now.
 4. In `src/view.js`, create the store shell:
    ```js
    import { store, getContext } from '@wordpress/interactivity';

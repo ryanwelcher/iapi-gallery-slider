@@ -58,7 +58,7 @@ This section is pure block editor — no Interactivity API yet. We're setting up
        );
    }
    ```
-   The `data-wp-text` on the counter is a placeholder — it's an Interactivity directive that doesn't execute in the editor, so the literal "1/3" is what we see here. It pairs with the front-end markup we'll build in Section 6.
+   The `data-wp-text` on the counter is the first Interactivity directive we're seeing in the workshop — a special HTML attribute (always prefixed `data-wp-*`) that binds a piece of the DOM to a JavaScript store at runtime. It doesn't execute in the editor (IAPI only runs on the front end), so the literal "1/3" is what we see here. We mirror the front-end markup in the editor preview for visual parity. Section 4 covers directives in depth; here we're just placing one we'll need later.
 
    Note the `aria-label` on each button. Icon-only buttons (`<` and `>`) have no readable name for screen readers without it. We're adding the labels here as we build the markup; Section 9 comes back to accessibility more broadly (labelling the carousel region, pausing autoplay on focus, a visible focus ring).
 4. Add the `InspectorControls` block inside the wrapper, just before the closing `</div>`:
