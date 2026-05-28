@@ -35,7 +35,7 @@ This section is where `state` enters the picture — distinct from `context`. Co
 - The three slides visibly slide left/right when you click.
 - Prev button is disabled on slide 1; next button is disabled on slide 3.
 - Counter reads X/3.
-- Add a 4th cover/image block in the editor → save → reload. Counter still says X/3 and you can't reach the 4th slide. That's the §7 bug.
+- Add a 4th cover/image block in the editor → save → reload. Counter still says X/3 and you can't reach the 4th slide. That's the Section 7 bug.
 
 ## Code reference
 

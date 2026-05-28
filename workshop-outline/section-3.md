@@ -6,7 +6,7 @@
 
 Build `src/edit.js` from scratch so the block has a sensible editor preview and the three Inspector controls that drive its attributes (`continuous`, `autoplay`, `speed`). By the end of this section, inserting the Gallery Slider in a post shows the slider's editor preview, restricts the allowed inner blocks to Image / Cover / Media & Text, and exposes a "Slider Controls" panel in the Inspector sidebar.
 
-This section is pure block editor — no Interactivity API yet. We're setting up the editor side so the IAPI work in §5–§9 has attributes to read from.
+This section is pure block editor — no Interactivity API yet. We're setting up the editor side so the IAPI work in Sections 5–9 has attributes to read from.
 
 ## Concepts introduced
 
@@ -51,14 +51,16 @@ This section is pure block editor — no Interactivity API yet. We're setting up
                <div { ...innerBlockProps }></div>
                <div className="buttons">
                    <button aria-label="go to previous slide">&lt;</button>
-                   <p data-wp-text="state.imageIndex">1/10</p>
+                   <p data-wp-text="state.imageIndex">1/3</p>
                    <button aria-label="go to next slide">&gt;</button>
                </div>
            </div>
        );
    }
    ```
-   The `data-wp-text` on the counter is a placeholder — it's an Interactivity directive that doesn't execute in the editor, so the literal "1/10" is what we see here. It pairs with the front-end markup we'll build in §6.
+   The `data-wp-text` on the counter is a placeholder — it's an Interactivity directive that doesn't execute in the editor, so the literal "1/3" is what we see here. It pairs with the front-end markup we'll build in Section 6.
+
+   Note the `aria-label` on each button. Icon-only buttons (`<` and `>`) have no readable name for screen readers without it. We're adding the labels here as we build the markup; Section 9 comes back to accessibility more broadly (labelling the carousel region, pausing autoplay on focus, a visible focus ring).
 4. Add the `InspectorControls` block inside the wrapper, just before the closing `</div>`:
    ```jsx
    <InspectorControls>

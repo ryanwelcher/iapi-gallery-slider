@@ -19,7 +19,7 @@ This is the section where `callbacks` enter the picture. They're the third slot 
 
 ## Steps
 
-1. In `iapi-gallery-slider.php`, expand the `$context` array from §7:
+1. In `iapi-gallery-slider.php`, expand the `$context` array from Section 7:
    ```php
    $context = array_merge(
        array(
@@ -75,4 +75,4 @@ End-of-section snapshot lives in `code-reference/section-8/`.
 
 ## What's Next
 
-→ [Section 9 — Polish: Keyboard, Touch, Continuous](./section-9.md)
+→ [Section 9 — Polish: Focus, Touch, Continuous](./section-9.md)

@@ -56,7 +56,7 @@ This is a self-guided walkthrough. Each section lives in [`workshop-outline/`](.
 
 ## What Are We Building?
 
-A WordPress block called **Gallery Slider** that turns any group of inner blocks (Image, Cover, Media & Text) into an interactive slider — clickable prev/next buttons, an optional autoplay with a configurable speed, optional continuous looping, plus keyboard and touch navigation. By the end we'll have built it from a static starter into a fully interactive block using nothing but the Interactivity API.
+A WordPress block called **Gallery Slider** that turns any group of inner blocks (Image, Cover, Media & Text) into an interactive slider — clickable prev/next buttons, an optional autoplay with a configurable speed, optional continuous looping, plus touch swiping and an accessible keyboard / screen-reader experience. By the end we'll have built it from a static starter into a fully interactive block using nothing but the Interactivity API.
 
 ## Structure
 
@@ -70,6 +70,6 @@ A WordPress block called **Gallery Slider** that turns any group of inner blocks
 | 6       | Sliding + Bounds                               | coding  | ✓              |
 | 7       | Server-Side Directive Injection                | coding  | ✓              |
 | 8       | Autoplay                                       | coding  | ✓              |
-| 9       | Polish: Keyboard, Touch, Continuous            | coding  | ✓              |
+| 9       | Polish: Focus, Touch, Continuous               | coding  | ✓              |
 
 Let's go! → [Section 1](./workshop-outline/section-1.md)

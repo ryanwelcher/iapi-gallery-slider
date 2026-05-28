@@ -75,10 +75,10 @@
 
 **Talking points:**
 - `useBlockProps` is the bridge between our component and the editor — without it WordPress doesn't recognize the wrapper as the block root.
-- `allowedBlocks` on `useInnerBlocksProps` is the contract that keeps the slider sane; the IAPI render filter in §7 will rely on those same class names (`wp-block-cover`, `wp-block-image`, `wp-block-media-text`) to count slides.
+- `allowedBlocks` on `useInnerBlocksProps` is the contract that keeps the slider sane; the IAPI render filter in Section 7 will rely on those same class names (`wp-block-cover`, `wp-block-image`, `wp-block-media-text`) to count slides.
 - `__experimentalNumberControl` — the `__experimental` prefix is its current public import path; we're not doing anything risky by using it.
 - Conditional rendering: showing **Slide Duration** only when **Autoplay** is on keeps the inspector tidy and previews how attribute-driven UI works.
-- The `data-wp-text` on the editor counter is dormant — IAPI doesn't run in the editor, so this is just a literal attribute. We keep it for parity with the front-end markup we'll build in §6.
+- The `data-wp-text` on the editor counter is dormant — IAPI doesn't run in the editor, so this is just a literal attribute. We keep it for parity with the front-end markup we'll build in Section 6.
 
 **Common sticking points:**
 - Forgetting `useBlockProps` → block doesn't register / wrapper missing block-editor classes.
@@ -87,7 +87,7 @@
 - Mixing up imports: `InspectorControls` is from `@wordpress/block-editor`, but `PanelBody`/`ToggleControl`/`NumberControl` are from `@wordpress/components`.
 - Using `NumberControl` without the `__experimentalNumberControl as NumberControl` alias.
 
-**If running short:** Skip the conditional `NumberControl` rendering — always show it. Or drop the Continuous toggle entirely and add it back when §9c needs it. Either trims a couple of minutes without losing the InspectorControls teaching beat.
+**If running short:** Skip the conditional `NumberControl` rendering — always show it. Or drop the Continuous toggle entirely and add it back when Section 9c needs it. Either trims a couple of minutes without losing the InspectorControls teaching beat.
 
 ---
 
@@ -96,7 +96,7 @@
 **Goal:** Mental model for directives, store shape, and server-side state seeding.
 
 **Facilitator actions (not in learner outline):**
-- Run a live minimal-example demo before attendees write any code themselves — the learner-facing §4 is concept reading only, so the demo is yours to add in person.
+- Run a live minimal-example demo before attendees write any code themselves — the learner-facing Section 4 is concept reading only, so the demo is yours to add in person.
 
 **Talking points:**
 - TBD
@@ -114,15 +114,15 @@
 
 **Talking points:**
 - This is the loop every other section sits on top of: directive reads context, action mutates context, DOM re-renders.
-- `data-wp-interactive` on the wrapper sets the *namespace* for everything inside. Mention "we set it once" — full payoff lands in §7.
-- Why we don't add `data-wp-style--transform` yet: the lesson is that data changing doesn't automatically mean the page reacts visually. That separation lands cleanly in §6.
+- `data-wp-interactive` on the wrapper sets the *namespace* for everything inside. Mention "we set it once" — full payoff lands in Section 7.
+- Why we don't add `data-wp-style--transform` yet: the lesson is that data changing doesn't automatically mean the page reacts visually. That separation lands cleanly in Section 6.
 
 **Common sticking points:**
 - Forgetting `data-wp-interactive` on the wrapper → directives silently no-op.
 - Mutating `state` instead of `context` from inside an action — `state` getters are read-only computed values.
 - `wp_interactivity_data_wp_context()` vs writing `data-wp-context='...'` by hand. The helper handles escaping for you.
 
-**If running short:** Skip the "no upper bound" reveal at the end of §5 and just transition into §6 immediately.
+**If running short:** Skip the "no upper bound" reveal at the end of Section 5 and just transition into Section 6 immediately.
 
 ---
 
@@ -184,16 +184,17 @@
 
 ---
 
-### Section 9 — Polish: Keyboard, Touch, Continuous
+### Section 9 — Polish: Focus, Touch, Continuous
 
-**Goal:** Three additive enhancements as sub-stages. Each is self-contained and drop-friendly if running short. No new IAPI primitives — variations on §5–8 patterns.
+**Goal:** Three additive enhancements as sub-stages. Each is self-contained and drop-friendly if running short. No new IAPI primitives — variations on Sections 5–8 patterns.
 
 **Talking points:**
 - These three live together because none of them introduce a new IAPI concept. Each is a variation on something we've already seen.
-- Keyboard demonstrates `data-wp-on-document--<event>` — directives can target the document, not just the element they live on.
+- Focus demonstrates the bubbling `focusin`/`focusout` events — one pair of directives on the wrapper catches focus landing on any descendant button, so we don't have to wire each button individually.
+- **If someone asks "what about arrow keys?":** the short answer is that APG's Prev/Next carousel pattern doesn't include them, and bolting them on causes real harm — a document-level listener hijacks ArrowLeft/Right everywhere on the page (WCAG 2.1.4 *Character Key Shortcuts*), and a focusable wrapper with `data-wp-on--keydown` collides with screen readers in browse mode (NVDA/JAWS) that use arrows as their primary navigation. Arrow keys belong to APG's *Tabbed Carousel* variant (a different widget with `role="tablist"` and roving tabindex), not this one. The Prev/Next buttons are the keyboard interface; our job is making them work well.
 - Touch demonstrates ephemeral per-instance scratch state (`ctx.swipe`) — context isn't just server-seeded values, it's also where the client stashes per-instance data.
 - Continuous is a great showcase of how a single block attribute can ripple through state, actions, and the initial server seed — the same context value gets read in four different places.
-- Drop policy: if pressed for time, do 8a (keyboard) only. It's the smallest and best-rewards-effort. 8c (continuous) is the touchiest because it modifies existing code in place.
+- Drop policy: if pressed for time, do 9a (focus) only. It's the smallest and best-rewards-effort. 9c (continuous) is the touchiest because it modifies existing code in place.
 
 **Common sticking points:**
 - Swipe-direction sign errors in `onTouchEnd` — `clientX < swipe` means swiped left → next slide.
