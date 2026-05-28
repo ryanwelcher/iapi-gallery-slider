@@ -57,23 +57,27 @@ const { state, actions } = store( 'iapi-gallery', {
 			}
 			ctx.currentSlide++;
 		},
-		// Document-level keydown handler. Gated by state.noPrev/noNextSlide so
-		// the arrow keys respect continuous mode and end-of-slider behavior.
-		onKeyDown: ( e ) => {
-			switch ( e.key ) {
-				case 'ArrowLeft': {
-					if ( ! state.noPrevSlide ) {
-						actions.prevImage();
-					}
-					break;
-				}
-				case 'ArrowRight': {
-					if ( ! state.noNextSlide ) {
-						actions.nextImage();
-					}
-					break;
-				}
+		// Pause autoplay while a keyboard user has focus inside the carousel —
+		// APG Carousel: "Automatic slide rotation stops when any element in
+		// the carousel receives keyboard focus."
+		pauseAutoplay: () => {
+			const ctx = getContext();
+			if ( ctx.intervalId ) {
+				clearInterval( ctx.intervalId );
+				ctx.intervalId = null;
 			}
+		},
+		resumeAutoplay: () => {
+			const ctx = getContext();
+			if ( ! ctx.autoplay || ctx.intervalId ) {
+				return;
+			}
+			ctx.intervalId = setInterval(
+				withScope( () => {
+					actions.nextImage();
+				} ),
+				state.transitionsSpeed
+			);
 		},
 		// Touch swipe: capture the starting x on touchstart, compare to the
 		// ending x on touchend. ctx.swipe is ephemeral per-instance state.
@@ -98,13 +102,19 @@ const { state, actions } = store( 'iapi-gallery', {
 			if ( ! ctx.autoplay ) {
 				return;
 			}
-			const int = setInterval(
+			// Store the interval id on context so pauseAutoplay /
+			// resumeAutoplay can reach it from the focus handlers.
+			ctx.intervalId = setInterval(
 				withScope( () => {
 					actions.nextImage();
 				} ),
 				state.transitionsSpeed
 			);
-			return () => clearInterval( int );
+			return () => {
+				if ( ctx.intervalId ) {
+					clearInterval( ctx.intervalId );
+				}
+			};
 		},
 	},
 } );

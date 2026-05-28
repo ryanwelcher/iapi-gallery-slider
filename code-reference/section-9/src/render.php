@@ -12,7 +12,11 @@
 <div <?php echo wp_kses_data( get_block_wrapper_attributes() ); ?>
 	data-wp-interactive='iapi-gallery'
 	data-wp-init="callbacks.initSlideShow"
-	data-wp-on-document--keydown="actions.onKeyDown"
+	role="region"
+	aria-roledescription="carousel"
+	aria-label="Image gallery"
+	data-wp-on--focusin="actions.pauseAutoplay"
+	data-wp-on--focusout="actions.resumeAutoplay"
 >
 	<div
 		class="slider-container"

@@ -35,6 +35,11 @@
 		button:hover:not(:disabled) {
 			scale: (1.2);
 		}
+
+		button:focus-visible {
+			outline: 2px solid currentColor;
+			outline-offset: 2px;
+		}
 	}
 
 }
