@@ -13,5 +13,5 @@ import { useBlockProps } from '@wordpress/block-editor';
  */
 export default function Edit() {
 	const blockProps = useBlockProps();
-	return <div { ...blockProps }>Gallery Slider — set up the editor in §3.</div>;
+	return <div { ...blockProps }>Gallery Slider — set up the editor in Section 3.</div>;
 }

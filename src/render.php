@@ -11,20 +11,13 @@
 ?>
 <div <?php echo wp_kses_data( get_block_wrapper_attributes() ); ?>
 	data-wp-interactive='iapi-gallery'
-	data-wp-init="callbacks.initSlideShow"
-	data-wp-on-document--keydown="actions.onKeyDown"
 >
-	<div
-		class="slider-container"
-		data-wp-style--transform="state.currentPos"
-		data-wp-on--touchstart="actions.onTouchStart"
-		data-wp-on--touchend="actions.onTouchEnd"
-	>
+	<div class="slider-container">
 		<?php echo wp_kses_post( $content ); ?>
 	</div>
 	<div class="buttons">
-		<button data-wp-on--click="actions.prevImage" data-wp-bind--disabled="state.noPrevSlide" aria-label="go to previous slide">&lt;</button>
-		<p data-wp-text="state.imageIndex"></p>
-		<button data-wp-on--click="actions.nextImage" data-wp-bind--disabled="state.noNextSlide" aria-label="go to next slide">&gt;</button>
+		<button aria-label="go to previous slide">&lt;</button>
+		<p>1/3</p>
+		<button aria-label="go to next slide">&gt;</button>
 	</div>
 </div>
