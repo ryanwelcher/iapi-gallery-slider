@@ -75,7 +75,7 @@ data-wp-on--focusin="actions.pauseAutoplay"
 data-wp-on--focusout="actions.resumeAutoplay"
 ```
 
-We use `focusin` / `focusout` (not `focus` / `blur`) because they bubble — focus landing on Prev/Next inside the wrapper still triggers the pause. The `resumeAutoplay` guard (`if ( ctx.intervalId )`) prevents double intervals when focus moves between children.
+We use `focusin` / `focusout` (not `focus` / `blur`) because they bubble — focus landing on Prev/Next inside the wrapper still triggers the pause. The second half of the `resumeAutoplay` guard (`|| ctx.intervalId`) prevents double intervals when focus moves between children.
 
 ### Step 3 — Visible focus indicator
 
@@ -144,6 +144,6 @@ End-of-section snapshot lives in `code-reference/section-9/`.
 
 ## Wrap-up
 
-This is the finish line. The slider is complete: server-rendered with directives, navigable by buttons / touch / screen reader, optionally autoplaying (and pausing politely for keyboard users), optionally continuous. The interactive layer is roughly 100 lines of `view.js` and a ~40-line render filter — small for what it does.
+This is the finish line. The slider is complete: server-rendered with directives, navigable by buttons, keyboard, touch, and screen reader, optionally autoplaying (and pausing politely for keyboard users), optionally continuous. The interactive layer is roughly 100 lines of `view.js` and a ~40-line render filter — small for what it does.
 
 → Return to [README](../README.md).
