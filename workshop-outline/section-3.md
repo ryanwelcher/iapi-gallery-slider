@@ -102,7 +102,7 @@ This section is pure block editor — no Interactivity API yet. We're setting up
 
 ## Verification
 
-- Inserting the **Gallery Slider** block shows a small editor preview with the prev/next buttons and a "1/10" counter.
+- Inserting the **Gallery Slider** block shows a small editor preview with the prev/next buttons and a "1/3" counter.
 - Inside the slider, the inserter only offers Image, Cover, and Media & Text — nothing else.
 - The Inspector sidebar shows a "Slider Controls" panel with **Continuous** and **Autoplay** toggles.
 - Toggling **Autoplay** on reveals a **Slide Duration** number control; toggling it off hides it again.

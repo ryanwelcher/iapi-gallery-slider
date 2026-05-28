@@ -18,7 +18,7 @@ This is the section where the slider becomes adaptive to whatever inner blocks t
 
 ## Steps
 
-1. In `src/render.php`, remove the hardcoded `$context` block and the `wp_interactivity_data_wp_context()` call. The wrapper still has `data-wp-interactive='iapi-gallery'`. Context will arrive via the filter.
+1. In `src/render.php`, remove the hardcoded `$context` block and the `wp_interactivity_data_wp_context()` call. The wrapper still has `data-wp-interactive='iapi-gallery'`. Context will arrive via the filter. (Don't reload between this step and step 3 — until the filter is registered, the wrapper has no context at all and clicking the buttons will throw "currentSlide is not defined" in the console.)
 2. In `iapi-gallery-slider.php`, add the filter callback below the existing `register_block_type` registration. We walk the rendered HTML with `WP_HTML_Tag_Processor`: land on the wrapper, bookmark it, scan forward counting inner slides, then jump back to write the final `data-wp-context` value.
 
    ```php
@@ -66,7 +66,7 @@ This is the section where the slider becomes adaptive to whatever inner blocks t
    }
    ```
 3. Register: `add_filter( 'render_block_iapi/gallery-slider', 'add_directives_to_inner_blocks', 10, 2 );`.
-4. Reload. The slider now counts inner blocks correctly. But: do a hard reload and watch carefully. The counter briefly shows "1/3" (the static markup from `render.php`) before snapping to the right value. *That's the flash we're about to fix.*
+4. Reload. The slider now counts inner blocks correctly. But there's a subtler bug. Open DevTools, throttle CPU to 6× and Network to Slow 4G, then hard-reload. The counter `<p>` is briefly empty before the IAPI runtime hydrates and fills in "1/N". On a fast local machine this gap is sub-frame and you may not see it without throttling, but on real-world devices and connections it's exactly the pre-hydration content flash users do notice. *That's what we're about to fix.*
 5. Add `wp_interactivity_state( 'iapi-gallery', array( 'noPrevSlide' => true, 'imageIndex' => "1/{$total_slides}" ) )` before the `set_attribute` call. Reload. Flash gone.
 
 ## Verification
