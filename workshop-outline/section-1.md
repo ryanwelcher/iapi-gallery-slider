@@ -20,7 +20,9 @@ Get our dev environment ready and a test post in place so we can start building.
     npm run start            # starts the @wordpress/scripts watcher
     ```
     Leave `npm run start` running in this terminal for the rest of the workshop — it rebuilds `build/` whenever we edit a `src/` file.
-4. **Create a test post.** Open `wp-admin` (the URL and login are in `studio site status`), create a new post, and insert the **Gallery Slider** block. Add at least three inner blocks inside it (Image, Cover, or Media & Text). Save as a draft. Sections 3, 5, 6, and 7 all assume this post exists with at least three slides — we'll keep coming back to it.
+4. **Open the test post.** Open `wp-admin` and go to **Posts**. The blueprint has already published a post titled **Hello, IAPI!** containing an empty **Gallery Slider** block — open it in the editor. You don't need to add inner blocks yet; sections 3, 5, 6, and 7 will walk you through inserting Image / Cover / Media & Text slides at the right moments. We'll keep coming back to this same post throughout the workshop.
+
+    > **Not using Studio + the blueprint?** If you're running on your own WordPress install (or you didn't load `blueprint.json`), the **Hello, IAPI!** post won't exist. Create a new post yourself, give it any title you like, and insert the **Gallery Slider** block into the empty post. Leave the block empty for now — later sections will tell you when to add inner blocks.
 
 ## What's Next
 
