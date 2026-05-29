@@ -98,13 +98,20 @@ const { state, actions } = store( 'iapi-gallery', {
 			if ( ! ctx.autoplay ) {
 				return;
 			}
-			const int = setInterval(
-				withScope( () => {
+			let start = null;
+			let rafId = null;
+			const update = withScope( ( timestamp ) => {
+				if ( ! start ) {
+					start = timestamp;
+				}
+				if ( timestamp - start > state.transitionsSpeed ) {
 					actions.nextImage();
-				} ),
-				state.transitionsSpeed
-			);
-			return () => clearInterval( int );
+					start = null;
+				}
+				rafId = requestAnimationFrame( update );
+			} );
+			rafId = requestAnimationFrame( update );
+			return () => cancelAnimationFrame( rafId );
 		},
 	},
 } );

@@ -3,6 +3,24 @@
  */
 import { store, getContext, withScope } from '@wordpress/interactivity';
 
+// Module-level helper so initSlideShow and resumeAutoplay share one loop.
+// state and actions are populated by the time this is *called* — the
+// const { state, actions } = store(...) below has returned by then.
+const startAutoplayLoop = ( ctx ) => {
+	ctx.rafStart = null;
+	const update = withScope( ( timestamp ) => {
+		if ( ! ctx.rafStart ) {
+			ctx.rafStart = timestamp;
+		}
+		if ( timestamp - ctx.rafStart > state.transitionsSpeed ) {
+			actions.nextImage();
+			ctx.rafStart = null;
+		}
+		ctx.rafId = requestAnimationFrame( update );
+	} );
+	ctx.rafId = requestAnimationFrame( update );
+};
+
 const { state, actions } = store( 'iapi-gallery', {
 	state: {
 		get noPrevSlide() {
@@ -62,22 +80,17 @@ const { state, actions } = store( 'iapi-gallery', {
 		// the carousel receives keyboard focus."
 		pauseAutoplay: () => {
 			const ctx = getContext();
-			if ( ctx.intervalId ) {
-				clearInterval( ctx.intervalId );
-				ctx.intervalId = null;
+			if ( ctx.rafId ) {
+				cancelAnimationFrame( ctx.rafId );
+				ctx.rafId = null;
 			}
 		},
 		resumeAutoplay: () => {
 			const ctx = getContext();
-			if ( ! ctx.autoplay || ctx.intervalId ) {
+			if ( ! ctx.autoplay || ctx.rafId ) {
 				return;
 			}
-			ctx.intervalId = setInterval(
-				withScope( () => {
-					actions.nextImage();
-				} ),
-				state.transitionsSpeed
-			);
+			startAutoplayLoop( ctx );
 		},
 		// Touch swipe: capture the starting x on touchstart, compare to the
 		// ending x on touchend. ctx.swipe is ephemeral per-instance state.
@@ -102,17 +115,12 @@ const { state, actions } = store( 'iapi-gallery', {
 			if ( ! ctx.autoplay ) {
 				return;
 			}
-			// Store the interval id on context so pauseAutoplay /
+			// Store the rAF id on context so pauseAutoplay /
 			// resumeAutoplay can reach it from the focus handlers.
-			ctx.intervalId = setInterval(
-				withScope( () => {
-					actions.nextImage();
-				} ),
-				state.transitionsSpeed
-			);
+			startAutoplayLoop( ctx );
 			return () => {
-				if ( ctx.intervalId ) {
-					clearInterval( ctx.intervalId );
+				if ( ctx.rafId ) {
+					cancelAnimationFrame( ctx.rafId );
 				}
 			};
 		},

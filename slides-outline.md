@@ -109,8 +109,8 @@
 
 - `callbacks` — the third slot in the store, distinct from state/actions. Runs on element lifecycle.
 - `data-wp-init="callbacks.initSlideShow"` wires the lifecycle.
-- `withScope` — wraps callbacks that fire outside the IAPI scope (a `setInterval` tick is the classic case) so they can still call actions / read state.
-- Cleanup contract: return a function from a callback → IAPI calls it when the element leaves the DOM. No leaked timers.
+- `withScope` — wraps callbacks that fire outside the IAPI scope (a `requestAnimationFrame` tick is the classic case) so they can still call actions / read state.
+- Cleanup contract: return a function from a callback → IAPI calls it when the element leaves the DOM. No leaked animation frames.
 - Attribute-driven context: render filter pulls `autoplay` + `speed` into context via `array_merge`, so the client store reads them with `getContext()`.
 - `speed` is a string from `block.json` → `Number( ctx.speed ) * 1000`.
 
@@ -120,7 +120,7 @@
 
 - Three additive enhancements; no new IAPI primitives — recombinations of what we have.
 - **9a Focus a11y** — APG carousel labelling (`role="region"`, `aria-roledescription="carousel"`, `aria-label`), `data-wp-on--focusin`/`focusout` to pause autoplay on keyboard focus, `:focus-visible` ring.
-- Lift the interval ID into context (`ctx.intervalId`) so the focus actions can clear it.
+- Lift the rAF id into context (`ctx.rafId`) so the focus actions can cancel it; extract a `startAutoplayLoop( ctx )` helper that both `initSlideShow` and `resumeAutoplay` call.
 - **9b Touch** — `data-wp-on--touchstart`/`touchend` with ephemeral per-instance `ctx.swipe`. Context is also where the client stashes scratch state.
 - **9c Continuous** — one block attribute rippling through state getters, actions, and the server-side seed (`noPrevSlide => ! continuous`). No new directives at all.
 

@@ -169,19 +169,19 @@
 
 ### Section 8 — Autoplay
 
-**Goal:** Autoplay toggle drives `setInterval` via a `callbacks.initSlideShow` lifecycle. Cleanup function returns from the callback. `withScope` enters the picture.
+**Goal:** Autoplay toggle drives a `requestAnimationFrame` loop via a `callbacks.initSlideShow` lifecycle. Cleanup function returns from the callback. `withScope` enters the picture.
 
 **Talking points:**
 - `callbacks` is the third slot on the store — distinct from `state` (computed) and `actions` (event handlers). Callbacks run on element lifecycle.
-- Why `withScope`: a `setInterval` tick fires outside the Interactivity scope. Any code in that tick that calls actions or reads state/context needs `withScope` to re-enter the scope.
+- Why `withScope`: a `requestAnimationFrame` tick fires outside the Interactivity scope. Any code in that tick that calls actions or reads state/context needs `withScope` to re-enter the scope.
 - The cleanup contract: returning a function from a callback registers cleanup. Interactivity calls it when the element is removed.
 - Why we destructure `const { state, actions } = store(…)` here: callbacks live inside the store definition but need to call actions back into themselves; the destructured reference gives us that.
 - Attribute-driven context: the render filter is the bridge between editor toggles and the client store.
 
 **Common sticking points:**
 - Forgetting `withScope` → `actions.nextImage()` doesn't see the right `getContext()`.
-- Not returning the cleanup function → leaked intervals after navigation.
-- Trying to call `actions.nextImage()` directly inside `setInterval(…)` instead of `withScope( () => actions.nextImage() )`.
+- Not returning the cleanup function → leaked animation frames after navigation.
+- Trying to call `actions.nextImage()` directly inside the `requestAnimationFrame` tick instead of wrapping the loop body in `withScope( ( timestamp ) => { … } )`.
 - Forgetting to extend `actions.nextImage` to wrap on the last slide when autoplay is on — without that, autoplay stops at the end.
 
 **If running short:** Hardcode `state.transitionsSpeed` to a constant (e.g. 3000) and skip the `speed` attribute wiring. Keeps the callbacks/withScope lesson intact.

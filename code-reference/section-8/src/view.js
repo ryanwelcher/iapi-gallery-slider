@@ -51,18 +51,25 @@ const { state, actions } = store( 'iapi-gallery', {
 			if ( ! ctx.autoplay ) {
 				return;
 			}
-			// setInterval fires outside the Interactivity scope, so any code
-			// inside that touches state/context/actions needs to be wrapped
-			// in withScope() to re-enter the scope of this element.
-			const int = setInterval(
-				withScope( () => {
+			// requestAnimationFrame fires outside the Interactivity scope, so
+			// any code inside that touches state/context/actions needs to be
+			// wrapped in withScope() to re-enter the scope of this element.
+			let start = null;
+			let rafId = null;
+			const update = withScope( ( timestamp ) => {
+				if ( ! start ) {
+					start = timestamp;
+				}
+				if ( timestamp - start > state.transitionsSpeed ) {
 					actions.nextImage();
-				} ),
-				state.transitionsSpeed
-			);
+					start = null;
+				}
+				rafId = requestAnimationFrame( update );
+			} );
+			rafId = requestAnimationFrame( update );
 			// Returning a function from a callback registers cleanup —
 			// Interactivity calls it when the element is removed from the DOM.
-			return () => clearInterval( int );
+			return () => cancelAnimationFrame( rafId );
 		},
 	},
 } );

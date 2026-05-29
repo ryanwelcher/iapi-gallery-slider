@@ -32,20 +32,37 @@ This is the APG-recommended labelling for a carousel. No `tabindex` — the regi
 
 APG Carousel: *"Automatic slide rotation stops when any element in the carousel receives keyboard focus."* Without this, a keyboard user lands on the Next button, autoplay advances under them, and the button they meant to press is now pointing at a different slide.
 
-We need to clear the interval on focus and recreate it on blur. First, lift the interval ID out of the closure and into context so new actions can reach it. In `src/view.js`, update `callbacks.initSlideShow` — **replace** the `const int = setInterval(...)` line from Section 8 with `ctx.intervalId = setInterval(...)`, and update the cleanup to read from context too:
+We need to cancel the animation frame on focus and start a fresh loop on blur. First, lift the rAF id out of the closure and into context so new actions can reach it. The Section 8 loop kept `start` and `rafId` as locals — we'll promote both to context, and pull the loop body out into a small helper so `initSlideShow` and `resumeAutoplay` can share it. In `src/view.js`, **replace** the `callbacks.initSlideShow` block from Section 8 with this version, and add the `startAutoplayLoop` helper just above the `const { state, actions } = store(...)` line:
+
+```js
+// Module-level helper so initSlideShow and resumeAutoplay share one loop.
+// state and actions are available because store() returns the same object
+// we passed in — they're closed over by the time this is called.
+const startAutoplayLoop = ( ctx ) => {
+    ctx.rafStart = null;
+    const update = withScope( ( timestamp ) => {
+        if ( ! ctx.rafStart ) {
+            ctx.rafStart = timestamp;
+        }
+        if ( timestamp - ctx.rafStart > state.transitionsSpeed ) {
+            actions.nextImage();
+            ctx.rafStart = null;
+        }
+        ctx.rafId = requestAnimationFrame( update );
+    } );
+    ctx.rafId = requestAnimationFrame( update );
+};
+```
 
 ```js
 initSlideShow: () => {
     const ctx = getContext();
     if ( ! ctx.autoplay ) return;
-    // Was: const int = setInterval( ... ). Promoted to ctx.intervalId so
+    // Was: a local rafId in Section 8. Promoted onto ctx so
     // pauseAutoplay / resumeAutoplay below can reach it.
-    ctx.intervalId = setInterval(
-        withScope( () => { actions.nextImage(); } ),
-        state.transitionsSpeed
-    );
+    startAutoplayLoop( ctx );
     return () => {
-        if ( ctx.intervalId ) clearInterval( ctx.intervalId );
+        if ( ctx.rafId ) cancelAnimationFrame( ctx.rafId );
     };
 },
 ```
@@ -55,20 +72,19 @@ Then add two actions:
 ```js
 pauseAutoplay: () => {
     const ctx = getContext();
-    if ( ctx.intervalId ) {
-        clearInterval( ctx.intervalId );
-        ctx.intervalId = null;
+    if ( ctx.rafId ) {
+        cancelAnimationFrame( ctx.rafId );
+        ctx.rafId = null;
     }
 },
 resumeAutoplay: () => {
     const ctx = getContext();
-    if ( ! ctx.autoplay || ctx.intervalId ) return;
-    ctx.intervalId = setInterval(
-        withScope( () => { actions.nextImage(); } ),
-        state.transitionsSpeed
-    );
+    if ( ! ctx.autoplay || ctx.rafId ) return;
+    startAutoplayLoop( ctx );
 },
 ```
+
+`state` and `actions` are in scope inside `startAutoplayLoop` because the helper closes over the same module-level `const { state, actions } = store(...)` we set up in Section 8. The helper is only ever *called* after `store()` has returned, so the references are populated by the time the loop runs.
 
 In `src/render.php`, on the same outer wrapper, add:
 
@@ -77,9 +93,9 @@ data-wp-on--focusin="actions.pauseAutoplay"
 data-wp-on--focusout="actions.resumeAutoplay"
 ```
 
-We use `focusin` / `focusout` (not `focus` / `blur`) because they bubble — focus landing on Prev/Next inside the wrapper still triggers the pause. The second half of the `resumeAutoplay` guard (`|| ctx.intervalId`) prevents double intervals when focus moves between children.
+We use `focusin` / `focusout` (not `focus` / `blur`) because they bubble — focus landing on Prev/Next inside the wrapper still triggers the pause. The second half of the `resumeAutoplay` guard (`|| ctx.rafId`) prevents starting a second loop on top of an already-running one when focus moves between children.
 
-One subtle thing about `resumeAutoplay`: it doesn't fire `nextImage()` immediately, it just starts a fresh interval. So if a keyboard user tabs out 1.9s into a 2s cycle, they'll wait a full 2s after blur before the next advance. That's intentional — restarting the cycle on blur is more predictable than catching it up.
+One subtle thing about `resumeAutoplay`: it doesn't fire `nextImage()` immediately, it just starts a fresh loop with `rafStart` reset to `null`. So if a keyboard user tabs out 1.9s into a 2s cycle, they'll wait a full 2s after blur before the next advance. That's intentional — restarting the cycle on blur is more predictable than catching it up.
 
 By the end of 9a, your wrapper opening tag in `src/render.php` should look like this:
 
