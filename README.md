@@ -25,7 +25,7 @@ To avoid wifi bottlenecks on the day, please complete this **before you arrive**
 4. **Install JS dependencies** in the workshop plugin directory:
 
    ```bash
-   cd /path/to/your/studio/site/wp-content/plugins/iapi-gallery-slider-trunk
+   cd /path/to/your/studio/site/wp-content/plugins/iapi-gallery-slider
    npm install
    ```
 
@@ -71,5 +71,7 @@ A WordPress block called **Gallery Slider** that turns any group of inner blocks
 | 7       | Server-Side Directive Injection                | coding  | ✓              |
 | 8       | Autoplay                                       | coding  | ✓              |
 | 9       | Polish: Focus, Touch, Continuous               | coding  | ✓              |
+
+Sections 1, 2, and 4 are tour/reading and don't change any source files, so there's no `code-reference/section-1/`, `section-2/`, or `section-4/` directory — that's intentional, not a missing snapshot.
 
 Let's go! → [Section 1](./workshop-outline/section-1.md)

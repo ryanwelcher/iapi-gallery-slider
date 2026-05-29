@@ -58,9 +58,11 @@ This section is pure block editor — no Interactivity API yet. We're setting up
        );
    }
    ```
-   The `data-wp-text` on the counter is the first Interactivity directive we're seeing in the workshop — a special HTML attribute (always prefixed `data-wp-*`) that binds a piece of the DOM to a JavaScript store at runtime. It doesn't execute in the editor (IAPI only runs on the front end), so the literal "1/3" is what we see here. We mirror the front-end markup in the editor preview for visual parity. Section 4 covers directives in depth; here we're just placing one we'll need later.
+   The `data-wp-text` on the counter is the first `data-wp-*` directive *value* we're touching in the workshop (the wrapper's `data-wp-interactive` namespace declaration was already in the starter — Section 2 noted it in the file tour). A directive is a special HTML attribute, always prefixed `data-wp-*`, that the Interactivity API runtime reads to bind the DOM to a JavaScript store at runtime. It doesn't execute in the editor (IAPI only runs on the front end), so the literal "1/3" is what we see here. We mirror the front-end markup in the editor preview for visual parity. Section 4 covers directives in depth; here we're just placing one we'll need later.
 
    Note the `aria-label` on each button. Icon-only buttons (`<` and `>`) have no readable name for screen readers without it. We're adding the labels here as we build the markup; Section 9 comes back to accessibility more broadly (labelling the carousel region, pausing autoplay on focus, a visible focus ring).
+
+   **Checkpoint** — save and reload the editor. Inserting the Gallery Slider should now show the inner-block area and the prev/`1/3`/next row underneath. The Inspector sidebar is still empty; we'll fill it in next. If the block fails to register, fix that before moving on (usually a missing import or a typo in `useBlockProps` / `useInnerBlocksProps`).
 4. Add the `InspectorControls` block inside the wrapper, just before the closing `</div>`:
    ```jsx
    <InspectorControls>

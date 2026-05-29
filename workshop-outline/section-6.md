@@ -46,19 +46,23 @@ This section is where `state` enters the picture — distinct from `context`. Co
        ctx.currentSlide--;
    },
    ```
-3. In `src/render.php`:
+3. In `src/render.php`, wire up sliding first:
    - Add `data-wp-style--transform="state.currentPos"` on `.slider-container`.
    - Wire prev button: `data-wp-on--click="actions.prevImage"`.
-   - Add `data-wp-bind--disabled="state.noPrevSlide"` to the prev button and `data-wp-bind--disabled="state.noNextSlide"` to the next button.
    - Change the counter to `data-wp-text="state.imageIndex"`. Notice the shift: we used to read `context.currentSlide` directly; now we read derived state.
-4. Reload and test.
+
+   Reload and click through — the slides should visibly move, and the counter should read X/3. Prev and next are still both clickable past the ends; we'll lock that down next.
+4. Back in `src/render.php`, add the disable bindings:
+   - `data-wp-bind--disabled="state.noPrevSlide"` on the prev button.
+   - `data-wp-bind--disabled="state.noNextSlide"` on the next button.
+5. Reload and test.
 
 ## Verification
 
 - The three slides visibly slide left/right when you click.
 - Prev button is disabled on slide 1; next button is disabled on slide 3.
 - Counter reads X/3.
-- Add a 4th cover/image block in the editor → save → reload. Counter still says X/3 and you can't reach the 4th slide. That's the Section 7 bug.
+- Add a 4th cover/image block in the editor → save → reload. Counter still says X/3 and you can't reach the 4th slide. That's the Section 7 bug. **Keep the 4th block in place** — Section 7 verifies the fix by checking that the counter now reads X/4.
 
 ## Code reference
 

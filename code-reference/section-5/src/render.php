@@ -8,7 +8,7 @@
  *     $block (WP_Block): The block instance.
  */
 
-// Section 4 hardcodes the slide count and seeds context inline. Section 6
+// Section 5 hardcodes the slide count and seeds context inline. Section 7
 // replaces this with a server-side filter that counts inner blocks
 // dynamically and seeds initial state with wp_interactivity_state().
 $context = array(

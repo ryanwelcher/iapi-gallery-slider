@@ -19,8 +19,9 @@ This is the section where `callbacks` enter the picture. They're the third slot 
 
 ## Steps
 
-1. In `iapi-gallery-slider.php`, expand the `$context` array from Section 7:
+1. In `iapi-gallery-slider.php`, **replace** the `$context = array( … )` block we wrote in Section 7 with this `array_merge` version that prepends the two new attribute-driven values:
    ```php
+   // Replaces the plain $context = array(...) from Section 7.
    $context = array_merge(
        array(
            'autoplay' => $block['attrs']['autoplay'] ?? false,
@@ -32,24 +33,37 @@ This is the section where `callbacks` enter the picture. They're the third slot 
        )
    );
    ```
-2. In `src/view.js`:
+   The `array_merge` pattern keeps the attribute-driven values visually separated from the runtime-driven ones — it'll make Section 9c easier to read when we add `continuous` to the same block.
+2. In `src/view.js`, four edits — three setup edits, then the new `callbacks` block. There's a natural checkpoint partway through; we'll call it out.
    - Add `withScope` to the `@wordpress/interactivity` import.
-   - Change `store( … )` to `const { state, actions } = store( … )`. We need that reference for the callback below.
+   - Change `store( … )` to `const { state, actions } = store( … )`. We need that reference so the new callback can call `actions.nextImage()` directly.
    - Add a `transitionsSpeed` getter to the existing `state` block:
      ```js
      get transitionsSpeed() {
          const ctx = getContext();
+         // `speed` is declared as a string in block.json, so coerce before
+         // multiplying. setInterval expects milliseconds.
          return Number( ctx.speed ) * 1000;
      },
      ```
-   - Update `actions.nextImage` so it wraps when autoplay reaches the end:
+   - Update `actions.nextImage` so it wraps when autoplay reaches the end. Replace the existing function with this complete version:
      ```js
-     if ( ctx.autoplay && ctx.currentSlide === ctx.totalSlides ) {
-         ctx.currentSlide = 1;
-         return;
-     }
+     nextImage: () => {
+         const ctx = getContext();
+         // When autoplay reaches the end, wrap back to the first slide so
+         // the loop keeps running. Manual clicks still stop at the end
+         // because state.noNextSlide disables the button.
+         if ( ctx.autoplay && ctx.currentSlide === ctx.totalSlides ) {
+             ctx.currentSlide = 1;
+             return;
+         }
+         ctx.currentSlide++;
+     },
      ```
-   - Add `callbacks.initSlideShow`:
+
+   **Checkpoint** — save and reload. The slider should still behave exactly as it did at the end of Section 7 (manual buttons work, no autoplay yet). If a hot reload throws, fix imports/syntax before adding the callbacks block below.
+
+   - Add a `callbacks` block alongside `state` and `actions`:
      ```js
      callbacks: {
          initSlideShow: () => {
@@ -57,17 +71,22 @@ This is the section where `callbacks` enter the picture. They're the third slot 
              if ( ! ctx.autoplay ) {
                  return;
              }
+             // setInterval fires outside the Interactivity scope, so any code
+             // inside that touches state/context/actions needs to be wrapped
+             // in withScope() to re-enter the scope of this element.
              const int = setInterval(
                  withScope( () => {
                      actions.nextImage();
                  } ),
                  state.transitionsSpeed
              );
+             // Returning a function from a callback registers cleanup —
+             // Interactivity calls it when the element is removed from the DOM.
              return () => clearInterval( int );
          },
      },
      ```
-3. In `src/render.php`, add `data-wp-init="callbacks.initSlideShow"` to the wrapper.
+3. In `src/render.php`, add `data-wp-init="callbacks.initSlideShow"` to the wrapper. This is what actually wires the lifecycle callback to the element.
 
 ## Verification
 

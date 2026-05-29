@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * the per-block read here is fine and the manifest indirection would add noise
  * without a measurable win.
  */
-function iapi_gallery_slider_iapi_gallery_slider_block_init() {
+function iapi_gallery_slider_block_init() {
 	register_block_type( __DIR__ . '/build' );
 }
-add_action( 'init', 'iapi_gallery_slider_iapi_gallery_slider_block_init' );
+add_action( 'init', 'iapi_gallery_slider_block_init' );

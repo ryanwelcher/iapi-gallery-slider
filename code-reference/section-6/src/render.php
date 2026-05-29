@@ -8,7 +8,7 @@
  *     $block (WP_Block): The block instance.
  */
 
-// Still hardcoded in section 5. Section 6 replaces this with a server-side
+// Still hardcoded from Section 5. Section 7 replaces this with a server-side
 // filter that walks the inner blocks and counts them dynamically.
 $context = array(
 	'currentSlide' => 1,

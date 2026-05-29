@@ -16,12 +16,12 @@ Directives are plain HTML attributes the Interactivity API runtime reads to bind
 |---|---|---|
 | `data-wp-interactive` | Marks the root of an interactive region and binds it to a namespaced store | `<div data-wp-interactive="iapi-gallery">` |
 | `data-wp-context` | Seeds **local** state for this instance (JSON) | `data-wp-context='{"currentSlide":0}'` |
-| `data-wp-on--<event>` | Wires a DOM event to a store action | `data-wp-on--click="actions.next"` |
+| `data-wp-on--<event>` | Wires a DOM event to a store action | `data-wp-on--click="actions.nextImage"` |
 | `data-wp-text` | Binds the text content of an element to a value | `<p data-wp-text="state.label"></p>` |
 | `data-wp-bind--<attr>` | Binds an HTML attribute to a store getter | `data-wp-bind--hidden="!state.isOpen"` |
 | `data-wp-style--<prop>` | Sets an inline style from a getter | `data-wp-style--transform="state.translate"` |
 | `data-wp-class--<name>` | Toggles a class from a getter | `data-wp-class--is-active="state.isActive"` |
-| `data-wp-init` | Runs a callback once on hydration | `data-wp-init="callbacks.start"` |
+| `data-wp-init` | Runs a callback once on hydration (we'll use this in Section 8) | `data-wp-init="callbacks.initSlideShow"` |
 
 ### 2. The `store()` shape — `state` / `actions` / `callbacks`
 

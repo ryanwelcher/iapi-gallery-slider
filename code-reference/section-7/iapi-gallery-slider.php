@@ -29,10 +29,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  * the per-block read here is fine and the manifest indirection would add noise
  * without a measurable win.
  */
-function iapi_gallery_slider_iapi_gallery_slider_block_init() {
+function iapi_gallery_slider_block_init() {
 	register_block_type( __DIR__ . '/build' );
 }
-add_action( 'init', 'iapi_gallery_slider_iapi_gallery_slider_block_init' );
+add_action( 'init', 'iapi_gallery_slider_block_init' );
 
 /**
  * Filter the rendered block to count inner slide blocks, seed the wrapper's
@@ -43,7 +43,7 @@ add_action( 'init', 'iapi_gallery_slider_iapi_gallery_slider_block_init' );
  * @param array  $block         The parsed block, including attributes.
  * @return string Modified markup with data-wp-context injected on the wrapper.
  */
-function add_directives_to_inner_blocks( $block_content, $block ) {
+function iapi_gallery_slider_inject_context( $block_content, $block ) {
 	$allowed_blocks = array( 'wp-block-cover', 'wp-block-image', 'wp-block-media-text' );
 	$slides         = new \WP_HTML_Tag_Processor( $block_content );
 	$total_slides   = 0;
@@ -88,4 +88,4 @@ function add_directives_to_inner_blocks( $block_content, $block ) {
 	$slides->set_attribute( 'data-wp-context', wp_json_encode( $context ) );
 	return $slides->get_updated_html();
 }
-add_filter( 'render_block_iapi/gallery-slider', 'add_directives_to_inner_blocks', 10, 2 );
+add_filter( 'render_block_iapi/gallery-slider', 'iapi_gallery_slider_inject_context', 10, 2 );

@@ -31,7 +31,7 @@
 | 6       | Sliding + Bounds                               | TBD         | TBD        |
 | 7       | Server-Side Directive Injection                | TBD         | TBD        |
 | 8       | Autoplay                                       | TBD         | TBD        |
-| 9       | Polish: Keyboard, Touch, Continuous            | TBD         | TBD        |
+| 9       | Polish: Focus, Touch, Continuous               | TBD         | TBD        |
 
 ---
 

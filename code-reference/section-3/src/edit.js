@@ -37,7 +37,7 @@ export default function Edit( {
 			<div { ...innerBlockProps }></div>
 			<div className="buttons">
 				<button aria-label="go to previous slide">&lt;</button>
-				<p data-wp-text="state.imageIndex">1/10</p>
+				<p data-wp-text="state.imageIndex">1/3</p>
 				<button aria-label="go to next slide">&gt;</button>
 			</div>
 			<InspectorControls>
