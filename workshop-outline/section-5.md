@@ -19,7 +19,16 @@ By the end of this section, clicking the next button bumps a counter displayed o
 
 ## Steps
 
-1. In `src/render.php`, define a hardcoded `$context = array( 'currentSlide' => 1, 'totalSlides' => 3 )` above the wrapper, then emit it as an attribute on the wrapper opening tag via `<?php echo wp_interactivity_data_wp_context( $context ); ?>`. The wrapper already has `data-wp-interactive='iapi-gallery'`. After this step, the wrapper opening tag should look like:
+1. In `src/render.php`, define a hardcoded `$context` array above the wrapper, then emit it as an attribute on the wrapper opening tag. Add this just inside the closing `?>` of the file's opening PHP block (above the `<div>`):
+
+   ```php
+   $context = array(
+       'currentSlide' => 1,
+       'totalSlides'  => 3,
+   );
+   ```
+
+   Then update the wrapper opening tag — the wrapper already has `data-wp-interactive='iapi-gallery'`; add the `data-wp-context` line below it:
 
    ```php
    <div <?php echo wp_kses_data( get_block_wrapper_attributes() ); ?>
@@ -29,10 +38,22 @@ By the end of this section, clicking the next button bumps a counter displayed o
    ```
 
    A quick note on that string: our block's name is `iapi/gallery-slider` (per `block.json`), but the Interactivity store namespace is `iapi-gallery`. They don't have to match — the store namespace is just a label we pick to scope directives and the `store()` call. We chose a shorter one here. The only contract is that the value in `data-wp-interactive` and the first argument to `store(…)` agree.
-2. Change the counter `<p>` to `<p data-wp-text="context.currentSlide"></p>`. Reload — it should render `1`.
+2. Change the counter `<p>` to read from context:
+
+   ```html
+   <p data-wp-text="context.currentSlide"></p>
+   ```
+
+   Reload — it should render `1`.
 
    Heads up: the editor preview from Section 3 reads `state.imageIndex`, but here on the front end we're reading `context.currentSlide` directly. That's intentional — we haven't built any `state` getters yet, so we go straight to context. Section 6 promotes this front-end counter to `state.imageIndex` so both sides converge.
-3. Wire only the next button by adding `data-wp-on--click="actions.nextImage"` to its opening tag — keep the existing `aria-label` and `&gt;` content in place. Leave the prev button without a handler for now.
+3. Wire only the next button — add `data-wp-on--click` to its opening tag. Keep the existing `aria-label` and `&gt;` content in place; leave the prev button without a handler for now. The opening tag should now look like:
+
+   ```html
+   <button aria-label="go to previous slide">&lt;</button>
+   <p data-wp-text="context.currentSlide"></p>
+   <button data-wp-on--click="actions.nextImage" aria-label="go to next slide">&gt;</button>
+   ```
 4. In `src/view.js`, create the store shell:
    ```js
    import { store, getContext } from '@wordpress/interactivity';

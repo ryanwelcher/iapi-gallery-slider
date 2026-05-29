@@ -60,7 +60,8 @@
 **Goal:** Tour the plugin's moving parts (`block.json`, `render.php`, `view.js`, the render filter).
 
 **Talking points:**
-- TBD
+- **Hammer the two-part opt-in.** `supports.interactivity: true` in `block.json` and `data-wp-interactive` in the rendered markup are a pair — block.json loads the runtime, the directive declares the hydration root. If learners only remember one thing from the tour, it should be that pair. Most "my directives aren't doing anything" debugging in IAPI work comes back to missing one of the two.
+- A quick way to make it stick: ask "what happens if we delete `supports.interactivity: true` from block.json?" (the module never loads; directives are inert) and "what happens if we delete `data-wp-interactive` from the wrapper?" (the module loads but has no hydration root, so directives are inert). Same symptom, two different causes.
 
 **Common sticking points:**
 - `viewScriptModule` vs `viewScript` confusion; why `--experimental-modules` in the build script.
@@ -72,6 +73,9 @@
 ### Section 3 — Editor Controls
 
 **Goal:** Learner builds `src/edit.js` from a near-empty stub up to the full editor preview + InspectorControls panel. No IAPI in this section — just block editor APIs.
+
+**Facilitator actions (not in learner outline):**
+- Call out explicitly that the starter `src/edit.js` is a placeholder — attendees should delete the whole file's contents before they start typing. The instruction says "replace its contents," but it's easy to miss; some learners try to merge their new code into the stub and end up with two `Edit` exports.
 
 **Talking points:**
 - `useBlockProps` is the bridge between our component and the editor — without it WordPress doesn't recognize the wrapper as the block root.

@@ -19,8 +19,13 @@
       }
     },
     {
+      "step": "mv",
+      "fromPath": "/wordpress/wp-content/plugins/iapi-gallery-slider-trunk",
+      "toPath": "/wordpress/wp-content/plugins/iapi-gallery-slider"
+    },
+    {
       "step": "activatePlugin",
-      "pluginPath": "iapi-gallery-slider-trunk/iapi-gallery-slider.php"
+      "pluginPath": "iapi-gallery-slider/iapi-gallery-slider.php"
     },
     {
       "step": "activateTheme",

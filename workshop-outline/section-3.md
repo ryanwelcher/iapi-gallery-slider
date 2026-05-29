@@ -20,7 +20,7 @@ This section is pure block editor — no Interactivity API yet. We're setting up
 
 ## Steps
 
-1. Open `src/edit.js`. We're starting from a near-empty stub; replace its contents.
+1. Open `src/edit.js`. The starter ships a placeholder `Edit` component just so the block registers — **delete everything in the file**. The imports and component you build over the next steps replace it entirely. (We could have shipped an empty file, but a registered block makes the editor side easier to verify before this section.)
 2. Add the imports we'll need:
    ```js
    import {

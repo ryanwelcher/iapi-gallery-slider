@@ -133,7 +133,23 @@ A focus ring is the only cue keyboard users get that they've arrived somewhere. 
    },
    ```
    Note that `ctx.swipe` is *ephemeral* per-instance state — it lives in context because that's where per-instance scratch data goes; we never seed it from the server. No need to declare it anywhere ahead of time either: the first `ctx.swipe = …` write on touchstart creates the field, and onTouchEnd reads it back from the same context.
-2. In `src/render.php`, on the `.slider-container`, add `data-wp-on--touchstart="actions.onTouchStart"` and `data-wp-on--touchend="actions.onTouchEnd"`.
+2. In `src/render.php`, on the `.slider-container` opening tag, add the two touch directives:
+
+   ```html
+   data-wp-on--touchstart="actions.onTouchStart"
+   data-wp-on--touchend="actions.onTouchEnd"
+   ```
+
+   The `.slider-container` opening tag should now look like (the `data-wp-style--transform` came from Section 6):
+
+   ```html
+   <div
+       class="slider-container"
+       data-wp-style--transform="state.currentPos"
+       data-wp-on--touchstart="actions.onTouchStart"
+       data-wp-on--touchend="actions.onTouchEnd"
+   >
+   ```
 
 **Verify:** in Chrome devtools touch emulation (toggle with `Cmd-Shift-M` / `Ctrl-Shift-M` inside DevTools), swiping left/right changes slides.
 
@@ -191,35 +207,61 @@ A focus ring is the only cue keyboard users get that they've arrived somewhere. 
        )
    );
    ```
-2. In `src/view.js`:
-   - `state.noPrevSlide` and `state.noNextSlide` early-return `false` when `ctx.continuous`:
-     ```js
-     if ( ctx.continuous ) return false;
-     ```
-   - `actions.prevImage` wraps when continuous:
-     ```js
-     if ( ctx.continuous && ctx.currentSlide === 1 ) {
-         ctx.currentSlide = ctx.totalSlides;
-         return;
-     }
-     ```
-   - Broaden the existing `actions.nextImage` wrap condition from `ctx.autoplay` to `( ctx.continuous || ctx.autoplay )`. The full updated function:
-     ```js
-     nextImage: () => {
-         const ctx = getContext();
-         // Both autoplay and continuous wrap from the last slide to the
-         // first. Manual clicks in non-continuous mode stop at the end
-         // because state.noNextSlide keeps the button disabled.
-         if (
-             ( ctx.continuous || ctx.autoplay ) &&
-             ctx.currentSlide === ctx.totalSlides
-         ) {
-             ctx.currentSlide = 1;
-             return;
-         }
-         ctx.currentSlide++;
-     },
-     ```
+2. In `src/view.js`, three edits — two getters in the `state` block and two actions in the `actions` block. All four exist already; you're modifying them in place.
+
+   **a. `state.noPrevSlide`** — replace the existing getter with this version. The added line is the first one inside the function; when continuous is on, the prev button is never disabled.
+
+   ```js
+   get noPrevSlide() {
+       const ctx = getContext();
+       if ( ctx.continuous ) return false;
+       return ctx.currentSlide === 1;
+   },
+   ```
+
+   **b. `state.noNextSlide`** — same pattern for the next button:
+
+   ```js
+   get noNextSlide() {
+       const ctx = getContext();
+       if ( ctx.continuous ) return false;
+       return ctx.currentSlide === ctx.totalSlides;
+   },
+   ```
+
+   **c. `actions.prevImage`** — wrap to the last slide when continuous is on and we're at slide 1. Replace the existing function:
+
+   ```js
+   prevImage: () => {
+       const ctx = getContext();
+       if ( ctx.continuous && ctx.currentSlide === 1 ) {
+           ctx.currentSlide = ctx.totalSlides;
+           return;
+       }
+       ctx.currentSlide--;
+   },
+   ```
+
+   **d. `actions.nextImage`** — broaden the wrap condition from `ctx.autoplay` to `( ctx.continuous || ctx.autoplay )`. Replace the existing function:
+
+   ```js
+   nextImage: () => {
+       const ctx = getContext();
+       // Both autoplay and continuous wrap from the last slide to the
+       // first. Manual clicks in non-continuous mode stop at the end
+       // because state.noNextSlide keeps the button disabled.
+       if (
+           ( ctx.continuous || ctx.autoplay ) &&
+           ctx.currentSlide === ctx.totalSlides
+       ) {
+           ctx.currentSlide = 1;
+           return;
+       }
+       ctx.currentSlide++;
+   },
+   ```
+
+   The end-of-section `code-reference/section-9/src/view.js` snapshot is the source of truth if you want to compare a full file.
 
 **Verify:** toggle Continuous on, click prev from slide 1 → jumps to the last slide; click next from the last → jumps to 1. Buttons stay enabled. Autoplay still works alongside continuous.
 

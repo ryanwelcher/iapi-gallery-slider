@@ -35,8 +35,18 @@ This is the section where `callbacks` enter the picture. They're the third slot 
    ```
    The `array_merge` pattern keeps the attribute-driven values visually separated from the runtime-driven ones — it'll make Section 9c easier to read when we add `continuous` to the same block.
 2. In `src/view.js`, four edits — three setup edits, then the new `callbacks` block. There's a natural checkpoint partway through; we'll call it out.
-   - Add `withScope` to the `@wordpress/interactivity` import.
-   - Change `store( … )` to `const { state, actions } = store( … )`. We need that reference so the new callback can call `actions.nextImage()` directly.
+   - Add `withScope` to the `@wordpress/interactivity` import. Replace the import line at the top of the file with:
+
+     ```js
+     import { store, getContext, withScope } from '@wordpress/interactivity';
+     ```
+   - Capture a reference to the store by destructuring `state` and `actions` from its return value. Replace the existing `store( 'iapi-gallery', {` line with:
+
+     ```js
+     const { state, actions } = store( 'iapi-gallery', {
+     ```
+
+     Why destructure here? `store()` returns the same `{ state, actions, callbacks }` object you pass in (with the getters live). Up to now nothing inside the store needed a JS reference to the store itself — every action used `getContext()` to reach per-instance data, and directives in markup looked up `state.foo` / `actions.bar` by string. Callbacks change that: we'll call `actions.nextImage()` directly from inside a `setInterval` tick, which means the callback code needs a real reference to `actions`. Destructuring the return value gives us `state` and `actions` in the same module scope, so the new `callbacks.initSlideShow` below can call them without re-entering the store. (`state` is destructured for the same reason — we read `state.transitionsSpeed` inside the same callback.)
    - Add a `transitionsSpeed` getter to the existing `state` block:
      ```js
      get transitionsSpeed() {
@@ -71,21 +81,24 @@ This is the section where `callbacks` enter the picture. They're the third slot 
              if ( ! ctx.autoplay ) {
                  return;
              }
-             // setInterval fires outside the Interactivity scope, so any code
-             // inside that touches state/context/actions needs to be wrapped
-             // in withScope() to re-enter the scope of this element.
              const int = setInterval(
                  withScope( () => {
                      actions.nextImage();
                  } ),
                  state.transitionsSpeed
              );
-             // Returning a function from a callback registers cleanup —
-             // Interactivity calls it when the element is removed from the DOM.
              return () => clearInterval( int );
          },
      },
      ```
+
+     **A note on `withScope`.** When a directive fires an action — say `data-wp-on--click="actions.nextImage"` — Interactivity runs that action inside a *scope* that's bound to the element the directive sits on. That scope is what makes `getContext()` work: it knows which instance's context to return, because the scope remembers which element triggered the call.
+
+     A `setInterval` tick has no such scope. It's a bare browser callback fired by the timer, with no connection back to the DOM element our callback was registered on. So if the interval handler called `actions.nextImage()` directly, `getContext()` inside that action would have nothing to return (you'd get an error or the wrong instance's context — on a page with two sliders, the second one would advance the first one's state, or neither).
+
+     `withScope( fn )` wraps `fn` so that when the timer eventually calls it, Interactivity re-enters the scope of the element this `callbacks.initSlideShow` was bound to. From there, `getContext()` returns the right instance, `state` getters compute from the right context, and `actions.nextImage()` mutates the right slider.
+
+     **Rule of thumb:** any time you cross a boundary the Interactivity runtime doesn't control — `setInterval`, `setTimeout`, `requestAnimationFrame`, a `fetch().then(…)`, a third-party event emitter — and the code on the other side needs to call actions or read state/context, wrap it in `withScope`.
 3. In `src/render.php`, add `data-wp-init="callbacks.initSlideShow"` to the wrapper. This is what actually wires the lifecycle callback to the element.
 
 ## Verification

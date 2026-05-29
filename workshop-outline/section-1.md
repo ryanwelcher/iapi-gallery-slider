@@ -9,12 +9,9 @@ Get our dev environment ready and a test post in place so we can start building.
 ## Steps
 
 1. **Create the Studio site.** If you haven't already, create a new Studio site from the provided `blueprint.json` (Studio → **Add site → Build a new site → Upload Blueprint**).
-2. **Confirm the site is running and the plugin is active.** From the plugin directory:
-    ```bash
-    studio site status                              # URL, admin login, PHP/WP versions
-    studio wp plugin list --status=active           # iapi-gallery-slider should appear
-    ```
-    If the site isn't running: `studio site start --skip-browser`. If the plugin isn't active: `studio wp plugin activate iapi-gallery-slider`.
+2. **Confirm the site is running and the plugin is active.** In the Studio app, your new site should show a green **Running** indicator. Click **WP Admin** to open `wp-admin`, log in (Studio fills the credentials for you), and go to **Plugins**. The **IAPI Gallery Slider** plugin should be listed as **Active**. If it isn't, click **Activate**.
+
+    > **Aside — Studio CLI.** If you've enabled the Studio CLI (Studio → **Settings → Studio CLI for terminal**), you can do the same checks from your terminal: `studio site status` prints the URL and admin login, and `studio wp plugin list --status=active` lists active plugins. The CLI is optional for this workshop — every check has a click-through equivalent in the Studio app or `wp-admin`.
 3. **Confirm Node 20+ and install JS deps.** In a terminal, from the plugin directory:
     ```bash
     cd /path/to/your/studio/site/wp-content/plugins/iapi-gallery-slider

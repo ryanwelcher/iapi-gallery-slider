@@ -95,7 +95,6 @@ This is the section where the slider becomes adaptive to whatever inner blocks t
 
 - Add/remove inner blocks in the editor → save → reload front end. Counter and disable behavior follow the new total automatically.
 - Hard-reload several times. No counter flash on first paint.
-- Inspect the DOM: no inner block has `data-wp-interactive` — only the wrapper does. Namespace inheritance is doing the work.
 
 ## Code reference
 

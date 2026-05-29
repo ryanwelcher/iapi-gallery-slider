@@ -6,7 +6,7 @@
 
 Make the slider actually slide, and stop us from going past either end. Both prev and next buttons work; the buttons gray out at the ends; the counter shows "X/3" instead of just "X". Still using a hardcoded `totalSlides: 3`.
 
-This section is where `state` enters the picture — distinct from `context`. Context is per-instance data; state is derived/computed values shared across instances of the store.
+Section 4 introduced `state` as a concept — the global, shared branch of the store, distinct from per-instance `context`. Section 5 created an empty `state: {}` placeholder. This is the section where we actually fill it in, and where one specific form of state — **derived state via getters** — enters the picture. A getter is a function on `state` that computes a value from `context` (or other state) every time it's read. Directives that read `state.imageIndex` re-invoke the getter, so the value always reflects the current context. Disable booleans, transform strings, and the "X/Y" counter label are all *derived* from `currentSlide` and `totalSlides`, so they belong here.
 
 ## Concepts introduced
 

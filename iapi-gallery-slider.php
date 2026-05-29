@@ -19,6 +19,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Registers the block using the metadata loaded from the `block.json` file.
+ * Behind the scenes, it registers also all assets so they can be enqueued
+ * through the block editor in the corresponding context.
+ *
+ * @see https://developer.wordpress.org/reference/functions/register_block_type/
+ *
+ * Note: WP 6.7+ offers wp_register_block_metadata_collection() for registering
+ * many blocks from a single cached manifest. This plugin ships one block, so
+ * the per-block read here is fine and the manifest indirection would add noise
+ * without a measurable win.
  */
 function iapi_gallery_slider_block_init() {
 	register_block_type( __DIR__ . '/build' );
