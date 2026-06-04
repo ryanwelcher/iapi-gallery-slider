@@ -6,7 +6,11 @@
  */
 
 .wp-block-iapi-gallery-slider {
-	overflow: hidden;
+	// Mask the off-screen slides at the left/right edges only. Using
+	// overflow: hidden here would also clip the buttons' focus outline and
+	// hover scale at the top/bottom; clip-path lets those grow freely while
+	// still hiding the slides that overflow horizontally.
+	clip-path: inset(-100% 0 -100% 0);
 
 	.slider-container {
 		display: flex;
