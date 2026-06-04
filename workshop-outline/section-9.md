@@ -285,7 +285,7 @@ A focus ring is the only cue keyboard users get that they've arrived somewhere. 
 
 Everything so far in Section 9 has been front-end polish driven by the Interactivity API. This bonus is the one editor-side flourish, and it deliberately uses a *different* toolset: the block editor's `@wordpress/data` store, not the IAPI. The slides never participate in IAPI directives inside the editor — they're just inner blocks — so this is a pure Block API trick.
 
-**The problem:** in the editor our inner blocks render as a tall stack of slides (the IAPI sliding only runs on the front end). That's visually noisy and makes the block hard to place. We'd rather show only the slider chrome — the prev/next buttons and counter — and reveal the slide list *only* when someone is actually working inside the gallery. "Working inside" means the Gallery Slider block itself is selected, **or** any of its slides (or a block nested inside one of those slides) is selected.
+**The problem:** in the editor our inner blocks render as a tall stack of slides (the IAPI sliding only runs on the front end). That's visually noisy and makes the block hard to place. We'd rather collapse the whole preview down to a small `Placeholder` prompt and reveal the slides *only* when someone is actually working inside the gallery. "Working inside" means the Gallery Slider block itself is selected, **or** any of its slides (or a block nested inside one of those slides) is selected.
 
 **The tools.** The `core/block-editor` store exposes exactly the two selectors we need, and `Edit` already receives the block's `clientId`:
 
@@ -294,7 +294,7 @@ Everything so far in Section 9 has been front-end polish driven by the Interacti
 
 We read both with `useSelect`, OR them together, and use the result to decide whether to render the inner-blocks element.
 
-In `src/edit.js`, add the two imports — `store as blockEditorStore` from `@wordpress/block-editor` and `useSelect` from `@wordpress/data` — accept `clientId` in the props, derive the flag, and gate the inner-blocks `<div>` on it. The full file:
+In `src/edit.js` we add a few imports — `store as blockEditorStore` from `@wordpress/block-editor`, `useSelect` from `@wordpress/data`, `Placeholder` from `@wordpress/components`, and the block's own `metadata` from `./block.json` — accept `clientId` in the props, derive the flag, and branch the render: the slides plus prev/next chrome when the flag is `true`, a `Placeholder` otherwise. We pull the `Placeholder` label from `metadata.title` so it always matches the registered block name, and we deliberately give it **no icon** — the icon in `block.json` is a dashicon, and the dashicon font isn't loaded inside the editor canvas iframe, so it would render blank. The full file:
 
 ```js
 /**
@@ -308,11 +308,17 @@ import {
 } from '@wordpress/block-editor';
 import {
 	PanelBody,
+	Placeholder,
 	ToggleControl,
 	__experimentalNumberControl as NumberControl,
 } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
+
+/**
+ * Internal dependencies
+ */
+import metadata from './block.json';
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -351,12 +357,25 @@ export default function Edit( {
 	);
 	return (
 		<div { ...blockProps }>
-			{ showInnerBlocks && <div { ...innerBlockProps }></div> }
-			<div className="buttons">
-				<button aria-label="go to previous slide">&lt;</button>
-				<p data-wp-text="state.imageIndex">1/10</p>
-				<button aria-label="go to next slide">&gt;</button>
-			</div>
+			{ showInnerBlocks ? (
+				<>
+					<div { ...innerBlockProps }></div>
+					<div className="buttons">
+						<button aria-label="go to previous slide">
+							&lt;
+						</button>
+						<p data-wp-text="state.imageIndex">1/10</p>
+						<button aria-label="go to next slide">&gt;</button>
+					</div>
+				</>
+			) : (
+				<Placeholder
+					label={ metadata.title }
+					instructions={ __(
+						'Select this block to add and arrange your gallery slides.'
+					) }
+				/>
+			) }
 			<InspectorControls>
 				<PanelBody title={ __( 'Slider Controls' ) }>
 					<ToggleControl
@@ -398,17 +417,18 @@ export default function Edit( {
 }
 ```
 
-Two things worth calling out:
+A few things worth calling out:
 
-- **`useInnerBlocksProps` is still called unconditionally.** Only the *element* it returns is gated behind `showInnerBlocks`. Hooks must run on every render, so never move the hook call itself inside a condition — gate the JSX, not the hook.
-- **This unmounts the slides when nothing is selected.** The block *data* is untouched (it lives in the editor store, not the rendered tree), so nothing is lost — the slides just aren't in the DOM while hidden. If you'd rather keep them mounted and only hide them visually (so layout stays stable), swap the gated render for `<div { ...innerBlockProps } hidden={ ! showInnerBlocks }></div>` instead.
+- **`useInnerBlocksProps` is still called unconditionally.** Only the *element* it returns lives inside the `showInnerBlocks` branch. Hooks must run on every render, so never move the hook call itself inside a condition — gate the JSX, not the hook.
+- **The slides are unmounted when nothing is selected**, and we render a `Placeholder` in their place. The block *data* is untouched (it lives in the editor store, not the rendered tree), so nothing is lost — the slides just aren't in the DOM while the placeholder is showing.
+- **The `Placeholder` has no icon on purpose.** The icon in `block.json` is a dashicon, and the dashicon font isn't loaded inside the editor canvas iframe, so passing it would render a blank square. We pull `label` from `metadata.title` instead, so the prompt always matches the registered block name without hardcoding it.
 
 **Verify:**
 
-- Click somewhere else on the canvas so the gallery is deselected → only the prev/counter/next chrome shows; the slide stack is gone.
-- Click the Gallery Slider block → the slides reappear.
+- Click somewhere else on the canvas so the gallery is deselected → the preview collapses to a "Gallery Slider" placeholder prompting you to select the block.
+- Click the Gallery Slider block → the slides and prev/next chrome reappear.
 - Click into a single slide (or a block nested inside a Cover slide) → the slides stay visible because the descendant is selected.
-- Click fully outside the block → the slides collapse away again.
+- Click fully outside the block → it collapses back to the placeholder.
 
 Rebuild (`npm run start` should pick it up automatically) and the front end is completely unaffected — this only changes the editor canvas.
 
