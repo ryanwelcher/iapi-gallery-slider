@@ -9,11 +9,17 @@ import {
 } from '@wordpress/block-editor';
 import {
 	PanelBody,
+	Placeholder,
 	ToggleControl,
 	__experimentalNumberControl as NumberControl,
 } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
+
+/**
+ * Internal dependencies
+ */
+import metadata from './block.json';
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -52,12 +58,25 @@ export default function Edit( {
 	);
 	return (
 		<div { ...blockProps }>
-			{ showInnerBlocks && <div { ...innerBlockProps }></div> }
-			<div className="buttons">
-				<button aria-label="go to previous slide">&lt;</button>
-				<p data-wp-text="state.imageIndex">1/10</p>
-				<button aria-label="go to next slide">&gt;</button>
-			</div>
+			{ showInnerBlocks ? (
+				<>
+					<div { ...innerBlockProps }></div>
+					<div className="buttons">
+						<button aria-label="go to previous slide">
+							&lt;
+						</button>
+						<p data-wp-text="state.imageIndex">1/10</p>
+						<button aria-label="go to next slide">&gt;</button>
+					</div>
+				</>
+			) : (
+				<Placeholder
+					label={ metadata.title }
+					instructions={ __(
+						'Select this block to add and arrange your gallery slides.'
+					) }
+				/>
+			) }
 			<InspectorControls>
 				<PanelBody title={ __( 'Slider Controls' ) }>
 					<ToggleControl
