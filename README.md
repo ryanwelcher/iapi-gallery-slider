@@ -4,7 +4,7 @@
 
 **Date:** 2026-06-06
 
-- Ryan Welcher, Automattic
+-   Ryan Welcher, Automattic
 
 ## Pre-Workshop Setup Checklist
 
@@ -14,39 +14,27 @@ To avoid wifi bottlenecks on the day, please complete this **before you arrive**
 
 2. **Create a site from the blueprint** — Download the [`blueprint.json`](https://github.com/ryanwelcher/iapi-gallery-slider/raw/trunk/blueprint.json) file from this repository. In Studio, click **Add site → Start from a blueprint → Choose blueprint file** and select the downloaded file.
 
-   Set the WordPress version to **latest** in the **Advanced settings** of the Add a site dialog.
+    Set the WordPress version to **latest** in the **Advanced settings** of the Add a site dialog.
 
 3. **Node.js v20+** — Recommended via [NVM](https://github.com/nvm-sh/nvm):
 
-   ```bash
-   nvm install 20 && nvm use 20
-   ```
+    ```bash
+    nvm install 20 && nvm use 20
+    ```
 
 4. **Install JS dependencies** in the workshop plugin directory:
 
-   ```bash
-   cd /path/to/your/studio/site/wp-content/plugins/iapi-gallery-slider
-   npm install
-   ```
-
-## Local development (facilitator / contributors)
-
-Use `blueprint.local.json` to spin up an empty Studio site, then point Studio at this repo as the plugin source.
-
-1. In Studio, **Add site → Start from a blueprint** and pick `blueprint.local.json`.
-2. Install deps and start the build watcher:
-
-   ```bash
-   npm install
-   npm run start
-   ```
+    ```bash
+    cd /path/to/your/studio/site/wp-content/plugins/iapi-gallery-slider
+    npm install
+    ```
 
 ## Documentation & References
 
-- [Interactivity API docs](https://developer.wordpress.org/block-editor/reference-guides/interactivity-api/)
-- [@wordpress/interactivity package](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-interactivity/)
-- [Block Editor Handbook](https://developer.wordpress.org/block-editor/)
-- [WordPress Studio](https://developer.wordpress.com/studio/)
+-   [Interactivity API docs](https://developer.wordpress.org/block-editor/reference-guides/interactivity-api/)
+-   [@wordpress/interactivity package](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-interactivity/)
+-   [Block Editor Handbook](https://developer.wordpress.org/block-editor/)
+-   [WordPress Studio](https://developer.wordpress.com/studio/)
 
 ---
 
@@ -60,17 +48,17 @@ A WordPress block called **Gallery Slider** that turns any group of inner blocks
 
 ## Structure
 
-| Section | Title                                          | Type    | Code reference |
-| ------- | ---------------------------------------------- | ------- | -------------- |
-| 1       | Welcome & Setup                                | tour    | —              |
-| 2       | Anatomy of the Starter                         | tour    | —              |
-| 3       | Editor Controls                                | coding  | ✓              |
-| 4       | Interactivity API Primer                       | reading | —              |
-| 5       | Hello, Store                                   | coding  | ✓              |
-| 6       | Sliding + Bounds                               | coding  | ✓              |
-| 7       | Server-Side Directive Injection                | coding  | ✓              |
-| 8       | Autoplay                                       | coding  | ✓              |
-| 9       | Polish: Focus, Touch, Continuous               | coding  | ✓              |
+| Section | Title                            | Type    | Code reference |
+| ------- | -------------------------------- | ------- | -------------- |
+| 1       | Welcome & Setup                  | tour    | —              |
+| 2       | Anatomy of the Starter           | tour    | —              |
+| 3       | Editor Controls                  | coding  | ✓              |
+| 4       | Interactivity API Primer         | reading | —              |
+| 5       | Hello, Store                     | coding  | ✓              |
+| 6       | Sliding + Bounds                 | coding  | ✓              |
+| 7       | Server-Side Directive Injection  | coding  | ✓              |
+| 8       | Autoplay                         | coding  | ✓              |
+| 9       | Polish: Focus, Touch, Continuous | coding  | ✓              |
 
 Sections 1, 2, and 4 are tour/reading and don't change any source files, so there's no `code-reference/section-1/`, `section-2/`, or `section-4/` directory — that's intentional, not a missing snapshot.
 
