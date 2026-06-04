@@ -5,12 +5,14 @@ import {
 	useBlockProps,
 	useInnerBlocksProps,
 	InspectorControls,
+	store as blockEditorStore,
 } from '@wordpress/block-editor';
 import {
 	PanelBody,
 	ToggleControl,
 	__experimentalNumberControl as NumberControl,
 } from '@wordpress/components';
+import { useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 
 /**
@@ -26,7 +28,23 @@ import { __ } from '@wordpress/i18n';
 export default function Edit( {
 	attributes: { continuous, autoplay, speed },
 	setAttributes,
+	clientId,
 } ) {
+	// True when the gallery block itself is selected, or any of its
+	// descendants (deep) are selected. The `true` makes hasSelectedInnerBlock
+	// reach blocks nested inside the slides, not just the direct children.
+	const showInnerBlocks = useSelect(
+		( select ) => {
+			const { isBlockSelected, hasSelectedInnerBlock } =
+				select( blockEditorStore );
+			return (
+				isBlockSelected( clientId ) ||
+				hasSelectedInnerBlock( clientId, true )
+			);
+		},
+		[ clientId ]
+	);
+
 	const blockProps = useBlockProps();
 	const innerBlockProps = useInnerBlocksProps(
 		{ className: 'slider-container' },
@@ -34,7 +52,7 @@ export default function Edit( {
 	);
 	return (
 		<div { ...blockProps }>
-			<div { ...innerBlockProps }></div>
+			{ showInnerBlocks && <div { ...innerBlockProps }></div> }
 			<div className="buttons">
 				<button aria-label="go to previous slide">&lt;</button>
 				<p data-wp-text="state.imageIndex">1/10</p>

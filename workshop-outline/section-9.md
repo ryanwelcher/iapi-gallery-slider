@@ -281,9 +281,140 @@ A focus ring is the only cue keyboard users get that they've arrived somewhere. 
 
 **Verify:** toggle Continuous on, click prev from slide 1 → jumps to the last slide; click next from the last → jumps to 1. Buttons stay enabled. Autoplay still works alongside continuous.
 
+## Bonus — Editor: reveal inner blocks only when the block is selected
+
+Everything so far in Section 9 has been front-end polish driven by the Interactivity API. This bonus is the one editor-side flourish, and it deliberately uses a *different* toolset: the block editor's `@wordpress/data` store, not the IAPI. The slides never participate in IAPI directives inside the editor — they're just inner blocks — so this is a pure Block API trick.
+
+**The problem:** in the editor our inner blocks render as a tall stack of slides (the IAPI sliding only runs on the front end). That's visually noisy and makes the block hard to place. We'd rather show only the slider chrome — the prev/next buttons and counter — and reveal the slide list *only* when someone is actually working inside the gallery. "Working inside" means the Gallery Slider block itself is selected, **or** any of its slides (or a block nested inside one of those slides) is selected.
+
+**The tools.** The `core/block-editor` store exposes exactly the two selectors we need, and `Edit` already receives the block's `clientId`:
+
+- `isBlockSelected( clientId )` — is *this* block the selected one.
+- `hasSelectedInnerBlock( clientId, true )` — is any descendant selected. The `true` second argument makes the check **deep**, so a block nested inside a Cover slide counts, not just the direct children.
+
+We read both with `useSelect`, OR them together, and use the result to decide whether to render the inner-blocks element.
+
+In `src/edit.js`, add the two imports — `store as blockEditorStore` from `@wordpress/block-editor` and `useSelect` from `@wordpress/data` — accept `clientId` in the props, derive the flag, and gate the inner-blocks `<div>` on it. The full file:
+
+```js
+/**
+ * WordPress dependencies
+ */
+import {
+	useBlockProps,
+	useInnerBlocksProps,
+	InspectorControls,
+	store as blockEditorStore,
+} from '@wordpress/block-editor';
+import {
+	PanelBody,
+	ToggleControl,
+	__experimentalNumberControl as NumberControl,
+} from '@wordpress/components';
+import { useSelect } from '@wordpress/data';
+import { __ } from '@wordpress/i18n';
+
+/**
+ * The edit function describes the structure of your block in the context of the
+ * editor. This represents what the editor will render when the block is used.
+ *
+ * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#edit
+ *
+ * @param {Object}   props               Properties passed to the function.
+ *
+ * @return {Element} Element to render.
+ */
+export default function Edit( {
+	attributes: { continuous, autoplay, speed },
+	setAttributes,
+	clientId,
+} ) {
+	// True when the gallery block itself is selected, or any of its
+	// descendants (deep) are selected. The `true` makes hasSelectedInnerBlock
+	// reach blocks nested inside the slides, not just the direct children.
+	const showInnerBlocks = useSelect(
+		( select ) => {
+			const { isBlockSelected, hasSelectedInnerBlock } =
+				select( blockEditorStore );
+			return (
+				isBlockSelected( clientId ) ||
+				hasSelectedInnerBlock( clientId, true )
+			);
+		},
+		[ clientId ]
+	);
+
+	const blockProps = useBlockProps();
+	const innerBlockProps = useInnerBlocksProps(
+		{ className: 'slider-container' },
+		{ allowedBlocks: [ 'core/cover', 'core/image', 'core/media-text' ] }
+	);
+	return (
+		<div { ...blockProps }>
+			{ showInnerBlocks && <div { ...innerBlockProps }></div> }
+			<div className="buttons">
+				<button aria-label="go to previous slide">&lt;</button>
+				<p data-wp-text="state.imageIndex">1/10</p>
+				<button aria-label="go to next slide">&gt;</button>
+			</div>
+			<InspectorControls>
+				<PanelBody title={ __( 'Slider Controls' ) }>
+					<ToggleControl
+						label={ __( 'Continuous' ) }
+						help={ __(
+							'If enabled, the slider will loop back to the first slide after the last slide.'
+						) }
+						checked={ continuous }
+						onChange={ () =>
+							setAttributes( { continuous: ! continuous } )
+						}
+					/>
+					<ToggleControl
+						label={ __( 'Autoplay' ) }
+						help={ __( 'Set the slideshow to play automatically.' ) }
+						checked={ autoplay }
+						onChange={ () =>
+							setAttributes( { autoplay: ! autoplay } )
+						}
+					/>
+					{ autoplay && (
+						<NumberControl
+							label={ __( 'Slide Duration' ) }
+							help={ __(
+								'The duration of each slide in seconds.'
+							) }
+							min={ 1 }
+							max={ 10 }
+							value={ speed }
+							onChange={ ( newSpeed ) =>
+								setAttributes( { speed: newSpeed } )
+							}
+						/>
+					) }
+				</PanelBody>
+			</InspectorControls>
+		</div>
+	);
+}
+```
+
+Two things worth calling out:
+
+- **`useInnerBlocksProps` is still called unconditionally.** Only the *element* it returns is gated behind `showInnerBlocks`. Hooks must run on every render, so never move the hook call itself inside a condition — gate the JSX, not the hook.
+- **This unmounts the slides when nothing is selected.** The block *data* is untouched (it lives in the editor store, not the rendered tree), so nothing is lost — the slides just aren't in the DOM while hidden. If you'd rather keep them mounted and only hide them visually (so layout stays stable), swap the gated render for `<div { ...innerBlockProps } hidden={ ! showInnerBlocks }></div>` instead.
+
+**Verify:**
+
+- Click somewhere else on the canvas so the gallery is deselected → only the prev/counter/next chrome shows; the slide stack is gone.
+- Click the Gallery Slider block → the slides reappear.
+- Click into a single slide (or a block nested inside a Cover slide) → the slides stay visible because the descendant is selected.
+- Click fully outside the block → the slides collapse away again.
+
+Rebuild (`npm run start` should pick it up automatically) and the front end is completely unaffected — this only changes the editor canvas.
+
 ## Code reference
 
-End-of-section snapshot lives in `code-reference/section-9/`.
+End-of-section snapshot lives in `code-reference/section-9/`. The `src/edit.js` in that snapshot includes the editor bonus above — if you skipped the bonus, ignore the `showInnerBlocks`/`useSelect` additions there.
 
 ## Wrap-up
 
