@@ -35,6 +35,7 @@ To avoid wifi bottlenecks on the day, please complete this **before you arrive**
 -   [@wordpress/interactivity package](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-interactivity/)
 -   [Block Editor Handbook](https://developer.wordpress.org/block-editor/)
 -   [WordPress Studio](https://developer.wordpress.com/studio/)
+-   [VSCode Extension: WordPress Interactivity API Helper](https://marketplace.visualstudio.com/items?itemName=ryanwelcher.wordpress-interactivity-api-helper)
 
 ---
 
