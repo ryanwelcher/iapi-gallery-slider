@@ -11,9 +11,30 @@
 	.slider-container {
 		display: flex;
 		transition: 0.5s;
+		align-items: stretch; // slides share the tallest slide's height
 
 		[class*="wp-block-"] {
 			flex: 1 0 100%;
+		}
+
+		// A plain Image block is a <figure> wrapping an <img> that keeps its
+		// intrinsic height, so it renders shorter than Cover / Media & Text.
+		// Make the figure fill the slide and the image cover it, matching how
+		// the other supported blocks behave.
+		figure.wp-block-image {
+			// aspect-ratio gives the figure a definite height even when no
+			// Cover block is present to set one, so short images normalize
+			// instead of collapsing to their natural height. When a Cover is
+			// present, height: 100% takes over and matches the taller slide.
+			aspect-ratio: 4 / 3;
+			height: 100%;
+			margin: 0;
+
+			img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
 		}
 	}
 
