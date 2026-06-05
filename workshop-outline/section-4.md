@@ -34,7 +34,11 @@ Directives are plain HTML attributes the Interactivity API runtime reads to bind
 
 ### 3. The `store()` shape — `state` / `actions` / `callbacks`
 
-A store has three branches. **State** holds values (often getters) the DOM reads. **Actions** are the functions DOM events call. **Callbacks** run at lifecycle moments — hydration, or when a watched value changes.
+A store has three branches:
+
+-   **state** Used to store the global state for this store and hold functions that return derived state.
+-   **actions** Contains functions that can be triggered by a user such as clicking on a button.
+-   **callbacks** Contains functions that respond to things that happen programmatically or automatically. Such as when the block is loaded or when watching for a change in state.
 
 #### Example store
 
