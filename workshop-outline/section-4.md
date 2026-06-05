@@ -36,15 +36,19 @@ Directives are plain HTML attributes the Interactivity API runtime reads to bind
 
 A store has three branches. **State** holds values (often getters) the DOM reads. **Actions** are the functions DOM events call. **Callbacks** run at lifecycle moments — hydration, or when a watched value changes.
 
+#### Example store
+
 ```js
 import { store } from '@wordpress/interactivity';
 
-const {state, actions, callbacks }store( 'storeName', {
-   state: {},
-   actions: {},
-   callbacks: {},
+const { state, actions, callbacks } = store( 'storeName', {
+	state: {},
+	actions: {},
+	callbacks: {},
 } );
 ```
+
+#### Flow
 
 ```mermaid
 flowchart LR
