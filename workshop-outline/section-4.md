@@ -21,20 +21,30 @@ You need both. The block.json flag loads the engine; the directive gives the eng
 
 Directives are plain HTML attributes the Interactivity API runtime reads to bind the DOM to a store. They're how server-rendered markup "wakes up" on the client — no manual `querySelector` / `addEventListener` glue. Every directive on an element resolves its value against the **same store** that the nearest ancestor `data-wp-interactive` declares.
 
-| Directive | Purpose | Tiny example |
-|---|---|---|
-| `data-wp-interactive` | Marks the root of an interactive region and binds it to a namespaced store | `<div data-wp-interactive="iapi-gallery">` |
-| `data-wp-context` | Seeds **local** state for this instance (JSON) | `data-wp-context='{"currentSlide":0}'` |
-| `data-wp-on--<event>` | Wires a DOM event to a store action | `data-wp-on--click="actions.nextImage"` |
-| `data-wp-text` | Binds the text content of an element to a value | `<p data-wp-text="state.label"></p>` |
-| `data-wp-bind--<attr>` | Binds an HTML attribute to a store getter | `data-wp-bind--hidden="!state.isOpen"` |
-| `data-wp-style--<prop>` | Sets an inline style from a getter | `data-wp-style--transform="state.translate"` |
-| `data-wp-class--<name>` | Toggles a class from a getter | `data-wp-class--is-active="state.isActive"` |
-| `data-wp-init` | Runs a callback once on hydration (we'll use this in Section 8) | `data-wp-init="callbacks.initSlideShow"` |
+| Directive               | Purpose                                                                    | Tiny example                                 |
+| ----------------------- | -------------------------------------------------------------------------- | -------------------------------------------- |
+| `data-wp-interactive`   | Marks the root of an interactive region and binds it to a namespaced store | `<div data-wp-interactive="iapi-gallery">`   |
+| `data-wp-context`       | Seeds **local** state for this instance (JSON)                             | `data-wp-context='{"currentSlide":0}'`       |
+| `data-wp-on--<event>`   | Wires a DOM event to a store action                                        | `data-wp-on--click="actions.nextImage"`      |
+| `data-wp-text`          | Binds the text content of an element to a value                            | `<p data-wp-text="state.label"></p>`         |
+| `data-wp-bind--<attr>`  | Binds an HTML attribute to a store getter                                  | `data-wp-bind--hidden="!state.isOpen"`       |
+| `data-wp-style--<prop>` | Sets an inline style from a getter                                         | `data-wp-style--transform="state.translate"` |
+| `data-wp-class--<name>` | Toggles a class from a getter                                              | `data-wp-class--is-active="state.isActive"`  |
+| `data-wp-init`          | Runs a callback once on hydration (we'll use this in Section 8)            | `data-wp-init="callbacks.initSlideShow"`     |
 
 ### 3. The `store()` shape — `state` / `actions` / `callbacks`
 
 A store has three branches. **State** holds values (often getters) the DOM reads. **Actions** are the functions DOM events call. **Callbacks** run at lifecycle moments — hydration, or when a watched value changes.
+
+```js
+import { store } from '@wordpress/interactivity';
+
+const {state, actions, callbacks }store( 'storeName', {
+   state: {},
+   actions: {},
+   callbacks: {},
+} );
+```
 
 ```mermaid
 flowchart LR
@@ -70,11 +80,11 @@ flowchart TB
     end
 ```
 
-Rule of thumb: if you'd be sad when two copies disagreed, it's state. If each copy *should* have its own value, it's context.
+Rule of thumb: if you'd be sad when two copies disagreed, it's state. If each copy _should_ have its own value, it's context.
 
 ### 5. Server-seeded state prevents content flash
 
-If the initial values only exist in JavaScript, the browser paints the markup *before* the runtime hydrates — and the user sees the wrong thing for a frame or two. `wp_interactivity_state()` lets PHP hand the runtime the right values up front, so the first paint is already correct.
+If the initial values only exist in JavaScript, the browser paints the markup _before_ the runtime hydrates — and the user sees the wrong thing for a frame or two. `wp_interactivity_state()` lets PHP hand the runtime the right values up front, so the first paint is already correct.
 
 ```mermaid
 sequenceDiagram
