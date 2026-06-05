@@ -58,7 +58,12 @@
 		}
 
 		button:hover:not(:disabled) {
-			scale: (1.2);
+			scale: (1.1);
+		}
+
+		button:focus-visible {
+			outline: 2px solid currentColor;
+			outline-offset: 2px;
 		}
 
 		button:focus-visible {
