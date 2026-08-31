@@ -50,11 +50,11 @@ Timing references the run sheet in `facilitator-notes.md`.
 
 ### Slide 8 [T] — `iapi-gallery-slider.php`
 - Screenshot/fragment: `register_block_type` and nothing else
-- "In §7 this file grows a render filter — that's the only PHP we'll write"
+- "In Section 7 this file grows a render filter — that's the only PHP we'll write"
 
 ### Slide 9 [T] — `src/block.json`
 - Highlighted lines: `supports.interactivity: true`, `viewScriptModule`, three attributes
-- Flag now: `speed` is `"type": "string"` — "remember that; it bites in §8"
+- Flag now: `speed` is `"type": "string"` — "remember that; it bites in Section 8"
 
 ### Slide 10 [T] — **The opt-in pair** ★ recurring motif
 - Two-panel diagram: `supports.interactivity: true` (loads the engine) ⇄ `data-wp-interactive` (gives it a place to bind)
@@ -62,17 +62,17 @@ Timing references the run sheet in `facilitator-notes.md`.
 - Speaker note: you will flash back to this slide during debugging moments — keep its visual distinctive
 
 ### Slide 11 [T] — `src/edit.js` + `src/render.php`
-- edit.js: near-empty stub — "§3 builds this"
+- edit.js: near-empty stub — "Section 3 builds this"
 - render.php: wrapper, `.slider-container`, prev/next buttons, and the one directive already present: `data-wp-interactive='iapi-gallery'`
 
 ### Slide 12 [T] — `src/view.js`
-- Doesn't exist meaningfully yet — "§5 creates the store here; this file is where the workshop lives from §5 on"
+- Doesn't exist meaningfully yet — "Section 5 creates the store here; this file is where the workshop lives from Section 5 on"
 
 ---
 
 ## Section 3 — Editor Controls (0:16–0:31 · slides 13–16)
 
-### Slide 13 [T] — What §3 is (and isn't)
+### Slide 13 [T] — What Section 3 is (and isn't)
 - "Pure block editor — zero Interactivity API. We're building the attributes the IAPI sections will read."
 - The three attributes → the three Inspector controls
 
@@ -97,7 +97,7 @@ Timing references the run sheet in `facilitator-notes.md`.
 
 ## Section 4 — IAPI Primer (0:31–0:39 · slides 17–21, all [T])
 
-### Slide 17 [T] — The round-trip loop ★ reused in §5
+### Slide 17 [T] — The round-trip loop ★ reused in Section 5
 - Circular diagram: directive reads store → event fires action → action mutates context → directives re-render
 - "Every section from here is this loop with more parts"
 
@@ -109,13 +109,13 @@ Timing references the run sheet in `facilitator-notes.md`.
 - `data-wp-bind--{attr}`, `data-wp-style--{prop}`, `data-wp-init`
 - Same treatment
 
-### Slide 20 [T] — Context vs state ★ reused in §6 and §7
+### Slide 20 [T] — Context vs state ★ reused in Section 6 and Section 7
 - Diagram: N slider instances, each with its own context box; one shared state box with getters reaching into context
 - The sentence that predicts every later bug: **"context is per-instance; state is shared and derived"**
 
 ### Slide 21 [T] — The server's role
 - `wp_interactivity_data_wp_context()` seeds context; `wp_interactivity_state()` seeds state
-- "The server paints the first frame; the client takes over without a flash — §7 proves this with a demo"
+- "The server paints the first frame; the client takes over without a flash — Section 7 proves this with a demo"
 
 ---
 
@@ -137,7 +137,7 @@ Timing references the run sheet in `facilitator-notes.md`.
 - Speaker note: walk the room; check for silent-failure namespace typos and stopped watchers
 
 ### Slide 25 [C] — Checkpoint · minute-50 gate
-- Demo the working counter, including running past 3 — "that bug is §6's job"
+- Demo the working counter, including running past 3 — "that bug is Section 6's job"
 - Speaker note: **run-sheet checkpoint — if this slide isn't on screen by 0:50, engage cut lines (facilitator-notes.md)**
 
 ---
@@ -229,4 +229,4 @@ Timing references the run sheet in `facilitator-notes.md`.
 
 ### Slide 40 [T] — Thanks / Q&A
 - Repo URL + QR code · contact
-- Speaker note: likely questions are pre-gamed in `facilitator-notes.md` § Q&A
+- Speaker note: likely questions are pre-gamed in the Q&A section of `facilitator-notes.md`

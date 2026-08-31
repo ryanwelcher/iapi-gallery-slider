@@ -13,7 +13,7 @@
 - Demo machine: Studio site created from `blueprint.json`, plugin active, `npm install` done, `npm run start` tested once and stopped.
 - Have the repo open in your editor with `src/`, `workshop-outline/`, and `code-reference/` in the file tree — you'll point people at snapshots all session.
 - Have a browser tab on the test post and one on `wp-admin`.
-- DevTools ready with CPU/Network throttling profiles saved (needed for the §7 flash demo).
+- DevTools ready with CPU/Network throttling profiles saved (needed for the Section 7 flash demo).
 - Projector-check the focus ring and disabled-button styling — some themes make both nearly invisible at projector contrast.
 - Remind the room at the top: **every section has a full snapshot in `code-reference/section-N/`**. Falling behind is never fatal — copy the snapshot and rejoin.
 
@@ -48,16 +48,16 @@ Coding sections split roughly ⅓ talk track / ⅔ lab. Slide numbers reference 
 
 ### The minute-50 checkpoint
 
-**Section 5 must be done by 0:50.** It's the core round-trip (directive → action → context mutation → re-render); everything after it stacks on that loop, and everything before it is preamble. If you hit 0:50 and §5 isn't landed, use the cut lines below. If you're *ahead* at 0:50, don't bank the time — spend it in §7 and §8, which have the richest teaching moments.
+**Section 5 must be done by 0:50.** It's the core round-trip (directive → action → context mutation → re-render); everything after it stacks on that loop, and everything before it is preamble. If you hit 0:50 and Section 5 isn't landed, use the cut lines below. If you're *ahead* at 0:50, don't bank the time — spend it in Section 7 and Section 8, which have the richest teaching moments.
 
 ### Cut lines (in order of preference)
 
-1. **Compress §3 to a hand-out.** It's pure block editor — no IAPI content, and the section says so itself. Demo the finished Inspector panel for 3 minutes, tell everyone to copy `code-reference/section-3/src/edit.js`, and jump straight from slide 14 to slide 17 (skip §3's pause slide, keep its theory slides). Recovers ~10 min. Decide by 0:16; this is the cut to pre-plan.
-2. **Compress §4 to 4 minutes.** Talk the directives table and the context-vs-state distinction; skip the rest — §§5–8 re-teach every concept at the moment it's used. Recovers ~4 min.
-3. **Demo-only §8.** If you reach 1:12 without §7 finished, finish §7 with the room, then live-code §8 solo on the projector while they watch, and point at the snapshot. Autoplay is the most self-contained section — watching it still teaches `callbacks`/`withScope`/cleanup.
-4. **Never cut §5, §6, or §7.** They're the spine: round-trip, derived state, server-side seeding.
+1. **Compress Section 3 to a hand-out.** It's pure block editor — no IAPI content, and the section says so itself. Demo the finished Inspector panel for 3 minutes, tell everyone to copy `code-reference/section-3/src/edit.js`, and jump straight from slide 14 to slide 17 (skip Section 3's pause slide, keep its theory slides). Recovers ~10 min. Decide by 0:16; this is the cut to pre-plan.
+2. **Compress Section 4 to 4 minutes.** Talk the directives table and the context-vs-state distinction; skip the rest — Sections 5–8 re-teach every concept at the moment it's used. Recovers ~4 min.
+3. **Demo-only Section 8.** If you reach 1:12 without Section 7 finished, finish Section 7 with the room, then live-code Section 8 solo on the projector while they watch, and point at the snapshot. Autoplay is the most self-contained section — watching it still teaches `callbacks`/`withScope`/cleanup.
+4. **Never cut Section 5, Section 6, or Section 7.** They're the spine: round-trip, derived state, server-side seeding.
 
-If the wheels come off early (wifi, Studio installs), the floor is: §1–2 fast, §4 as a talk, then §5–6 with everyone, §7 as demo. That's still a coherent 90 minutes.
+If the wheels come off early (wifi, Studio installs), the floor is: Section 1–2 fast, Section 4 as a talk, then Section 5–6 with everyone, Section 7 as demo. That's still a coherent 90 minutes.
 
 ---
 
@@ -82,7 +82,7 @@ If the wheels come off early (wifi, Studio installs), the floor is: §1–2 fast
 
 **Talking points:**
 - The one thing to land hard: **`supports.interactivity: true` and `data-wp-interactive` are a pair.** The flag loads the runtime; the directive gives it a place to bind. Miss either and nothing works. You'll lean on this in every debugging moment later.
-- Flag the `speed`-is-a-string detail now, exactly as the outline does — it pays off in §8.
+- Flag the `speed`-is-a-string detail now, exactly as the outline does — it pays off in Section 8.
 
 **Common sticking points:**
 - None really — it's a tour. The risk is time, not confusion. Skim, don't read.
@@ -106,7 +106,7 @@ If the wheels come off early (wifi, Studio installs), the floor is: §1–2 fast
 
 **Talking points:**
 - This is a talk, not a follow-along — tell people to close their editors and listen.
-- The distinction that predicts every later bug: **context is per-instance, state is shared/derived.** Come back to this sentence in §6 and §7.
+- The distinction that predicts every later bug: **context is per-instance, state is shared/derived.** Come back to this sentence in Section 6 and Section 7.
 - Don't exhaustively read the directives table; each directive gets re-taught at the moment it's used.
 
 ### Section 5 — Hello, Store (~10 min) — **checkpoint section, never cut**
@@ -115,7 +115,7 @@ If the wheels come off early (wifi, Studio installs), the floor is: §1–2 fast
 
 **Talking points:**
 - The namespace contract: `data-wp-interactive='iapi-gallery'` and `store('iapi-gallery', …)` must agree — and neither has to match the block name `iapi/gallery-slider`. Say this before someone hits the typo.
-- The counter running past 3 is *expected* — resist the urge to fix it early; §6 owns bounds.
+- The counter running past 3 is *expected* — resist the urge to fix it early; Section 6 owns bounds.
 
 **Common sticking points:**
 - Clicking does nothing, no errors: namespace typo between the directive and `store()` — silently binds to nothing. This is the #1 failure of the whole workshop.
@@ -127,7 +127,7 @@ If the wheels come off early (wifi, Studio installs), the floor is: §1–2 fast
 **Goal:** Derived state getters; `data-wp-style--transform` slides the track; `data-wp-bind--disabled` grays out buttons at the ends; counter shows "X/3".
 
 **Talking points:**
-- The section's own framing is the right one: disable logic is *derived* from context, so it lives in `state` getters, not in context. This is the context-vs-state payoff from §4.
+- The section's own framing is the right one: disable logic is *derived* from context, so it lives in `state` getters, not in context. This is the context-vs-state payoff from Section 4.
 - Getters re-run on every read — that's why the UI stays in sync with no extra wiring.
 
 **Common sticking points:**
@@ -157,7 +157,7 @@ If the wheels come off early (wifi, Studio installs), the floor is: §1–2 fast
 **Talking points:**
 - Use the section's built-in **mid-section checkpoint**: after the three setup edits, save/reload and confirm nothing changed before writing the callbacks block. Cheap insurance against compound errors.
 - `withScope` gets one clear sentence: a rAF tick runs outside the Interactivity scope, so `getContext()`/`state` would be undefined without the wrapper.
-- `Number( ctx.speed ) * 1000` — the string-attribute coercion you promised back in §2.
+- `Number( ctx.speed ) * 1000` — the string-attribute coercion you promised back in Section 2.
 - Returning a function from a callback *is* the cleanup registration — no removeEventListener ceremony.
 
 **Common sticking points:**
@@ -179,7 +179,7 @@ If you do run it live: 9a (focus a11y) is the highest-value sub-stage — the AP
 
 ## Q&A — likely questions
 
-- **"Why not just use React/Alpine on the front end?"** — Server-rendered first paint with no client framework payload; directives hydrate in place. The §7 flash demo is your evidence.
+- **"Why not just use React/Alpine on the front end?"** — Server-rendered first paint with no client framework payload; directives hydrate in place. The Section 7 flash demo is your evidence.
 - **"Context vs state, one more time?"** — Context is per-instance and lives in the DOM; state is shared and where derived getters live. Two sliders on one page each get their own context.
-- **"Does the store namespace have to match the block name?"** — No; the only contract is `data-wp-interactive` ⇄ `store()` agreement (§5).
+- **"Does the store namespace have to match the block name?"** — No; the only contract is `data-wp-interactive` ⇄ `store()` agreement (Section 5).
 - **"Can blocks talk to each other?"** — Yes — shared state across namespaces; out of scope today, good take-home research.
