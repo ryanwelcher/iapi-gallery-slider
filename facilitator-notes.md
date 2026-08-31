@@ -57,7 +57,7 @@ Coding sections split roughly ⅓ talk track / ⅔ lab. Slide numbers reference 
 3. **Demo-only Section 8.** If you reach 1:12 without Section 7 finished, finish Section 7 with the room, then live-code Section 8 solo on the projector while they watch, and point at the snapshot. Autoplay is the most self-contained section — watching it still teaches `callbacks`/`withScope`/cleanup.
 4. **Never cut Section 5, Section 6, or Section 7.** They're the spine: round-trip, derived state, server-side seeding.
 
-If the wheels come off early (wifi, Studio installs), the floor is: Section 1–2 fast, Section 4 as a talk, then Section 5–6 with everyone, Section 7 as demo. That's still a coherent 90 minutes.
+If the wheels come off early (wifi, Studio installs), the floor is: Sections 1–2 fast, Section 4 as a talk, then Sections 5–6 with everyone, Section 7 as demo. That's still a coherent 90 minutes.
 
 ---
 
