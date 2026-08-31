@@ -130,7 +130,7 @@ Nine fast beats, content drawn from the "From Static to Dynamic" talk.
 - Today's seven highlighted in amber — show the toolbox shape, don't read the list
 
 ### Slide 24 [T] — Four kinds of data ★ reused in Sections 6 and 7
-- Four cards with "when to use" rules: global state (blocks share/sync) · local context (independent instances) · derived state (computable values) · config (static server-to-client — REST URLs, nonces; never triggers updates)
+- 2×2 grid, one card per kind with a "when to use" rule and a code sample from the From Static to Dynamic talk: global state (`wp_interactivity_state()`) · local context (`wp_interactivity_data_wp_context()` + its rendered `data-wp-context` output) · derived state (the `ucText` getter) · config (`wp_interactivity_config()` / `getConfig()`), each tagged render.php / view.js
 - The sentence that predicts every later bug: **"context is per-instance; state is shared and derived"**
 - The workshop uses the first three; config is the one to file away
 
