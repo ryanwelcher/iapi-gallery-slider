@@ -106,7 +106,7 @@ Nine fast beats, content drawn from the "From Static to Dynamic" talk.
 
 ### Slide 18 [T] — Under the hood
 - Three cards: Preact + Signals (hydration + client logic, never touched directly) · HTML directives both client *and* server understand · HTML Tag Processor (server-side logic in plain PHP, no Node SSR)
-- "Directives legible to both sides is the trick — it's what makes Section 7's no-flash seeding possible"
+- "The trick is that both the client *and* the server can read the directives — that's what makes Section 7's no-flash first paint possible"
 
 ### Slide 19 [T] — Declarative, not imperative
 - Side-by-side code: imperative sum-the-evens loop (the *how*) vs `.filter().reduce()` (the *what*)
@@ -114,7 +114,7 @@ Nine fast beats, content drawn from the "From Static to Dynamic" talk.
 
 ### Slide 20 [T] — Reactivity ★ the mindset
 - When state changes the UI updates automatically; each directive declares a *relationship* between an attribute and a piece of state
-- Mutation is allowed — no immutability ceremony: `ctx.currentSlide++` just works and reactivity still fires
+- Mutation is allowed — you don't have to treat anything as immutable; `ctx.currentSlide++` just works and reactivity still fires
 - The sentence: **"the state updates the UI — not the other way around"**
 
 ### Slide 21 [T] — The round-trip loop ★ reused in Section 5
@@ -194,7 +194,7 @@ Nine fast beats, content drawn from the "From Static to Dynamic" talk.
 ### Slide 34 [T] — The hydration flash
 - Two-frame visual: pre-hydration empty counter → hydrated "1/N"
 - Live demo on the projector with CPU 6× + Slow 4G throttling — "on your fast laptop you may never see it; real devices do"
-- The fix and the contract: `wp_interactivity_state()` seed **must mirror what the client getter computes** on first paint
+- The fix: whatever you pass to `wp_interactivity_state()` **must match what the client getter computes** on first paint
 
 ### Slide 35 [P] — LAB: real slide counts, no flash
 - **Mission:** filter counts inner blocks and seeds context + state
