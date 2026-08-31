@@ -55,7 +55,7 @@ Timing references the run sheet in `facilitator-notes.md`.
 
 ### Slide 9 [T] — `src/block.json`
 - Highlighted lines: `supports.interactivity: true`, `viewScriptModule`, three attributes
-- Flag now: `speed` is `"type": "string"` — "remember that; it bites in Section 8"
+- Flag now: `speed` is `"type": "string"` — "remember that — we convert it to a number before doing math with it in Section 8"
 
 ### Slide 10 [T] — **The opt-in pair** ★ recurring motif
 - Two-panel diagram: `supports.interactivity: true` (loads the engine) ⇄ `data-wp-interactive` (gives it a place to bind)
