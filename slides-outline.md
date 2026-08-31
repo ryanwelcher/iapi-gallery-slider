@@ -28,7 +28,8 @@ Timing references the run sheet in `facilitator-notes.md`.
 
 ### Slide 4 [T] — Setup check
 - Studio site from `blueprint.json` · plugin active · `npm run start` running
-- Playground fallback link for anyone stuck
+- Editor open on the plugin folder — the `workshop-outline/` section files and `code-reference/` snapshots live in it
+- Repo URL on screen (github.com/ryanwelcher/iapi-gallery-slider) — README has the Playground fallback
 - Speaker note: don't hold the room — pair stragglers with a neighbor, keep moving
 
 ### Slide 5 [T] — How today works
@@ -85,8 +86,10 @@ Timing references the run sheet in `facilitator-notes.md`.
 ### Slide 15 [P] — LAB: build `edit.js`
 - **Mission:** editor preview + "Slider Controls" Inspector panel
 - **Where:** `workshop-outline/section-3.md`, all steps
+- **Files:** `src/edit.js`
 - **Done when:** block inserts with inner-block area restricted to the 3 types; toggles + conditional number control work
 - **⏱ 10 min** · behind? `code-reference/section-3/src/edit.js`
+- **Done early?** open the post's code editor view and watch the attributes serialize into the block comment
 - Speaker note: *this is the pre-planned cut* — running late, demo the finished panel for 3 min, point at the snapshot, jump to slide 17
 
 ### Slide 16 [C] — Checkpoint
@@ -154,8 +157,10 @@ Nine fast beats, content drawn from the "From Static to Dynamic" talk.
 ### Slide 28 [P] — LAB: first round-trip
 - **Mission:** next button bumps a counter on the page
 - **Where:** `workshop-outline/section-5.md`, steps 1–5
+- **Files:** `src/render.php` · `src/view.js`
 - **Done when:** counter renders "1", next bumps it 2·3·4 *and keeps going past 3* (expected!), prev inert, no console errors
 - **⏱ 7 min** · behind? `code-reference/section-5/`
+- **Done early?** wire up the prev button — starting Section 6 early
 - Speaker note: walk the room; check for silent-failure namespace typos and stopped watchers
 
 ### Slide 29 [C] — Checkpoint · minute-50 gate
@@ -174,8 +179,10 @@ Nine fast beats, content drawn from the "From Static to Dynamic" talk.
 ### Slide 31 [P] — LAB: make it slide
 - **Mission:** slides move, buttons gray out at the ends, counter reads "X/3"
 - **Where:** `workshop-outline/section-6.md`, all steps
+- **Files:** `src/view.js` · `src/render.php`
 - **Done when:** prev+next both work, disabled at ends, transform animates
 - **⏱ 7 min** · behind? `code-reference/section-6/`
+- **Done early?** add a 4th image — the counter breaks; that's next section's setup
 - Speaker note: watch for transform off-by-one (slide 1 = translateX(0)) and unitless getter returns
 
 ### Slide 32 [C] — Checkpoint
@@ -199,9 +206,11 @@ Nine fast beats, content drawn from the "From Static to Dynamic" talk.
 ### Slide 35 [P] — LAB: real slide counts, no flash
 - **Mission:** filter counts inner blocks and seeds context + state
 - **Where:** `workshop-outline/section-7.md`, steps 1–5
+- **Files:** `iapi-gallery-slider.php` · `src/render.php`
 - **⚠ Don't reload between steps 1 and 3** — no context = console errors until the filter is registered
 - **Done when:** adding a 4th block makes the counter read "X/4" with no flash
 - **⏱ 8 min** · behind? `code-reference/section-7/`
+- **Done early?** throttle CPU + network in DevTools and try to catch the flash
 - Speaker note: sticking points — hook-name mismatch, `wp-block-image` (not `core/image`) in `$allowed_blocks`
 
 ### Slide 36 [C] — Checkpoint
@@ -224,9 +233,11 @@ Nine fast beats, content drawn from the "From Static to Dynamic" talk.
 
 ### Slide 39 [P] — LAB: autoplay
 - **Mission:** Autoplay toggle drives the slider at the chosen speed; loop cleans up
+- **Files:** `src/view.js` · `iapi-gallery-slider.php` · `src/render.php`
 - **Where:** `workshop-outline/section-8.md` — setup edits first, then **mid-lab checkpoint** (save/reload, behavior unchanged), then the callbacks block
 - **Done when:** autoplay advances and wraps; toggling off stops it; no leaked frames
 - **⏱ 9 min** · behind? `code-reference/section-8/`
+- **Done early?** two sliders on one page at different speeds — proof context is per-instance
 - Speaker note: "autoplay doesn't start" → check the toggle in the Inspector *before* the code. Running late? This section demos well — see cut line 3.
 
 ### Slide 40 [C] — Checkpoint
