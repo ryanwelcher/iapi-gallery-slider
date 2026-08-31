@@ -19,20 +19,32 @@
 
 ---
 
+## Delivery model: slide-driven
+
+The session runs from slides (see `slides-outline.md`), not live copy-paste. Three slide types repeat all day:
+
+- **Talk tracks [T]** — theory on slides; you narrate, laptops closed. All the "just me talking" theory (opt-in pair, round-trip loop, context-vs-state, `withScope`) lives on a slide you can point at — and flash back to during debugging moments.
+- **Pause slides [P]** — one per coding section, distinctive background, stays on screen for the whole lab: mission, `workshop-outline/section-N.md` pointer, done-when checklist, timebox, snapshot rescue path. While it's up, you walk the room (the sticking-point lists below are for exactly this).
+- **Checkpoints [C]** — after each lab you demo the working result on the projector; anyone unfinished copies the snapshot and rejoins. This is the pacing valve.
+
+Slides never carry copy-paste code — attendees type from the section files, which show full cumulative code. Slides show fragments for explanation only.
+
 ## Timing table (90-minute run sheet)
 
-| Clock | Section | Type | Budget |
-|-------|---------|------|--------|
-| 0:00–0:08 | 1 — Welcome & Setup | tour | 8 min |
-| 0:08–0:16 | 2 — Anatomy of the Starter | tour | 8 min |
-| 0:16–0:31 | 3 — Editor Controls | coding | 15 min |
-| 0:31–0:39 | 4 — Interactivity API Primer | reading | 8 min |
-| 0:39–0:49 | 5 — Hello, Store | coding | 10 min |
-| 0:49–0:59 | 6 — Sliding + Bounds | coding | 10 min |
-| 0:59–1:12 | 7 — Server-Side Directive Injection | coding | 13 min |
-| 1:12–1:25 | 8 — Autoplay | coding | 13 min |
-| 1:25–1:30 | Wrap-up + pointer to Section 9 | — | 5 min |
-| take-home | 9 — Polish: Focus, Touch, Continuous | coding | ~25–30 min solo |
+Coding sections split roughly ⅓ talk track / ⅔ lab. Slide numbers reference `slides-outline.md`.
+
+| Clock | Section | Type | Budget | Talk / Lab | Slides |
+|-------|---------|------|--------|-----------|--------|
+| 0:00–0:08 | 1 — Welcome & Setup | tour | 8 min | all talk | 1–6 |
+| 0:08–0:16 | 2 — Anatomy of the Starter | tour | 8 min | all talk | 7–12 |
+| 0:16–0:31 | 3 — Editor Controls | coding | 15 min | 4 / 10 (+1 checkpoint) | 13–16 |
+| 0:31–0:39 | 4 — Interactivity API Primer | reading | 8 min | all talk | 17–21 |
+| 0:39–0:49 | 5 — Hello, Store | coding | 10 min | 3 / 7 | 22–25 |
+| 0:49–0:59 | 6 — Sliding + Bounds | coding | 10 min | 3 / 7 | 26–28 |
+| 0:59–1:12 | 7 — Server-Side Directive Injection | coding | 13 min | 5 / 8 | 29–32 |
+| 1:12–1:25 | 8 — Autoplay | coding | 13 min | 4 / 9 | 33–36 |
+| 1:25–1:30 | Wrap-up + pointer to Section 9 | — | 5 min | all talk | 37–40 |
+| take-home | 9 — Polish: Focus, Touch, Continuous | coding | ~25–30 min solo | — | — |
 
 ### The minute-50 checkpoint
 
@@ -40,7 +52,7 @@
 
 ### Cut lines (in order of preference)
 
-1. **Compress §3 to a hand-out.** It's pure block editor — no IAPI content, and the section says so itself. Demo the finished Inspector panel for 3 minutes, tell everyone to copy `code-reference/section-3/src/edit.js`, and move to §4. Recovers ~10 min. Decide by 0:16; this is the cut to pre-plan.
+1. **Compress §3 to a hand-out.** It's pure block editor — no IAPI content, and the section says so itself. Demo the finished Inspector panel for 3 minutes, tell everyone to copy `code-reference/section-3/src/edit.js`, and jump straight from slide 14 to slide 17 (skip §3's pause slide, keep its theory slides). Recovers ~10 min. Decide by 0:16; this is the cut to pre-plan.
 2. **Compress §4 to 4 minutes.** Talk the directives table and the context-vs-state distinction; skip the rest — §§5–8 re-teach every concept at the moment it's used. Recovers ~4 min.
 3. **Demo-only §8.** If you reach 1:12 without §7 finished, finish §7 with the room, then live-code §8 solo on the projector while they watch, and point at the snapshot. Autoplay is the most self-contained section — watching it still teaches `callbacks`/`withScope`/cleanup.
 4. **Never cut §5, §6, or §7.** They're the spine: round-trip, derived state, server-side seeding.
