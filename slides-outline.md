@@ -134,7 +134,7 @@ Nine fast beats, content drawn from the "From Static to Dynamic" talk.
 
 ### Slide 24 [T] — A directive for every need
 - The full taxonomy in five groups: data providers (wp-interactive, wp-context) · attribute-based (wp-bind, wp-class, wp-style, wp-text) · event-based (wp-on + async/window/document variants) · programmatic (wp-init, wp-watch, wp-run) · looping (wp-each, wp-key, wp-each-child)
-- Today's seven highlighted in amber — show the toolbox shape, don't read the list
+- Today's seven highlighted in orange — show the toolbox shape, don't read the list
 
 ### Slide 25 [T] — Four kinds of data ★ reused in Sections 6 and 7
 - 2×2 grid, one card per kind with a "when to use" rule and a code sample from the From Static to Dynamic talk: global state (`wp_interactivity_state()`) · local context (`wp_interactivity_data_wp_context()` + its rendered `data-wp-context` output) · derived state (the `ucText` getter) · config (`wp_interactivity_config()` / `getConfig()`), each tagged render.php / view.js
