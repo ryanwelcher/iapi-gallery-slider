@@ -1,0 +1,44 @@
+{
+  "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+  "preferredVersions": {
+    "php": "8.2",
+    "wp": "latest"
+  },
+  "features": {
+    "networking": true
+  },
+  "login": true,
+  "landingPage": "/?p=1",
+  "steps": [
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "url",
+        "url": "https://github.com/ryanwelcher/iapi-gallery-slider/archive/refs/heads/demo.zip"
+      }
+    },
+    {
+      "step": "mv",
+      "fromPath": "/wordpress/wp-content/plugins/iapi-gallery-slider-demo",
+      "toPath": "/wordpress/wp-content/plugins/iapi-gallery-slider"
+    },
+    {
+      "step": "activatePlugin",
+      "pluginPath": "iapi-gallery-slider/iapi-gallery-slider.php"
+    },
+    {
+      "step": "activateTheme",
+      "themeFolderName": "twentytwentyfive"
+    },
+    {
+      "step": "setSiteOptions",
+      "options": {
+        "blogname": "IAPI Gallery Slider \u2014 Demo"
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php require '/wordpress/wp-load.php'; require ABSPATH . 'wp-admin/includes/media.php'; require ABSPATH . 'wp-admin/includes/file.php'; require ABSPATH . 'wp-admin/includes/image.php';\n$images = [\n  ['url' => 'https://pd.w.org/2026/05/9936a13ffe567c1a7.56072101.jpg', 'title' => 'Reflective Hillside Lake', 'alt' => 'A calm body of water reflecting a rocky hillside and green trees'],\n  ['url' => 'https://pd.w.org/2026/05/9106a12493a11b950.86693035.jpg', 'title' => 'Swiss Alps Panorama', 'alt' => 'Snow-covered Swiss Alps under a bright sun with dramatic swirling clouds'],\n  ['url' => 'https://pd.w.org/2026/05/1066a112efede78f0.11057692.jpg', 'title' => 'Boat on Calm Water', 'alt' => 'A person in a small wooden boat on calm water backed by lush green hills'],\n  ['url' => 'https://pd.w.org/2026/05/1396a0b6835d38ab8.23541697.jpeg', 'title' => 'Rhine River', 'alt' => 'The turquoise Rhine River flowing peacefully between green forests in Switzerland'],\n  ['url' => 'https://pd.w.org/2026/05/9636a06a061b5b065.25317215.jpg', 'title' => 'Forest Walkway', 'alt' => 'A wooden walkway through a lush green forest lit by gentle sunlight'],\n];\n$ids = [];\nforeach ($images as $img) {\n  $tmp = download_url($img['url']);\n  if (is_wp_error($tmp)) { continue; }\n  $file_array = ['name' => basename(parse_url($img['url'], PHP_URL_PATH)), 'tmp_name' => $tmp];\n  $id = media_handle_sideload($file_array, 0, $img['title']);\n  if (is_wp_error($id)) { @unlink($tmp); continue; }\n  $file = get_attached_file($id);\n  $editor = wp_get_image_editor($file);\n  if (!is_wp_error($editor)) {\n    $size = $editor->get_size(); $w = $size['width']; $h = $size['height'];\n    $target = 16 / 9; $current = $w / $h;\n    if ($current > $target) { $new_w = (int) round($h * $target); $src_x = (int) round(($w - $new_w) / 2); $editor->crop($src_x, 0, $new_w, $h, 1600, 900); }\n    else { $new_h = (int) round($w / $target); $src_y = (int) round(($h - $new_h) / 2); $editor->crop(0, $src_y, $w, $new_h, 1600, 900); }\n    $editor->save($file);\n    wp_update_attachment_metadata($id, wp_generate_attachment_metadata($id, $file));\n  }\n  update_post_meta($id, '_wp_attachment_image_alt', $img['alt']);\n  $ids[] = $id;\n}\n$inner = '';\nforeach ($ids as $id) {\n  $url = wp_get_attachment_image_url($id, 'large');\n  $alt = esc_attr(get_post_meta($id, '_wp_attachment_image_alt', true));\n  $inner .= sprintf('<!-- wp:image {\"id\":%1$d,\"sizeSlug\":\"large\",\"linkDestination\":\"none\"} --><figure class=\"wp-block-image size-large\"><img src=\"%2$s\" alt=\"%3$s\" class=\"wp-image-%1$d\"/></figure><!-- /wp:image -->', $id, esc_url($url), $alt);\n}\nwp_update_post(['ID' => 1, 'post_title' => 'Hello, IAPI!', 'post_content' => '<!-- wp:iapi/gallery-slider {\"autoplay\":true,\"speed\":\"4\"} -->' . $inner . '<!-- /wp:iapi/gallery-slider -->', 'post_status' => 'publish']);\necho 'Demo post ready with ' . count($ids) . ' slides';"
+    }
+  ]
+}
