@@ -122,8 +122,8 @@ Nine fast beats, content drawn from the "From Static to Dynamic" talk.
 - "Every section from here is this loop with more parts"
 
 ### Slide 22 [T] — Anatomy of a directive
-- `data-wp-bind--disabled` broken into segments: `data-wp-` (standard HTML data-* attribute) · `bind` (directive name — what kind of relationship) · `--disabled` (parameter — which event/attribute/property)
-- "The `--parameter` pattern generalizes: any event, any attribute, any CSS property"
+- `data-wp-bind--hidden---id` broken into four segments: `data-wp-` (standard HTML data-* attribute) · `bind` (directive name — what kind of relationship) · `--hidden` (parameter, two dashes — which event/attribute/property) · `---id` (optional unique ID, three dashes — lets the same directive appear more than once on one element)
+- "The `--parameter` pattern generalizes: any event, any attribute, any CSS property — and `---id` when you need the same one twice"
 
 ### Slide 23 [T] — A directive for every need
 - The full taxonomy in five groups: data providers (wp-interactive, wp-context) · attribute-based (wp-bind, wp-class, wp-style, wp-text) · event-based (wp-on + async/window/document variants) · programmatic (wp-init, wp-watch, wp-run) · looping (wp-each, wp-key, wp-each-child)
