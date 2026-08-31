@@ -16,7 +16,7 @@ Timing references the run sheet in `facilitator-notes.md`.
 
 ### Slide 1 [T] — Title
 - Building Interactive Blocks with the Interactivity API
-- WCEU 2026 · Ryan Welcher, Automattic · @ryanwelcher
+- Ryan Welcher, Automattic · @ryanwelcher
 
 ### Slide 2 [T] — Who am I?
 - Developer Advocate at Automattic

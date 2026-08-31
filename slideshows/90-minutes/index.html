@@ -16,7 +16,7 @@
     --line: #4A4780;
     --ink: #FFFFFF;
     --ink-dim: #C9C7E0;
-    --accent: #A9A6D8;
+    --accent: #C9C7E0;
     --amber: #E76F51;
     --green: #A5FF90;
     --pause-ground: #E76F51;
@@ -50,7 +50,7 @@
     color: var(--accent);
     margin-bottom: 2.2vh;
   }
-  .eyebrow .clock { color: var(--ink-dim); }
+  .eyebrow .clock { color: var(--ink-dim); opacity: 0.75; }
   h1 {
     font-family: var(--display);
     font-weight: 800;
@@ -138,10 +138,10 @@
   .cycle .node span { font-size: clamp(14px, 1.65vw, 21px); color: var(--ink-dim); }
   .cycle .node:not(:last-child)::after {
     content: "→"; position: absolute; right: calc(-1.1vw - 8px); top: 50%; transform: translateY(-50%);
-    color: var(--accent); font-size: clamp(16px, 2vw, 28px);
+    color: var(--amber); font-size: clamp(16px, 2vw, 28px);
   }
   .cycle-back {
-    text-align: center; font-family: var(--mono); color: var(--accent);
+    text-align: center; font-family: var(--mono); color: var(--amber);
     font-size: clamp(14px, 1.6vw, 21px); margin-top: 1vh;
   }
   /* stepper */
@@ -225,7 +225,7 @@
   .slide[data-type="c"] .eyebrow { color: var(--green); }
   .slide[data-type="c"] .big-say { max-width: 30em; }
   /* chrome */
-  #progress { position: fixed; top: 0; left: 0; height: 4px; background: var(--accent); width: 0; z-index: 5; transition: width 0.2s; }
+  #progress { position: fixed; top: 0; left: 0; height: 4px; background: var(--amber); width: 0; z-index: 5; transition: width 0.2s; }
   #counter {
     position: fixed; bottom: 14px; right: 18px; z-index: 5;
     font-family: var(--mono); font-size: 13px; color: var(--ink-dim);
@@ -270,7 +270,7 @@
 <!-- ===================== OPENING 0:00–0:08 ===================== -->
 
 <section class="slide" data-type="t" data-notes="Welcome people in as they settle. Watcher check happens on slide 4, not now.">
-  <div class="eyebrow">WordCamp Canada 2026 <span class="clock">· workshop · 90 min</span></div>
+  <div class="eyebrow">Hands-on workshop <span class="clock">· 90 min</span></div>
   <h1>Building Interactive Blocks<br>with the Interactivity&nbsp;API</h1>
   <p class="dim" style="font-size: clamp(18px, 2.2vw, 30px);">Ryan Welcher · Automattic · @ryanwelcher</p>
 </section>
@@ -658,12 +658,12 @@ nums
   <div class="eyebrow">Section 4 · IAPI Primer</div>
   <h2>Anatomy of a directive</h2>
   <div style="font-family: var(--mono); font-size: clamp(22px, 3.2vw, 46px); font-weight: 600; margin: 2vh 0 3vh;">
-    <span class="dim" data-frag="1">data-wp-</span><span class="amber" data-frag="2">bind</span><span style="color: var(--accent);" data-frag="3">--hidden</span><span style="color: var(--green);" data-frag="4">---id</span>
+    <span class="dim" data-frag="1">data-wp-</span><span class="amber" data-frag="2">bind</span><span style="color: #FAD000;" data-frag="3">--hidden</span><span style="color: var(--green);" data-frag="4">---id</span>
   </div>
   <div class="cols">
     <div class="card" data-frag="1"><h3 style="color: var(--ink-dim);">data-wp-</h3><p>A standard HTML <code>data-*</code> attribute — valid markup, server-printable</p></div>
     <div class="card" data-frag="2"><h3 style="color: var(--amber);">bind</h3><p>The directive name — <em>what kind</em> of relationship</p></div>
-    <div class="card" data-frag="3"><h3>--hidden</h3><p>The parameter (two dashes) — <em>which</em> event, attribute, or CSS property</p></div>
+    <div class="card" data-frag="3"><h3 style="color: #FAD000;">--hidden</h3><p>The parameter (two dashes) — <em>which</em> event, attribute, or CSS property</p></div>
     <div class="card" style="border-color: var(--green);" data-frag="4"><h3 style="color: var(--green);">---id</h3><p>Optional unique ID (three dashes) — lets the <em>same</em> directive appear more than once on one element</p></div>
   </div>
   <p class="big-say" style="margin-top: 3vh;" data-frag="5">The <code>--parameter</code> pattern generalizes: <strong>any event, any attribute, any CSS property</strong> — and <code>---id</code> when you need the same one twice.</p>

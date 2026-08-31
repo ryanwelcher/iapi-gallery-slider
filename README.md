@@ -1,9 +1,5 @@
 # Building Interactive Blocks with the Interactivity API
 
-### WCEU 2026
-
-**Date:** 2026-06-06
-
 -   Ryan Welcher, Automattic
 
 ## Pre-Workshop Setup Checklist
