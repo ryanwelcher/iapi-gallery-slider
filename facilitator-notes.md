@@ -38,12 +38,12 @@ Coding sections split roughly ⅓ talk track / ⅔ lab. Slide numbers reference 
 | 0:00–0:08 | 1 — Welcome & Setup | tour | 8 min | all talk | 1–6 |
 | 0:08–0:16 | 2 — Anatomy of the Starter | tour | 8 min | all talk | 7–12 |
 | 0:16–0:31 | 3 — Editor Controls | coding | 15 min | 4 / 10 (+1 checkpoint) | 13–16 |
-| 0:31–0:39 | 4 — Interactivity API Primer | reading | 8 min | all talk | 17–21 |
-| 0:39–0:49 | 5 — Hello, Store | coding | 10 min | 3 / 7 | 22–25 |
-| 0:49–0:59 | 6 — Sliding + Bounds | coding | 10 min | 3 / 7 | 26–28 |
-| 0:59–1:12 | 7 — Server-Side Directive Injection | coding | 13 min | 5 / 8 | 29–32 |
-| 1:12–1:25 | 8 — Autoplay | coding | 13 min | 4 / 9 | 33–36 |
-| 1:25–1:30 | Wrap-up + pointer to Section 9 | — | 5 min | all talk | 37–40 |
+| 0:31–0:39 | 4 — Interactivity API Primer | reading | 8 min | all talk | 17–25 |
+| 0:39–0:49 | 5 — Hello, Store | coding | 10 min | 3 / 7 | 26–29 |
+| 0:49–0:59 | 6 — Sliding + Bounds | coding | 10 min | 3 / 7 | 30–32 |
+| 0:59–1:12 | 7 — Server-Side Directive Injection | coding | 13 min | 5 / 8 | 33–36 |
+| 1:12–1:25 | 8 — Autoplay | coding | 13 min | 4 / 9 | 37–40 |
+| 1:25–1:30 | Wrap-up + pointer to Section 9 | — | 5 min | all talk | 41–45 |
 | take-home | 9 — Polish: Focus, Touch, Continuous | coding | ~25–30 min solo | — | — |
 
 ### The minute-50 checkpoint
@@ -102,12 +102,14 @@ If the wheels come off early (wifi, Studio installs), the floor is: Sections 1�
 
 ### Section 4 — Interactivity API Primer (~8 min)
 
-**Goal:** Mental model: directives, context vs state, actions vs callbacks, server seeding.
+**Goal:** Mental model: what the API is and why it's standardized, the declarative/reactive mindset, directive anatomy, the four kinds of data (global state / local context / derived state / config), server seeding. Nine slides, fast beats — content drawn from the "From Static to Dynamic" talk.
 
 **Talking points:**
 - This is a talk, not a follow-along — tell people to close their editors and listen.
-- The distinction that predicts every later bug: **context is per-instance, state is shared/derived.** Come back to this sentence in Section 6 and Section 7.
-- Don't exhaustively read the directives table; each directive gets re-taught at the moment it's used.
+- Credibility beat up front: Core already runs on this API (Search, Query Loop, Navigation, File, Image lightbox).
+- The mindset sentence: **the state updates the UI — not the other way around.** And mutation is allowed — `ctx.currentSlide++` just works.
+- The distinction that predicts every later bug: **context is per-instance, state is shared/derived.** Come back to this sentence in Section 6 and Section 7. Config is the fourth kind — file it away for REST URLs/nonces; the workshop doesn't use it.
+- Directive anatomy (`data-wp-` / name / `--parameter`) replaces reading the directive list; the taxonomy slide shows the toolbox shape with today's seven highlighted — don't read it exhaustively.
 
 ### Section 5 — Hello, Store (~10 min) — **checkpoint section, never cut**
 
