@@ -76,6 +76,8 @@
   .slide li::marker { color: var(--accent); }
   .dim { color: var(--ink-dim); }
   .amber { color: #F8A48F; }
+  a.repo-link { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 0.15em; }
+  a.repo-link.amber { color: #F8A48F; }
   .big-say {
     font-family: var(--display);
     font-weight: 600;
@@ -84,6 +86,8 @@
     text-wrap: balance;
   }
   .big-say strong { color: var(--amber); font-weight: 800; }
+  /* No ligatures: show => and === as typed, not as single glyphs. */
+  pre.code, code { font-variant-ligatures: none; }
   pre.code {
     font-family: var(--mono);
     font-size: clamp(12px, calc(var(--u) * 1.198), 23px);
@@ -106,6 +110,10 @@
   /* two-column body: text lead left, evidence (code/cards) right */
   .split { display: grid; grid-template-columns: 5fr 6fr; gap: 3.5vw; align-items: center; }
   .split.even { grid-template-columns: 1fr 1fr; }
+  /* Side-by-side code: both blocks share one height, captions line up. */
+  .split.code-pair { align-items: stretch; }
+  .code-pair > div { display: flex; flex-direction: column; }
+  .code-pair > div > pre.code { flex: 1; }
   .split > .lead { display: flex; flex-direction: column; gap: 1.8vh; }
   .cols { display: flex; gap: 2vw; align-items: stretch; }
   .cols > * { flex: 1; min-width: 0; }
@@ -322,7 +330,13 @@
   [data-frag] { opacity: 0; transition: opacity 0.35s ease, transform 0.35s ease; }
   div[data-frag], p[data-frag], ul[data-frag], pre[data-frag] { transform: translateY(10px); }
   [data-frag].frag-on { opacity: 1; transform: none; }
-  @media (prefers-reduced-motion: reduce) { #progress { transition: none; } [data-frag] { transition: none; } }
+  /* Bullet lists step one item per press: unreached items are hidden (their
+     space is kept so nothing jumps), the current one is full strength, earlier
+     ones fade, and a final press brings the whole list back to full. */
+  .step-li { transition: opacity 0.3s ease; }
+  .step-li.li-hidden { opacity: 0; visibility: hidden; }
+  .step-li.li-faded { opacity: 0.35; }
+  @media (prefers-reduced-motion: reduce) { #progress { transition: none; } [data-frag], .step-li { transition: none; } }
 </style>
 </head>
 <body>
@@ -380,7 +394,7 @@
       <li><strong>IAPI Gallery Slider</strong> plugin active</li>
       <li><strong>Node 20 via NVM</strong> (recommended): <code>nvm use</code> reads the repo's <code>.nvmrc</code>. No NVM? <code>node -v</code> should show v20 or newer</li>
       <li><strong>Editor open on the plugin folder</strong>. Everything today lives in it, including the <code>workshop-outline/</code> section files and the <code>code-reference/</code> snapshots</li>
-      <li class="dim">Stuck? <span class="amber">github.com/ryanwelcher/iapi-gallery-slider</span> has a Playground fallback in the README</li>
+      <li class="dim">Stuck? <a class="amber repo-link" href="https://github.com/ryanwelcher/iapi-gallery-slider" target="_blank" rel="noopener">github.com/ryanwelcher/iapi-gallery-slider</a> has a Playground fallback in the README</li>
     </ul>
     <pre class="code">cd wp-content/plugins/iapi-gallery-slider
 nvm use          <span class="c"># reads .nvmrc (Node 20)</span>
@@ -666,7 +680,7 @@ import { SwitchControl }
 <section class="slide" data-type="t" data-notes="The mindset shift. Imperative = micromanaging every move. Declarative = describe the result. Directives are the declarative version of DOM manipulation.">
   <div class="eyebrow">Section 4 · IAPI Primer</div>
   <h2>Declarative, not imperative</h2>
-  <div class="split even">
+  <div class="split even code-pair">
     <div data-frag="1">
       <pre class="code"><span class="c">// imperative — the HOW</span>
 let sum = 0;
@@ -679,7 +693,7 @@ for ( let i = 0; i &lt; nums.length; i++ ) {
     </div>
     <div data-frag="2">
       <pre class="code"><span class="c">// declarative — the WHAT</span>
-nums
+const sum = nums
   .filter( ( n ) => n % 2 === 0 )
   .reduce( ( acc, n ) => acc + n, 0 );</pre>
       <p class="dim" style="margin-top: 1.2vh;">You describe the result, and all the machinery happens under the hood.</p>
@@ -691,7 +705,7 @@ nums
 <section class="slide" data-type="t" data-notes="Same split as the last slide, now with a real button and counter. The right side is exactly what they write in Section 5, so don't explain the directives yet. Just let them see how much code disappears.">
   <div class="eyebrow">Section 4 · IAPI Primer</div>
   <h2>Same idea, in the DOM</h2>
-  <div class="split even">
+  <div class="split even code-pair">
     <div data-frag="1">
       <pre class="code"><span class="c">// imperative: the HOW</span>
 let current = 1;
@@ -854,7 +868,7 @@ nextImage() { getContext().currentSlide++; }</pre>
     <div class="node" data-frag="4"><b>data-wp-text</b><span>counter re-renders</span></div>
   </div>
   <div class="cycle-back" data-frag="4">⟲ same loop as the primer, with real names now</div>
-  <div class="split even" style="margin-top: 2.5vh; align-items: start;" data-frag="5">
+  <div class="split even code-pair" style="margin-top: 2.5vh;" data-frag="5">
     <pre class="code"><span class="c">&lt;!-- render.php, as rendered --&gt;</span>
 &lt;div data-wp-interactive='iapi-gallery'
      <mark>data-wp-context</mark>='{"currentSlide":1}'&gt;
@@ -1161,7 +1175,7 @@ return <mark>Number( ctx.speed )</mark> * 1000;</pre>
   <div class="split" style="align-items: center;">
     <div class="lead">
       <h1 style="font-size: clamp(36px, calc(var(--u) * 3.958), 76px); margin-bottom: 2vh;">Thank you 🎉</h1>
-      <p class="big-say">Repo: <strong>github.com/ryanwelcher/iapi-gallery-slider</strong></p>
+      <p class="big-say">Repo: <a class="repo-link" href="https://github.com/ryanwelcher/iapi-gallery-slider" target="_blank" rel="noopener"><strong>github.com/ryanwelcher/iapi-gallery-slider</strong></a></p>
       <p class="big-say">Scan the QR and let me know how this went. It helps me make the next one better.</p>
       <p class="dim" style="font-size: clamp(17px, calc(var(--u) * 1.354), 26px);">@ryanwelcher · @ryanwelchercodes · Questions?</p>
     </div>
@@ -1236,19 +1250,41 @@ return <mark>Number( ctx.speed )</mark> * 1000;</pre>
   const help = document.getElementById('help');
   let idx = 0;
 
-  // Fragment steps: [data-frag="N"] elements reveal in numeric order.
-  // Forward reveals the next group before leaving the slide; backward
-  // un-reveals; arriving from the right (or by hash) shows everything.
-  function fragSteps(slide) {
-    const nums = [...new Set(Array.from(slide.querySelectorAll('[data-frag]'))
+  // Build steps. [data-frag="N"] elements reveal in numeric order first,
+  // then each bullet list steps one item at a time, then one last step shows
+  // the whole list at full strength. Forward reveals the next step before
+  // leaving the slide; backward un-reveals; arriving from the right (or by
+  // hash or the outline) shows everything.
+  function fragNums(slide) {
+    return [...new Set(Array.from(slide.querySelectorAll('[data-frag]'))
       .map(el => parseInt(el.dataset.frag, 10)))].sort((a, b) => a - b);
-    return nums;
+  }
+  // Bullet lists with 2+ items step through, except small lists inside cards.
+  slides.forEach(slide => {
+    slide.stepItems = [];
+    slide.querySelectorAll('ul').forEach(ul => {
+      if (ul.closest('.card')) return;
+      const items = ul.querySelectorAll(':scope > li');
+      if (items.length < 2) return;
+      items.forEach(li => { li.classList.add('step-li'); slide.stepItems.push(li); });
+    });
+  });
+  // One entry per build step; only the length matters to callers.
+  function fragSteps(slide) {
+    const bullets = slide.stepItems.length;
+    return fragNums(slide).concat(Array(bullets ? bullets + 1 : 0).fill('li'));
   }
   function applyFrags(slide, revealed) {
-    const steps = fragSteps(slide);
-    const visible = new Set(steps.slice(0, revealed));
+    const nums = fragNums(slide);
+    const visible = new Set(nums.slice(0, revealed));
     slide.querySelectorAll('[data-frag]').forEach(el => {
       el.classList.toggle('frag-on', visible.has(parseInt(el.dataset.frag, 10)));
+    });
+    const current = revealed - nums.length;  // 1-based bullet; past the end = all full
+    const all = current > slide.stepItems.length;
+    slide.stepItems.forEach((li, k) => {
+      li.classList.toggle('li-hidden', !all && k + 1 > current);
+      li.classList.toggle('li-faded', !all && k + 1 < current);
     });
   }
   const revealedBySlide = new Map();
