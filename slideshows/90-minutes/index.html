@@ -553,7 +553,7 @@ npm install      <span class="c"># safe to re-run</span>
   </div>
 </section>
 
-<section class="slide" data-type="t" data-notes="The import-map callout is the #1 sticking point. InspectorControls comes from block-editor, SwitchControl from the newer @wordpress/ui, and the rest from components. If anyone asks: ToggleControl is the older version, and WordPress now recommends SwitchControl. Alias syntax for NumberControl on screen so nobody has to guess.">
+<section class="slide" data-type="t" data-notes="The import-map callout is the #1 sticking point. InspectorControls comes from block-editor, SwitchControl from the newer @wordpress/ui, and the rest from components. If anyone asks: ToggleControl is the older version, and WordPress now recommends SwitchControl. Alias syntax for NumberControl on screen so nobody has to guess. The panel code is step 4 of section-3.md, trimmed to the Autoplay switch; the conditional NumberControl is the Slide Duration field.">
   <div class="eyebrow">Section 3 · Editor Controls</div>
   <h2>The pieces</h2>
   <div class="split">
@@ -566,17 +566,23 @@ npm install      <span class="c"># safe to re-run</span>
         <li>Don't let the <code>__experimental</code> prefix scare you. That's still the current public import for <code>NumberControl</code></li>
       </ul>
     </div>
-    <pre class="code">import { <mark data-step-mark="1">useBlockProps</mark>, <mark data-step-mark="2">useInnerBlocksProps</mark>,
-         InspectorControls }
-    from <mark data-step-mark="3">'@wordpress/block-editor'</mark>;
+    <pre class="code"><span class="c">// the imports</span>
+import { <mark data-step-mark="1">useBlockProps</mark>, <mark data-step-mark="2">useInnerBlocksProps</mark>,
+    InspectorControls } from <mark data-step-mark="3">'@wordpress/block-editor'</mark>;
+import { PanelBody, <mark data-step-mark="5">__experimentalNumberControl</mark>
+    <mark data-step-mark="5">as NumberControl</mark> } from <mark data-step-mark="3">'@wordpress/components'</mark>;
+import { SwitchControl } from <mark data-step-mark="3">'@wordpress/ui'</mark>;
 
-import { PanelBody,
-         <mark data-step-mark="5">__experimentalNumberControl</mark>
-             <mark data-step-mark="5">as NumberControl</mark> }
-    from <mark data-step-mark="3">'@wordpress/components'</mark>;
-
-import { SwitchControl }
-    from <mark data-step-mark="3">'@wordpress/ui'</mark>;</pre>
+<span class="c">// the Inspector panel</span>
+&lt;InspectorControls&gt;
+  &lt;PanelBody title={ __( 'Slider Controls' ) }&gt;
+    &lt;SwitchControl label={ __( 'Autoplay' ) }
+      checked={ <mark data-step-mark="4">autoplay</mark> }
+      onCheckedChange={ ( checked ) =&gt;
+        <mark data-step-mark="4">setAttributes( { autoplay: checked } )</mark> } /&gt;
+    { <mark data-step-mark="4">autoplay &amp;&amp;</mark> &lt;NumberControl … /&gt; }
+  &lt;/PanelBody&gt;
+&lt;/InspectorControls&gt;</pre>
   </div>
 </section>
 

@@ -76,7 +76,7 @@ Timing references the run sheet in `facilitator-notes.md`.
 - `useBlockProps` / `useInnerBlocksProps` + `allowedBlocks` (Image, Cover, Media & Text)
 - `InspectorControls` + `PanelBody` + `SwitchControl` (from `@wordpress/ui`) + `__experimentalNumberControl as NumberControl`
 - Import-map callout: which package each import comes from (the #1 sticking point)
-- Conditional rendering: Slide Duration only when Autoplay is on
+- Code shows the imports and, under them, the Inspector panel: `SwitchControl` with `onCheckedChange` → `setAttributes`, and `{ autoplay && <NumberControl … /> }` for Slide Duration only when Autoplay is on
 
 ### Slide 13 [P] — LAB: build `edit.js`
 - **Mission:** editor preview + "Slider Controls" Inspector panel
