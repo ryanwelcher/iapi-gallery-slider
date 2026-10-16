@@ -246,6 +246,38 @@
     padding: 14px 24px 18px; font-size: 16px; line-height: 1.5; color: var(--ink);
   }
   #notes.on { display: block; }
+  /* Slide outline: O (or click the counter) to open, click a slide to jump. */
+  #outline {
+    position: fixed; inset: 3vh 3vw; z-index: 9; display: none; overflow-y: auto;
+    background: var(--ground); border: 2px solid var(--accent); border-radius: 12px;
+    padding: 18px 26px; columns: 3 17em; column-gap: 28px; font-size: 15px; color: var(--ink);
+  }
+  #outline.on { display: block; }
+  #outline .tag { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 6px; column-span: all; }
+  #outline .group { break-inside: avoid; margin-bottom: 14px; }
+  #outline h4 { margin: 0 0 4px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-dim); }
+  #outline button {
+    display: flex; gap: 8px; width: 100%; text-align: left; background: none; border: 0; border-radius: 6px;
+    color: inherit; font: inherit; line-height: 1.35; padding: 3px 6px; cursor: pointer;
+  }
+  #outline button:hover, #outline button:focus-visible { background: var(--ground-raise); outline: none; }
+  #outline button.current { color: var(--amber); font-weight: 600; }
+  #outline .num { font-family: var(--mono); color: var(--ink-dim); min-width: 2em; }
+  #outline .kind { color: var(--ink-dim); font-weight: 400; }
+  #counter { cursor: pointer; }
+  /* Controls panel: ? to open. */
+  #keys {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9; display: none;
+    width: min(640px, 92vw); max-height: 92vh; overflow-y: auto;
+    background: var(--ground); border: 2px solid var(--accent); border-radius: 12px;
+    padding: 18px 26px 20px; font-size: 15px; color: var(--ink);
+  }
+  #keys.on { display: block; }
+  #keys .tag { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 10px; }
+  #keys table { width: 100%; border-collapse: collapse; }
+  #keys th, #keys td { text-align: left; vertical-align: top; padding: 6px 0; border-top: 1px solid var(--line); line-height: 1.4; }
+  #keys th { font-family: var(--mono); font-weight: 600; color: var(--amber); white-space: nowrap; padding-right: 20px; font-size: 14px; }
+  #keys td { color: var(--ink-dim); }
   #notes .tag { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 4px; }
   #help {
     position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%); z-index: 5;
@@ -1121,7 +1153,19 @@ return <mark>Number( ctx.speed )</mark> * 1000;</pre>
 <div id="timer">00:00</div>
 <div id="pg-overlay"><button id="pg-close" onclick="closePG()">✕ close</button></div>
 <div id="notes"><span class="tag">Speaker notes · N to hide</span><span id="notes-body"></span></div>
-<div id="help">← → navigate · type a number + Enter to jump · N notes · T timer</div>
+<div id="outline" role="dialog" aria-label="Slide outline"></div>
+<div id="keys" role="dialog" aria-label="Controls"><span class="tag">Controls · ? or Esc to close</span><table>
+  <tr><th>→ · Space · Page Down · click</th><td>Next step or slide</td></tr>
+  <tr><th>← · Page Up</th><td>Previous step or slide</td></tr>
+  <tr><th>Home · End</th><td>First or last slide</td></tr>
+  <tr><th>Number, then Enter</th><td>Jump to that slide. Backspace fixes a typo, Esc cancels</td></tr>
+  <tr><th>O · click the counter</th><td>Slide outline. Click a slide to jump to it</td></tr>
+  <tr><th>N</th><td>Show or hide speaker notes (they show on the projector too)</td></tr>
+  <tr><th>T</th><td>Start or stop the timer</td></tr>
+  <tr><th>?</th><td>This panel</td></tr>
+  <tr><th>#28 in the URL</th><td>Open the deck at that slide</td></tr>
+</table></div>
+<div id="help">← → navigate · type a number + Enter to jump · O outline · N notes · T timer · ? all controls</div>
 <div id="jump"><span id="jump-num"></span><small>Enter to jump · Esc to cancel</small></div>
 
 <script>
@@ -1250,7 +1294,62 @@ return <mark>Number( ctx.speed )</mark> * 1000;</pre>
     jumpEl.classList.toggle('on', jumpBuffer.length > 0);
   }
 
+  // Slide outline, grouped by the section in each slide's eyebrow.
+  const outlineEl = document.getElementById('outline');
+  (function buildOutline() {
+    const KIND = { p: 'lab', c: 'checkpoint' };
+    let html = '<span class="tag">Slides · click to jump · O or Esc to close</span>';
+    let group = null;
+    slides.forEach((slide, i) => {
+      const eyebrow = slide.querySelector('.eyebrow');
+      const parts = eyebrow ? eyebrow.textContent.split('·').map(t => t.trim()) : [];
+      let label = 'Opening';
+      if (/^Section \d+/.test(parts[0] || '')) label = parts[0] + ' · ' + parts[1];
+      else if (/^(Wrap-up|Thanks)/.test(parts[0] || '')) label = 'Wrap-up';
+      const key = label.replace(/ · .*/, '');
+      if (key !== group) {
+        html += (group ? '</div>' : '') + '<div class="group"><h4>' + label + '</h4>';
+        group = key;
+      }
+      const heading = slide.querySelector('h1, h2');
+      let title = 'Slide ' + (i + 1);
+      if (heading) {
+        const copy = heading.cloneNode(true);
+        copy.querySelectorAll('br').forEach(br => br.replaceWith(' '));
+        title = copy.textContent.replace(/\s+/g, ' ').trim();
+      }
+      const kind = KIND[slide.dataset.type] ? ' <span class="kind">· ' + KIND[slide.dataset.type] + '</span>' : '';
+      html += '<button type="button" data-i="' + i + '"><span class="num">' + (i + 1) + '</span><span>' + title.replace(/</g, '&lt;') + kind + '</span></button>';
+    });
+    outlineEl.innerHTML = html + '</div>';
+  })();
+  function toggleOutline(force) {
+    const on = force !== undefined ? force : !outlineEl.classList.contains('on');
+    outlineEl.classList.toggle('on', on);
+    if (!on) return;
+    outlineEl.querySelectorAll('button').forEach(b => b.classList.toggle('current', +b.dataset.i === idx));
+    const cur = outlineEl.querySelector('button.current');
+    if (cur) { cur.scrollIntoView({ block: 'nearest' }); cur.focus({ preventScroll: true }); }
+  }
+  outlineEl.addEventListener('click', (e) => {
+    const b = e.target.closest('button[data-i]');
+    if (!b) return;
+    show(+b.dataset.i, 'back');
+    toggleOutline(false);
+  });
+  counter.addEventListener('click', () => toggleOutline());
+
+  const keysEl = document.getElementById('keys');
+
   document.addEventListener('keydown', (e) => {
+    if (keysEl.classList.contains('on')) {
+      if (e.key === 'Escape' || e.key === '?') keysEl.classList.remove('on');
+      return;
+    }
+    if (outlineEl.classList.contains('on')) {
+      if (e.key === 'Escape' || e.key === 'o' || e.key === 'O') toggleOutline(false);
+      return;
+    }
     if (pgOverlay.classList.contains('on')) {
       if (e.key === 'Escape') closePG();
       return;
@@ -1279,9 +1378,11 @@ return <mark>Number( ctx.speed )</mark> * 1000;</pre>
     else if (e.key === 'End') { show(slides.length - 1, 'back'); }
     else if (e.key === 'n' || e.key === 'N') { notes.classList.toggle('on'); }
     else if (e.key === 't' || e.key === 'T') { toggleTimer(); }
+    else if (e.key === 'o' || e.key === 'O') { toggleOutline(true); }
+    else if (e.key === '?') { keysEl.classList.add('on'); }
   });
   document.addEventListener('click', (e) => {
-    if (e.target.closest('#notes, #timer, .pg-launch, #pg-overlay')) return;
+    if (e.target.closest('#notes, #timer, .pg-launch, #pg-overlay, #outline, #counter, #keys')) return;
     if (pgOverlay.classList.contains('on')) return;
     forward();
   });
