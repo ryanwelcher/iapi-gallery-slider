@@ -305,7 +305,7 @@
       <div class="card"><h3>Slides + bounds</h3><p>Prev/next move the track; buttons disable at the ends</p></div>
       <div class="card"><h3>Adaptive</h3><p>Counter reads "1/4" because the server counted 4 blocks</p></div>
       <div class="card"><h3>Autoplay</h3><p>Editor-chosen speed, cleans up after itself</p></div>
-      <div class="card"><h3>No flash</h3><p>First paint is already correct, so there's no hydration snap</p></div>
+      <div class="card"><h3>No flash</h3><p>First paint is already correct, so the counter doesn't flicker when the JS loads</p></div>
     </div>
   </div>
 </section>
@@ -357,7 +357,7 @@ npm install      <span class="c"># safe to re-run</span>
       <div class="ex" style="white-space: normal; font-family: var(--body);">Derived state makes it actually move, and stop at the ends</div>
     </div>
     <div class="dir" data-frag="4">
-      <div><div class="name">Section 7 · Server-seeded</div></div>
+      <div><div class="name">Section 7 · Server-side injection</div></div>
       <div class="ex" style="white-space: normal; font-family: var(--body);">PHP counts the real slides and paints a correct first frame with no flash</div>
     </div>
     <div class="dir" data-frag="5">
@@ -373,13 +373,13 @@ npm install      <span class="c"># safe to re-run</span>
 <section class="slide" data-type="t" data-notes="Tour, not a read-along. The point: every later change lands in a file they recognize.">
   <div class="eyebrow">Section 2 · Anatomy of the Starter <span class="clock">· 0:08–0:16</span></div>
   <h2>The file map</h2>
-  <div class="split">
+  <div class="split" style="grid-template-columns: 4fr 7fr;">
     <div class="lead">
       <p class="big-say">We tour the starter now so every later change lands in a file you <strong>recognize</strong>.</p>
       <p class="dim">There are five files, split across two sides. PHP renders the markup and JS reacts to it.</p>
     </div>
     <pre class="code">iapi-gallery-slider/
-├── <mark>iapi-gallery-slider.php</mark>  <span class="c">← registers the block; Section 7 adds a filter</span>
+├── <mark>iapi-gallery-slider.php</mark>  <span class="c">← registers the block</span>
 └── src/
     ├── <mark>block.json</mark>           <span class="c">← metadata + the opt-in</span>
     ├── <mark>edit.js</mark>              <span class="c">← editor side; Section 3 builds it</span>
@@ -388,12 +388,12 @@ npm install      <span class="c"># safe to re-run</span>
   </div>
 </section>
 
-<section class="slide" data-type="t" data-notes="One beat: this file does almost nothing today. The only PHP we write all day goes here in section 7. register_block_type reads build/block.json and wires assets automatically.">
+<section class="slide" data-type="t" data-notes="One beat: this file does almost nothing today. Its only change all day is the section 7 render filter. register_block_type reads build/block.json and wires assets automatically.">
   <div class="eyebrow">Section 2 · Anatomy</div>
   <h2><code style="font-size: 0.85em;">iapi-gallery-slider.php</code></h2>
   <div class="split">
     <div class="lead">
-      <p class="big-say">That's it. In <strong>Section 7</strong> this file grows a render filter. That's the only PHP we'll write today.</p>
+      <p class="big-say">That's it. In <strong>Section 7</strong> this file grows a render filter. That's the only change it gets today.</p>
       <ul>
         <li><code>register_block_type</code> reads <code>build/block.json</code></li>
         <li>Registers and enqueues every asset for us: editor script, view module, and styles</li>
@@ -408,7 +408,7 @@ npm install      <span class="c"># safe to re-run</span>
 <section class="slide" data-type="t" data-notes="Flag the string speed NOW. We'll have to convert it to a number before doing math with it in Section 8. viewScriptModule = front-end only, loaded as an ES module.">
   <div class="eyebrow">Section 2 · Anatomy</div>
   <h2><code style="font-size: 0.85em;">src/block.json</code></h2>
-  <div class="split">
+  <div class="split" style="grid-template-columns: 4fr 7fr;">
     <div class="lead">
       <ul>
         <li><code>viewScriptModule</code> is front-end only, loaded as an ES module</li>
@@ -441,7 +441,7 @@ npm install      <span class="c"># safe to re-run</span>
     <div class="card" style="border-color: var(--amber);" data-frag="2">
       <h3 style="color: var(--amber);">render.php</h3>
       <p><code>data-wp-interactive="iapi-gallery"</code></p>
-      <p class="dim">Gives the engine a place to bind. It's the hydration root, and it scopes every directive underneath it to the matching store.</p>
+      <p class="dim">Gives the engine a place to bind. It marks where the Interactivity API takes over, and it ties every directive underneath it to the <code>iapi-gallery</code> namespace.</p>
     </div>
   </div>
   <p class="big-say" style="margin-top: 3vh;" data-frag="3">If you miss the flag, the runtime never loads. If you miss the directive, it has nothing to bind to. <strong>You need both.</strong></p>
@@ -488,7 +488,7 @@ export default function Edit() {
   <h2><code style="font-size: 0.85em;">src/view.js</code></h2>
   <div class="split">
     <div class="lead">
-      <p class="big-say">Doesn't meaningfully exist yet. <strong>Section 5 creates the store here</strong>, and from then on this file is where the workshop lives.</p>
+      <p class="big-say">Doesn't meaningfully exist yet. <strong>Section 5 creates the store here</strong>. That's the one object that holds this block's state, actions, and callbacks, and from then on this file is where the workshop lives.</p>
     </div>
     <pre class="code"><span class="c">// the shape we'll grow, section by section:</span>
 store( 'iapi-gallery', {
@@ -592,7 +592,7 @@ import { PanelBody, ToggleControl,
   <div class="eyebrow">Section 4 · IAPI Primer</div>
   <h2>Under the hood</h2>
   <div class="cols">
-    <div class="card" data-frag="1"><h3>Preact + Signals</h3><p>Hydration, client logic, and client-side navigation. It's tiny, and you never touch it directly.</p></div>
+    <div class="card" data-frag="1"><h3>Preact + Signals</h3><p>Hydration (taking over the server's HTML in the browser), client logic, and client-side navigation. It's tiny, and you never touch it directly.</p></div>
     <div class="card" data-frag="2"><h3>HTML directives</h3><p><code>data-wp-*</code> attributes that <strong>both the client and the server</strong> understand.</p></div>
     <div class="card" data-frag="3"><h3>HTML Tag Processor</h3><p>Server-side logic in plain PHP. There's no Node.js SSR anywhere in the stack.</p></div>
   </div>
@@ -658,7 +658,7 @@ nextImage() { getContext().currentSlide++; }</pre>
       <ul>
         <li>When state changes, the UI updates <strong>automatically</strong>, so you never manually touch the DOM</li>
         <li>Each directive declares a <strong>relationship</strong> between an attribute and a piece of state</li>
-        <li>Mutation is allowed. You don't have to treat anything as immutable. <code>ctx.currentSlide++</code> just works, and reactivity still fires</li>
+        <li>Mutation is allowed. You don't have to treat anything as immutable. <code>ctx.currentSlide++</code> just works, and reactivity still fires. (<code>ctx</code> is the block's <em>context</em>, its per-instance data. More on that in a few slides.)</li>
       </ul>
     </div>
     <div class="card" style="border-color: var(--amber);">
@@ -789,15 +789,27 @@ nextImage() { getContext().currentSlide++; }</pre>
     <div class="node" data-frag="4"><b>data-wp-text</b><span>counter re-renders</span></div>
   </div>
   <div class="cycle-back" data-frag="4">⟲ same loop as the primer, with real names now</div>
-  <pre class="code" style="margin-top: 2.5vh;" data-frag="5"><span class="c">// view.js — the whole store, Section 5 edition</span>
-import { store, getContext } from '@wordpress/interactivity';
+  <div class="split even" style="margin-top: 2.5vh; align-items: start;" data-frag="5">
+    <pre class="code"><span class="c">&lt;!-- render.php, as rendered --&gt;</span>
+&lt;div data-wp-interactive='iapi-gallery'
+     <mark>data-wp-context</mark>='{"currentSlide":1}'&gt;
+  …
+  &lt;p data-wp-text="<mark>context.currentSlide</mark>"&gt;&lt;/p&gt;
+  &lt;button data-wp-on--click="<mark>actions.nextImage</mark>"&gt;
+&lt;/div&gt;</pre>
+    <pre class="code"><span class="c">// view.js: the whole store, Section 5 edition</span>
+import { store, getContext }
+    from '@wordpress/interactivity';
 
 store( 'iapi-gallery', {
     state: {},
     actions: {
-        <mark>nextImage</mark>: () => { getContext().<mark>currentSlide++</mark>; },
+        <mark>nextImage</mark>: () => {
+            getContext().<mark>currentSlide++</mark>;
+        },
     },
 } );</pre>
+  </div>
   <p class="dim" style="margin-top: 1.5vh;">That's two of the store's three slots already: <code>state</code> and <code>actions</code>. The third one, <code>callbacks</code>, shows up in Section 8.</p>
 </section>
 
@@ -847,6 +859,7 @@ store( '<mark>iapi-gallery</mark>', { … } );</pre>
       <ul>
         <li>Disable logic is <strong>derived</strong> from <code>currentSlide</code> / <code>totalSlides</code> → it lives in state, not context</li>
         <li>Getters re-run on every read, so the UI stays in sync for free</li>
+        <li>A getter runs in the scope of the element reading it, so <code>getContext()</code> returns <em>that</em> slider's context. Same getter, different answer per instance</li>
         <li>New directives: <code>data-wp-style--transform</code>, <code>data-wp-bind--disabled</code></li>
       </ul>
       <p class="dim">This is the four-kinds slide from the primer paying off.</p>
@@ -861,7 +874,7 @@ store( '<mark>iapi-gallery</mark>', { … } );</pre>
         return `${ ctx.currentSlide }/${
                   ctx.totalSlides }`;
     },
-    <span class="c">// + noNextSlide, slideTransform</span>
+    <span class="c">// + noNextSlide, currentPos</span>
 }</pre>
   </div>
 </section>
@@ -965,9 +978,9 @@ store( '<mark>iapi-gallery</mark>', { … } );</pre>
   </div>
   <div class="split" style="margin-top: 3vh;" data-frag="3">
     <ul>
-      <li><code>data-wp-init</code> fires when the element initializes</li>
+      <li><code>data-wp-init</code> fires when the element initializes. We add <code>data-wp-init="callbacks.initSlideShow"</code> to the wrapper in <code>render.php</code></li>
       <li><strong>Returning a function</strong> from a callback <em>is</em> the cleanup registration, and it runs when the element leaves the DOM</li>
-      <li>Callbacks call actions directly, so they need a real JS reference</li>
+      <li>Callbacks run from JS, not markup, so they can't look up <code>actions.nextImage</code> by name. Destructure <code>store()</code> to get real references</li>
     </ul>
     <pre class="code"><span class="c">// store() returns the object you passed —</span>
 <span class="c">// with the getters live</span>
@@ -985,7 +998,9 @@ const { <mark>state, actions</mark> } =
       <p class="big-say">Remember the <code>speed</code> <strong>string</strong> from Section 2? Convert it to a number before you multiply.</p>
       <p class="dim">Why <code>requestAnimationFrame</code> and not <code>setInterval</code>? It lines up with the browser's repaint and pauses when the tab is hidden. <code>setInterval</code> keeps firing in the background.</p>
     </div>
-    <pre class="code">const update = <mark>withScope</mark>( ( timestamp ) => {
+    <pre class="code">let start = null, rafId = null;
+const update = <mark>withScope</mark>( ( timestamp ) => {
+    if ( ! start ) { start = timestamp; }
     if ( timestamp - start >
          state.transitionsSpeed ) {
         actions.nextImage();

@@ -38,7 +38,7 @@ Timing references the run sheet in `facilitator-notes.md`.
 - **`code-reference/section-N/` is the rescue path — falling behind is never fatal**
 
 ### Slide 6 [T] — The arc (step-through)
-- Five rows, one revealed per keypress, each with a one-sentence expansion: Section 3 editor controls (the attributes everything reads) · Section 5 smallest loop (the core round-trip) · Section 6 sliding + bounds (derived state) · Section 7 server-seeded (correct first frame, no flash) · Section 8 autoplay (lifecycle callbacks + cleanup)
+- Five rows, one revealed per keypress, each with a one-sentence expansion: Section 3 editor controls (the attributes everything reads) · Section 5 smallest loop (the core round-trip) · Section 6 sliding + bounds (derived state) · Section 7 server-side injection (correct first frame, no flash) · Section 8 autoplay (lifecycle callbacks + cleanup)
 - Final beat: Section 9 (focus a11y, touch, continuous) is the take-home
 
 ---
