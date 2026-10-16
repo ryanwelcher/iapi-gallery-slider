@@ -36,14 +36,14 @@ Coding sections split roughly ⅓ talk track / ⅔ lab. Slide numbers reference 
 | Clock | Section | Type | Budget | Talk / Lab | Slides |
 |-------|---------|------|--------|-----------|--------|
 | 0:00–0:08 | 1 — Welcome & Setup | tour | 8 min | all talk | 1–6 |
-| 0:08–0:16 | 2 — Anatomy of the Starter | tour | 8 min | all talk | 7–13 |
-| 0:16–0:31 | 3 — Editor Controls | coding | 15 min | 4 / 10 (+1 checkpoint) | 14–17 |
-| 0:31–0:39 | 4 — Interactivity API Primer | reading | 8 min | all talk | 18–27 |
-| 0:39–0:49 | 5 — Hello, Store | coding | 10 min | 3 / 7 | 28–31 |
-| 0:49–0:59 | 6 — Sliding + Bounds | coding | 10 min | 3 / 7 | 32–34 |
-| 0:59–1:12 | 7 — Server-Side Directive Injection | coding | 13 min | 5 / 8 | 35–38 |
-| 1:12–1:25 | 8 — Autoplay | coding | 13 min | 4 / 9 | 39–42 |
-| 1:25–1:30 | Wrap-up + pointer to Section 9 | — | 5 min | all talk | 43–47 |
+| 0:08–0:16 | 2 — Anatomy of the Starter | tour | 8 min | all talk | 7–10 |
+| 0:16–0:31 | 3 — Editor Controls | coding | 15 min | 4 / 10 (+1 checkpoint) | 11–14 |
+| 0:31–0:39 | 4 — Interactivity API Primer | reading | 8 min | all talk | 15–22 |
+| 0:39–0:49 | 5 — Hello, Store | coding | 10 min | 3 / 7 | 23–26 |
+| 0:49–0:59 | 6 — Sliding + Bounds | coding | 10 min | 3 / 7 | 27–29 |
+| 0:59–1:12 | 7 — Server-Side Directive Injection | coding | 13 min | 5 / 8 | 30–33 |
+| 1:12–1:25 | 8 — Autoplay | coding | 13 min | 4 / 9 | 34–37 |
+| 1:25–1:30 | Wrap-up + pointer to Section 9 | — | 5 min | all talk | 38–41 |
 | take-home | 9 — Polish: Focus, Touch, Continuous | coding | ~25–30 min solo | — | — |
 
 ### The minute-50 checkpoint
@@ -52,7 +52,7 @@ Coding sections split roughly ⅓ talk track / ⅔ lab. Slide numbers reference 
 
 ### Cut lines (in order of preference)
 
-1. **Compress Section 3 to a hand-out.** It's pure block editor — no IAPI content, and the section says so itself. Demo the finished Inspector panel for 3 minutes, tell everyone to copy `code-reference/section-3/src/edit.js`, and jump straight from slide 15 to slide 18 (skip Section 3's pause slide, keep its theory slides). Recovers ~10 min. Decide by 0:16; this is the cut to pre-plan.
+1. **Compress Section 3 to a hand-out.** It's pure block editor — no IAPI content, and the section says so itself. Demo the finished Inspector panel for 3 minutes, tell everyone to copy `code-reference/section-3/src/edit.js`, and jump straight from slide 12 to slide 15 (skip Section 3's pause slide, keep its theory slides). Recovers ~10 min. Decide by 0:16; this is the cut to pre-plan.
 2. **Compress Section 4 to 4 minutes.** Talk the directives table and the context-vs-state distinction; skip the rest — Sections 5–8 re-teach every concept at the moment it's used. Recovers ~4 min.
 3. **Demo-only Section 8.** If you reach 1:12 without Section 7 finished, finish Section 7 with the room, then live-code Section 8 solo on the projector while they watch, and point at the snapshot. Autoplay is the most self-contained section — watching it still teaches `callbacks`/`withScope`/cleanup.
 4. **Never cut Section 5, Section 6, or Section 7.** They're the spine: round-trip, derived state, server-side seeding.
@@ -102,7 +102,7 @@ If the wheels come off early (wifi, Studio installs), the floor is: Sections 1�
 
 ### Section 4 — Interactivity API Primer (~8 min)
 
-**Goal:** Mental model: what the API is and why it's standardized, the declarative/reactive mindset, directive anatomy, the four kinds of data (global state / local context / derived state / config), server seeding. Nine slides, fast beats — content drawn from the "From Static to Dynamic" talk.
+**Goal:** Mental model: what the API is and why it's standardized, the declarative/reactive mindset, directive anatomy, the three kinds of data (global state / local context / derived state), server seeding. Eight slides, fast beats — content drawn from the "From Static to Dynamic" talk.
 
 **Talking points:**
 - This is a talk, not a follow-along — tell people to close their editors and listen.

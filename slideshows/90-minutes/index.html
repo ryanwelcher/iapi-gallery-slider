@@ -445,13 +445,14 @@ npm install      <span class="c"># safe to re-run</span>
 
 <!-- ===================== SECTION 2 ANATOMY 0:08–0:16 ===================== -->
 
-<section class="slide" data-type="t" data-notes="Tour, not a read-along. The point: every later change lands in a file they recognize.">
+<section class="slide" data-type="t" data-notes="Tour, not a read-along. The point: every later change lands in a file they recognize. edit.js and view.js are near-empty stubs that Sections 3 and 5 build; the tree says so, no need to open them.">
   <div class="eyebrow">Section 2 · Anatomy of the Starter <span class="clock">· 0:08–0:16</span></div>
   <h2>The file map</h2>
   <div class="split" style="grid-template-columns: 4fr 7fr;">
     <div class="lead">
       <p class="big-say">We tour the starter now so every later change lands in a file you <strong>recognize</strong>.</p>
       <p class="dim">There are five files, split across two sides. PHP renders the markup and JS reacts to it.</p>
+      <p class="dim">The PHP file just calls <code>register_block_type</code>, which reads <code>build/block.json</code> and loads every asset for you. Section 7 adds a render filter to it, and that's its only change today.</p>
     </div>
     <pre class="code">iapi-gallery-slider/
 ├── <mark>iapi-gallery-slider.php</mark>  <span class="c">← registers the block</span>
@@ -460,23 +461,6 @@ npm install      <span class="c"># safe to re-run</span>
     ├── <mark>edit.js</mark>              <span class="c">← editor side; Section 3 builds it</span>
     ├── <mark>render.php</mark>           <span class="c">← server-rendered markup</span>
     └── <mark>view.js</mark>              <span class="c">← the store; Section 5 creates it</span></pre>
-  </div>
-</section>
-
-<section class="slide" data-type="t" data-notes="One beat: this file does almost nothing today. Its only change all day is the section 7 render filter. register_block_type reads build/block.json and wires assets automatically.">
-  <div class="eyebrow">Section 2 · Anatomy</div>
-  <h2><code style="font-size: 0.85em;">iapi-gallery-slider.php</code></h2>
-  <div class="split">
-    <div class="lead">
-      <p class="big-say">That's it. In <strong>Section 7</strong> this file grows a render filter, and that's the only change it gets today.</p>
-      <ul>
-        <li><code>register_block_type</code> reads <code>build/block.json</code></li>
-        <li>Registers and enqueues every asset for us: editor script, view module, and styles</li>
-      </ul>
-    </div>
-    <pre class="code">add_action( 'init', function () {
-    <mark>register_block_type</mark>( __DIR__ . '/build' );
-} );</pre>
   </div>
 </section>
 
@@ -522,24 +506,7 @@ npm install      <span class="c"># safe to re-run</span>
   <p class="big-say" style="margin-top: 3vh;" data-frag="3">If you miss the flag, the runtime never loads. If you miss the directive, it has nothing to bind to. <strong>You need both.</strong></p>
 </section>
 
-<section class="slide" data-type="t" data-notes="One beat: it's a stub on purpose. Section 3 builds the whole editor experience here; nothing in this file ships to the front end.">
-  <div class="eyebrow">Section 2 · Anatomy</div>
-  <h2><code style="font-size: 0.85em;">src/edit.js</code></h2>
-  <div class="split">
-    <div class="lead">
-      <p class="big-say">A near-empty stub, on purpose. <strong>Section 3 builds this</strong> into the editor preview and Inspector controls.</p>
-      <p class="dim">This is editor side only. Nothing in this file ships to the front end.</p>
-    </div>
-    <pre class="code"><span class="c">// the starter, more or less</span>
-export default function Edit() {
-    return &lt;div { ...useBlockProps() }&gt;
-        Gallery Slider goes here
-    &lt;/div&gt;;
-}</pre>
-  </div>
-</section>
-
-<section class="slide" data-type="t" data-notes="Wrapper, slider-container, prev/next buttons, and the ONE directive already present: the other half of the opt-in pair from two slides ago. Flash back to the pair slide if it helps.">
+<section class="slide" data-type="t" data-notes="Wrapper, slider-container, prev/next buttons, and the ONE directive already present: the other half of the opt-in pair from the last slide. Flash back to the pair slide if it helps.">
   <div class="eyebrow">Section 2 · Anatomy</div>
   <h2><code style="font-size: 0.85em;">src/render.php</code></h2>
   <div class="split">
@@ -555,22 +522,6 @@ export default function Edit() {
   &lt;div class="slider-container"&gt;…slides…&lt;/div&gt;
   &lt;button&gt;&lt;&lt;/button&gt; &lt;p&gt;&lt;/p&gt; &lt;button&gt;&gt;&lt;/button&gt;
 &lt;/div&gt;</pre>
-  </div>
-</section>
-
-<section class="slide" data-type="t" data-notes="Last anatomy beat. From section 5 on, this file is where the workshop lives.">
-  <div class="eyebrow">Section 2 · Anatomy</div>
-  <h2><code style="font-size: 0.85em;">src/view.js</code></h2>
-  <div class="split">
-    <div class="lead">
-      <p class="big-say">Doesn't really exist yet. <strong>Section 5 creates the store here</strong>, which is the one object that holds this block's state, actions, and callbacks. From then on, this is where the workshop lives.</p>
-    </div>
-    <pre class="code"><span class="c">// the shape we'll grow, section by section:</span>
-store( 'iapi-gallery', {
-    state:     { … },  <span class="c">// Section 6 — derived getters</span>
-    actions:   { … },  <span class="c">// Section 5 — event handlers</span>
-    callbacks: { … },  <span class="c">// Section 8 — lifecycle</span>
-} );</pre>
   </div>
 </section>
 
@@ -600,7 +551,7 @@ store( 'iapi-gallery', {
       <ul>
         <li><code>useBlockProps</code> wires the wrapper div to the editor</li>
         <li><code>useInnerBlocksProps</code> + <code>allowedBlocks</code> limits it to Image, Cover, and Media &amp; Text</li>
-        <li>Watch the packages. <code>InspectorControls</code> is <em>block-editor</em>, <code>SwitchControl</code> is <em>ui</em>, and the rest are <em>components</em></li>
+        <li>Watch the packages. <code>InspectorControls</code> comes from <em>block-editor</em> and <code>SwitchControl</code> from <em>ui</em>. Everything else is <em>components</em></li>
         <li><code>attributes</code> / <code>setAttributes</code> read and write what block.json declared</li>
         <li>Don't let the <code>__experimental</code> prefix scare you. That's still the current public import for <code>NumberControl</code></li>
       </ul>
@@ -677,34 +628,9 @@ import { SwitchControl }
   <p class="big-say" style="margin-top: 3vh;" data-frag="4">The trick is that both the client <strong>and</strong> the server can read the directives, and that's what makes Section 7's no-flash first paint possible.</p>
 </section>
 
-<section class="slide" data-type="t" data-notes="The mindset shift. Imperative = micromanaging every move. Declarative = describe the result. Directives are the declarative version of DOM manipulation.">
+<section class="slide" data-type="t" data-notes="The mindset shift. Imperative is micromanaging every move; declarative describes the result. The right side is exactly what they write in Section 5, so don't explain the directives yet. Just let them see how much code disappears.">
   <div class="eyebrow">Section 4 · IAPI Primer</div>
   <h2>Declarative, not imperative</h2>
-  <div class="split even code-pair">
-    <div data-frag="1">
-      <pre class="code"><span class="c">// imperative — the HOW</span>
-let sum = 0;
-for ( let i = 0; i &lt; nums.length; i++ ) {
-    if ( nums[ i ] % 2 === 0 ) {
-        sum += nums[ i ];
-    }
-}</pre>
-      <p class="dim" style="margin-top: 1.2vh;">You're micromanaging every move.</p>
-    </div>
-    <div data-frag="2">
-      <pre class="code"><span class="c">// declarative — the WHAT</span>
-const sum = nums
-  .filter( ( n ) => n % 2 === 0 )
-  .reduce( ( acc, n ) => acc + n, 0 );</pre>
-      <p class="dim" style="margin-top: 1.2vh;">You describe the result, and all the machinery happens under the hood.</p>
-    </div>
-  </div>
-  <p class="big-say" style="margin-top: 2.5vh;" data-frag="3">Directives work the same way: you describe <strong>what the UI should be for a given state</strong>, never how to update the DOM step by step.</p>
-</section>
-
-<section class="slide" data-type="t" data-notes="Same split as the last slide, now with a real button and counter. The right side is exactly what they write in Section 5, so don't explain the directives yet. Just let them see how much code disappears.">
-  <div class="eyebrow">Section 4 · IAPI Primer</div>
-  <h2>Same idea, in the DOM</h2>
   <div class="split even code-pair">
     <div data-frag="1">
       <pre class="code"><span class="c">// imperative: the HOW</span>
@@ -725,7 +651,10 @@ nextImage() { getContext().currentSlide++; }</pre>
       <p class="dim" style="margin-top: 1.2vh;">You change the value. The directives keep the DOM in sync.</p>
     </div>
   </div>
-  <p class="big-say" style="margin-top: 2.5vh;" data-frag="3">That right-hand side is what you'll build in <strong>Section 5</strong>.</p>
+  <div data-frag="3" style="margin-top: 2.5vh;">
+    <p class="big-say">Directives work the same way: you describe <strong>what the UI should be for a given state</strong>, never how to update the DOM step by step.</p>
+    <p class="dim">That right-hand side is what you'll build in Section 5.</p>
+  </div>
 </section>
 
 <section class="slide" data-type="t" data-notes="THE mindset sentence. Also: mutability is allowed. Unlike frameworks that force immutability, ctx.currentSlide++ just works and reactivity still fires.">
@@ -789,9 +718,9 @@ nextImage() { getContext().currentSlide++; }</pre>
   <p class="dim" style="margin-top: 2.5vh;" data-frag="5"><span class="amber">Orange</span> = the seven we use today. The rest are there when you need them, and each gets re-taught the moment we use it.</p>
 </section>
 
-<section class="slide" data-type="t" data-notes="★ REUSED in Sections 6 and 7. Upgraded from a two-way to a four-way distinction. The workshop uses the first three; config is the one to file away for REST URLs and nonces. Say it out loud: two sliders on one page each carry their own context; one store serves them both. Read from the wrong branch and the value is undefined, or it's the other slider's. THE sentence: context is per-instance; state is shared and derived.">
+<section class="slide" data-type="t" data-notes="★ REUSED in Sections 6 and 7. Config (REST URLs, nonces) is the fourth kind; it waits for the Beyond today slide. Say it out loud: two sliders on one page each carry their own context; one store serves them both. Read from the wrong branch and the value is undefined, or it's the other slider's. THE sentence: context is per-instance; state is shared and derived.">
   <div class="eyebrow">Section 4 · IAPI Primer <span class="clock">· ★ the distinction</span></div>
-  <h2>Four kinds of data</h2>
+  <h2>Three kinds of data</h2>
   <div class="grid2">
     <div class="card" data-frag="1">
       <h3>Global state <span class="dim" style="text-transform: none; letter-spacing: 0;">· when blocks share or sync data</span></h3>
@@ -809,7 +738,7 @@ nextImage() { getContext().currentSlide++; }</pre>
   data-wp-context='{"currentSlide":1,"totalSlides":3}' --&gt;</span></pre>
       <span class="file-tag">render.php</span>
     </div>
-    <div class="card" style="border-color: var(--amber);" data-frag="3">
+    <div class="card" style="border-color: var(--amber); grid-column: 1 / -1;" data-frag="3">
       <h3 style="color: var(--amber);">Derived state <span class="dim" style="text-transform: none; letter-spacing: 0;">· when a value can be calculated</span></h3>
       <pre class="code mini">state: {
     get imageIndex() {
@@ -819,41 +748,8 @@ nextImage() { getContext().currentSlide++; }</pre>
 },</pre>
       <span class="file-tag">view.js</span>
     </div>
-    <div class="card" data-frag="4">
-      <h3>Config <span class="dim" style="text-transform: none; letter-spacing: 0;">· static, never triggers updates</span></h3>
-      <pre class="code mini">wp_interactivity_config( 'iapi-gallery', array(
-    'nonce' => wp_create_nonce( 'my_plugin_action' ),
-) );
-<span class="c">// view.js: const { nonce } = getConfig();</span></pre>
-      <span class="file-tag">render.php · view.js</span>
-    </div>
   </div>
   <p class="big-say" style="margin-top: 2.5vh;" data-frag="5"><strong>Context belongs to each instance. State is shared, and it can be derived.</strong></p>
-</section>
-
-<section class="slide" data-type="t" data-notes="Close the primer: unlike React or Vue, there's no Node SSR. Directives are processed in plain PHP through the HTML API. The server paints the first frame; the client hydrates. Section 7 proves it on a throttled connection.">
-  <div class="eyebrow">Section 4 · IAPI Primer</div>
-  <h2>The server's role</h2>
-  <div class="split">
-    <div class="lead">
-      <ul>
-        <li>There's no Node.js SSR. Directives are processed in <strong>plain PHP</strong> through the HTML API</li>
-        <li>The browser gets fully rendered markup immediately, which is good for performance and SEO</li>
-        <li>The client doesn't re-render the page; it <strong>hydrates</strong> the server-painted state</li>
-      </ul>
-      <p class="big-say" style="margin-top: 1vh;">The server paints the first frame; the client takes over <strong>without a flash</strong>.</p>
-      <p class="dim">Section 7 proves this on a throttled connection.</p>
-    </div>
-    <pre class="code"><span class="c">// PHP, at render time</span>
-&lt;div &lt;?php echo
-  <mark>wp_interactivity_data_wp_context</mark>(
-    array( 'currentSlide' => 1 )
-  ); ?&gt;&gt;
-
-<mark>wp_interactivity_state</mark>( 'iapi-gallery',
-  array( 'imageIndex' => '1/3' )
-);</pre>
-  </div>
 </section>
 
 <!-- ===================== SECTION 5 HELLO, STORE 0:39–0:49 ===================== -->
@@ -941,7 +837,7 @@ store( '<mark>iapi-gallery</mark>', { … } );</pre>
         <li>A getter runs in the scope of the element reading it, so <code>getContext()</code> returns <em>that</em> slider's context. So one getter gives each slider its own answer</li>
         <li>New directives: <code>data-wp-style--transform</code>, <code>data-wp-bind--disabled</code></li>
       </ul>
-      <p class="dim">This is the four-kinds slide from the primer paying off.</p>
+      <p class="dim">This is the three-kinds slide from the primer paying off.</p>
     </div>
     <pre class="code">state: {
     get <mark>noPrevSlide</mark>() {
@@ -1120,13 +1016,13 @@ return <mark>Number( ctx.speed )</mark> * 1000;</pre>
   <div class="eyebrow">Wrap-up <span class="clock">· 1:25–1:30</span></div>
   <h2>The arc, revisited</h2>
   <div class="cycle" style="grid-template-columns: repeat(5, 1fr);">
-    <div class="node"><b>✓ opt-in pair</b><span>flag ⇄ directive</span></div>
+    <div class="node"><b>✓ editor controls</b><span>the attributes</span></div>
     <div class="node"><b>✓ round-trip</b><span>the loop</span></div>
     <div class="node"><b>✓ derived state</b><span>getters</span></div>
-    <div class="node"><b>✓ server state</b><span>no flash</span></div>
+    <div class="node"><b>✓ server-side</b><span>no flash</span></div>
     <div class="node"><b>✓ lifecycle</b><span>callbacks</span></div>
   </div>
-  <p class="big-say" style="margin-top: 3vh;">Five ideas, and that's most of the API you'll reach for.</p>
+  <p class="big-say" style="margin-top: 3vh;">Five sections, and you've touched most of the API you'll reach for.</p>
 </section>
 
 <section class="slide" data-type="t" data-notes="Zero new IAPI primitives in section 9. They already know everything it needs. The section file + snapshot are the answer key.">
@@ -1149,25 +1045,25 @@ return <mark>Number( ctx.speed )</mark> * 1000;</pre>
   </div>
 </section>
 
-<section class="slide" data-type="t" data-notes="Beyond the workshop: the parts of the API we didn't need today. Client-side navigation is the headline: router regions swap page content in place, state survives. Point, don't teach.">
+<section class="slide" data-type="t" data-notes="Beyond the workshop: the parts of the API we didn't need today. Client-side navigation is the headline: router regions swap page content in place, state survives. Point, don't teach, then point at the links.">
   <div class="eyebrow">Wrap-up</div>
   <h2>Beyond today</h2>
-  <ul style="max-width: 44em;">
+  <div class="split" style="align-items: start;">
+  <ul>
     <li><strong>Client-side navigation</strong> with <code>@wordpress/interactivity-router</code>. Router regions swap page content in place, and interactive state survives navigation</li>
     <li><strong>wp-each</strong> to render dynamic lists straight from state arrays</li>
     <li><strong>Config</strong> with <code>wp_interactivity_config()</code> / <code>getConfig()</code> for REST URLs and nonces</li>
     <li><strong>TypeScript support</strong> for typed stores and context (WP 6.9+)</li>
   </ul>
-</section>
-
-<section class="slide" data-type="t" data-notes="Point, don't read.">
-  <div class="eyebrow">Wrap-up</div>
-  <h2>Where to go next</h2>
-  <ul style="max-width: 44em;">
-    <li>Interactivity API reference: <span class="amber">developer.wordpress.org/block-editor/reference-guides/interactivity-api/</span></li>
-    <li>Block Editor Handbook: <span class="amber">developer.wordpress.org/block-editor/</span></li>
-    <li><span class="amber">#core-interactivity-api</span> on Make WordPress Slack</li>
-  </ul>
+    <div class="card">
+      <h3>Where to go next</h3>
+      <ul style="padding-left: 1.1em;">
+        <li>Interactivity API reference: <span class="amber" style="overflow-wrap: anywhere;">developer.wordpress.org/block-editor/reference-guides/interactivity-api/</span></li>
+        <li>Block Editor Handbook: <span class="amber">developer.wordpress.org/block-editor/</span></li>
+        <li><span class="amber">#core-interactivity-api</span> on Make WordPress Slack</li>
+      </ul>
+    </div>
+  </div>
 </section>
 
 <section class="slide" data-type="t" data-notes="Q&A. Likely questions are pre-gamed in facilitator-notes.md: why not React on the front end; context vs state one more time; namespace vs block name; can blocks talk to each other.">
