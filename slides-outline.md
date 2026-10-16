@@ -261,7 +261,7 @@ Nine fast beats, content drawn from the "From Static to Dynamic" talk.
 - Slide 6's arc with everything checked off: opt-in pair → round-trip → derived state → server seeding → lifecycle
 
 ### Slide 44 [T] — Your take-home: Section 9
-- Focus a11y (APG carousel pattern) · touch/swipe · continuous wrap
+- Focus a11y (APG carousel pattern) · touch/swipe · continuous (prev/next buttons wrap; autoplay already loops)
 - "Zero new IAPI primitives — you already know everything it needs"
 - `workshop-outline/section-9.md` + `code-reference/section-9/` as the answer key
 

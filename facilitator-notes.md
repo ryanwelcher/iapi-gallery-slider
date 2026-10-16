@@ -38,12 +38,12 @@ Coding sections split roughly ⅓ talk track / ⅔ lab. Slide numbers reference 
 | 0:00–0:08 | 1 — Welcome & Setup | tour | 8 min | all talk | 1–6 |
 | 0:08–0:16 | 2 — Anatomy of the Starter | tour | 8 min | all talk | 7–13 |
 | 0:16–0:31 | 3 — Editor Controls | coding | 15 min | 4 / 10 (+1 checkpoint) | 14–17 |
-| 0:31–0:39 | 4 — Interactivity API Primer | reading | 8 min | all talk | 18–26 |
-| 0:39–0:49 | 5 — Hello, Store | coding | 10 min | 3 / 7 | 27–30 |
-| 0:49–0:59 | 6 — Sliding + Bounds | coding | 10 min | 3 / 7 | 31–33 |
-| 0:59–1:12 | 7 — Server-Side Directive Injection | coding | 13 min | 5 / 8 | 34–37 |
-| 1:12–1:25 | 8 — Autoplay | coding | 13 min | 4 / 9 | 38–41 |
-| 1:25–1:30 | Wrap-up + pointer to Section 9 | — | 5 min | all talk | 42–46 |
+| 0:31–0:39 | 4 — Interactivity API Primer | reading | 8 min | all talk | 18–27 |
+| 0:39–0:49 | 5 — Hello, Store | coding | 10 min | 3 / 7 | 28–31 |
+| 0:49–0:59 | 6 — Sliding + Bounds | coding | 10 min | 3 / 7 | 32–34 |
+| 0:59–1:12 | 7 — Server-Side Directive Injection | coding | 13 min | 5 / 8 | 35–38 |
+| 1:12–1:25 | 8 — Autoplay | coding | 13 min | 4 / 9 | 39–42 |
+| 1:25–1:30 | Wrap-up + pointer to Section 9 | — | 5 min | all talk | 43–47 |
 | take-home | 9 — Polish: Focus, Touch, Continuous | coding | ~25–30 min solo | — | — |
 
 ### The minute-50 checkpoint

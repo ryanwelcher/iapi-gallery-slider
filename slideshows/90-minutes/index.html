@@ -510,7 +510,7 @@ store( 'iapi-gallery', {
       <p>We're building the Inspector controls that drive the three attributes, so the IAPI sections have something to read.</p>
     </div>
     <div class="cols" style="flex-direction: column; gap: 1.4vh;">
-      <div class="card"><h3>continuous</h3><p><code>ToggleControl</code> for wrap-around mode (used in Section 9)</p></div>
+      <div class="card"><h3>continuous</h3><p><code>ToggleControl</code> that lets the prev/next buttons wrap around the ends (used in Section 9)</p></div>
       <div class="card"><h3>autoplay</h3><p><code>ToggleControl</code> that drives Section 8's requestAnimationFrame loop</p></div>
       <div class="card"><h3>speed</h3><p><code>NumberControl</code>, rendered <em>only when autoplay is on</em></p></div>
     </div>
@@ -1042,7 +1042,7 @@ return <mark>Number( ctx.speed )</mark> * 1000;</pre>
     <ul>
       <li><strong>Focus a11y</strong> using the APG carousel pattern (label the region, pause on focus)</li>
       <li><strong>Touch</strong> support for swiping between slides</li>
-      <li><strong>Continuous</strong> mode that wraps around the ends</li>
+      <li><strong>Continuous</strong> mode so the prev/next buttons wrap around the ends. Autoplay already loops on its own</li>
     </ul>
     <div class="lead">
       <p class="big-say"><strong>There are no new IAPI primitives in it.</strong> You already know everything it needs.</p>
