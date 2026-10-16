@@ -1155,7 +1155,7 @@ return <mark>Number( ctx.speed )</mark> * 1000;</pre>
 <div id="notes"><span class="tag">Speaker notes · N to hide</span><span id="notes-body"></span></div>
 <div id="outline" role="dialog" aria-label="Slide outline"></div>
 <div id="keys" role="dialog" aria-label="Controls"><span class="tag">Controls · ? or Esc to close</span><table>
-  <tr><th>→ · Space · Page Down · click</th><td>Next step or slide</td></tr>
+  <tr><th>→ · Space · Page Down</th><td>Next step or slide</td></tr>
   <tr><th>← · Page Up</th><td>Previous step or slide</td></tr>
   <tr><th>Home · End</th><td>First or last slide</td></tr>
   <tr><th>Number, then Enter</th><td>Jump to that slide. Backspace fixes a typo, Esc cancels</td></tr>
@@ -1380,11 +1380,6 @@ return <mark>Number( ctx.speed )</mark> * 1000;</pre>
     else if (e.key === 't' || e.key === 'T') { toggleTimer(); }
     else if (e.key === 'o' || e.key === 'O') { toggleOutline(true); }
     else if (e.key === '?') { keysEl.classList.add('on'); }
-  });
-  document.addEventListener('click', (e) => {
-    if (e.target.closest('#notes, #timer, .pg-launch, #pg-overlay, #outline, #counter, #keys')) return;
-    if (pgOverlay.classList.contains('on')) return;
-    forward();
   });
 
   // Elapsed timer — press T at 0:00 of the session. The run sheet's
