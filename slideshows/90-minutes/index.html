@@ -342,7 +342,7 @@ npm install      <span class="c"># safe to re-run</span>
 <section class="slide" data-type="t" data-notes="Step through one section per keypress, one sentence each on why it exists in the build order. Then the take-home. This is the map they'll recognize at every eyebrow.">
   <div class="eyebrow">Section 1 · Welcome &amp; Setup</div>
   <h2>The arc</h2>
-  <p class="dim">Sections 1, 2, and 4 cover setup, a tour of the starter, and an Interactivity API primer. These are the ones you build.</p>
+  <p class="dim">These are the sections where you write code. Everything else is setup, a quick tour, or me talking about the API.</p>
   <div class="dir-rows">
     <div class="dir" data-frag="1">
       <div><div class="name">Section 3 · Editor controls</div></div>
@@ -393,7 +393,7 @@ npm install      <span class="c"># safe to re-run</span>
   <h2><code style="font-size: 0.85em;">iapi-gallery-slider.php</code></h2>
   <div class="split">
     <div class="lead">
-      <p class="big-say">That's it. In <strong>Section 7</strong> this file grows a render filter. That's the only change it gets today.</p>
+      <p class="big-say">That's it. In <strong>Section 7</strong> this file grows a render filter, and that's the only change it gets today.</p>
       <ul>
         <li><code>register_block_type</code> reads <code>build/block.json</code></li>
         <li>Registers and enqueues every asset for us: editor script, view module, and styles</li>
@@ -488,7 +488,7 @@ export default function Edit() {
   <h2><code style="font-size: 0.85em;">src/view.js</code></h2>
   <div class="split">
     <div class="lead">
-      <p class="big-say">Doesn't meaningfully exist yet. <strong>Section 5 creates the store here</strong>. That's the one object that holds this block's state, actions, and callbacks, and from then on this file is where the workshop lives.</p>
+      <p class="big-say">Doesn't really exist yet. <strong>Section 5 creates the store here</strong>, which is the one object that holds this block's state, actions, and callbacks. From then on, this is where the workshop lives.</p>
     </div>
     <pre class="code"><span class="c">// the shape we'll grow, section by section:</span>
 store( 'iapi-gallery', {
@@ -527,7 +527,7 @@ store( 'iapi-gallery', {
         <li><code>useInnerBlocksProps</code> + <code>allowedBlocks</code> limits it to Image, Cover, and Media &amp; Text</li>
         <li>Watch the packages. <code>InspectorControls</code> is <em>block-editor</em>; the controls are <em>components</em></li>
         <li><code>attributes</code> / <code>setAttributes</code> read and write what block.json declared</li>
-        <li><code>NumberControl</code> still ships under its <code>__experimental</code> name. That's the current public import, so it's fine to use</li>
+        <li>Don't let the <code>__experimental</code> prefix scare you. That's still the current public import for <code>NumberControl</code></li>
       </ul>
     </div>
     <pre class="code">import { useBlockProps, useInnerBlocksProps,
@@ -859,7 +859,7 @@ store( '<mark>iapi-gallery</mark>', { … } );</pre>
       <ul>
         <li>Disable logic is <strong>derived</strong> from <code>currentSlide</code> / <code>totalSlides</code> → it lives in state, not context</li>
         <li>Getters re-run on every read, so the UI stays in sync for free</li>
-        <li>A getter runs in the scope of the element reading it, so <code>getContext()</code> returns <em>that</em> slider's context. Same getter, different answer per instance</li>
+        <li>A getter runs in the scope of the element reading it, so <code>getContext()</code> returns <em>that</em> slider's context. So one getter gives each slider its own answer</li>
         <li>New directives: <code>data-wp-style--transform</code>, <code>data-wp-bind--disabled</code></li>
       </ul>
       <p class="dim">This is the four-kinds slide from the primer paying off.</p>
@@ -918,7 +918,7 @@ store( '<mark>iapi-gallery</mark>', { … } );</pre>
   'iapi_gallery_slider_inject_context',
   10, 2
 );</pre>
-      <p style="margin-top: 1.5vh;">The filter counts the slides inside our slider. The hook name includes our block name, so it only ever sees our slider.</p>
+      <p style="margin-top: 1.5vh;">The filter counts the slides inside the slider. Because the hook name includes our block name, it never runs for any other block.</p>
       <p class="dim">We do <strong>not</strong> set <code>data-wp-interactive</code> on inner blocks. Descendants inherit the wrapper's namespace. ★</p>
     </div>
   </div>
@@ -980,7 +980,7 @@ store( '<mark>iapi-gallery</mark>', { … } );</pre>
     <ul>
       <li><code>data-wp-init</code> fires when the element initializes. We add <code>data-wp-init="callbacks.initSlideShow"</code> to the wrapper in <code>render.php</code></li>
       <li><strong>Returning a function</strong> from a callback <em>is</em> the cleanup registration, and it runs when the element leaves the DOM</li>
-      <li>Callbacks run from JS, not markup, so they can't look up <code>actions.nextImage</code> by name. Destructure <code>store()</code> to get real references</li>
+      <li>Inside a callback you're in plain JS, so you can't look up <code>actions.nextImage</code> by name the way a directive does. Destructure <code>store()</code> to get real references</li>
     </ul>
     <pre class="code"><span class="c">// store() returns the object you passed —</span>
 <span class="c">// with the getters live</span>
