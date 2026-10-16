@@ -12,10 +12,10 @@ To avoid wifi bottlenecks on the day, please complete this **before you arrive**
 
     Set the WordPress version to **latest** in the **Advanced settings** of the Add a site dialog.
 
-3. **Node.js v20+** — Recommended via [NVM](https://github.com/nvm-sh/nvm):
+3. **Node.js v20+** — Recommended via [NVM](https://github.com/nvm-sh/nvm). The plugin includes an `.nvmrc`, so run this from the workshop plugin directory:
 
     ```bash
-    nvm install 20 && nvm use 20
+    nvm install && nvm use
     ```
 
 4. **Install JS dependencies** in the workshop plugin directory:

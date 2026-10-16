@@ -317,11 +317,12 @@
     <ul>
       <li>Studio site created from <code>blueprint.json</code></li>
       <li><strong>IAPI Gallery Slider</strong> plugin active</li>
+      <li><strong>Node 20 via NVM</strong> (recommended): <code>nvm use</code> reads the repo's <code>.nvmrc</code>. No NVM? <code>node -v</code> should show v20 or newer</li>
       <li><strong>Editor open on the plugin folder</strong> — everything today lives in it, including the <code>workshop-outline/</code> section files and the <code>code-reference/</code> snapshots</li>
       <li class="dim">Stuck? <span class="amber">github.com/ryanwelcher/iapi-gallery-slider</span> — the README has a Playground fallback</li>
     </ul>
     <pre class="code">cd wp-content/plugins/iapi-gallery-slider
-node -v          <span class="c"># v20 or newer</span>
+nvm use          <span class="c"># reads .nvmrc (Node 20)</span>
 npm install      <span class="c"># safe to re-run</span>
 <mark>npm run start</mark>    <span class="c"># leave running ALL session</span></pre>
   </div>

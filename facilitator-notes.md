@@ -73,7 +73,7 @@ If the wheels come off early (wifi, Studio installs), the floor is: Sections 1�
 
 **Common sticking points:**
 - Someone skipped the pre-work. Don't hold the room — pair them with a neighbor or hand them the Playground fallback, and keep moving.
-- `node -v` shows v18 or older: `nvm install 20 && nvm use 20`, then re-run `npm install`.
+- `node -v` shows v18 or older: run `nvm install && nvm use` from the plugin folder (it reads `.nvmrc`), then re-run `npm install`.
 - `npm run start` appears to hang — that's the watcher working. It's not stuck; leave it running all session.
 
 ### Section 2 — Anatomy of the Starter (~8 min)
