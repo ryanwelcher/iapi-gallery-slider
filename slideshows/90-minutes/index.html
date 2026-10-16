@@ -310,12 +310,12 @@
   </div>
 </section>
 
-<section class="slide" data-type="t" data-notes="Don't hold the room for stragglers. Pair them with a neighbor or hand them the Playground link and keep moving.">
+<section class="slide" data-type="t" data-notes="Some people won't have heard of Studio. It's a free WordPress.com desktop app for local sites, and the README pre-work walks through installing it. Don't hold the room for stragglers. Pair them with a neighbor or hand them the Playground link and keep moving.">
   <div class="eyebrow">Section 1 · Welcome &amp; Setup <span class="clock">· 0:00–0:08</span></div>
   <h2>Setup check</h2>
   <div class="split even">
     <ul>
-      <li>Studio site created from <code>blueprint.json</code></li>
+      <li>A <strong>WordPress Studio</strong> site created from <code>blueprint.json</code>. Studio is a free desktop app that runs WordPress sites on your laptop</li>
       <li><strong>IAPI Gallery Slider</strong> plugin active</li>
       <li><strong>Node 20 via NVM</strong> (recommended): <code>nvm use</code> reads the repo's <code>.nvmrc</code>. No NVM? <code>node -v</code> should show v20 or newer</li>
       <li><strong>Editor open on the plugin folder</strong>. Everything today lives in it, including the <code>workshop-outline/</code> section files and the <code>code-reference/</code> snapshots</li>
@@ -905,7 +905,7 @@ store( '<mark>iapi-gallery</mark>', { … } );</pre>
   'iapi_gallery_slider_inject_context',
   10, 2
 );</pre>
-      <p style="margin-top: 1.5vh;">The hook name includes our block name, so the filter only ever sees our slider.</p>
+      <p style="margin-top: 1.5vh;">The filter counts the slides inside our slider. The hook name includes our block name, so it only ever sees our slider.</p>
       <p class="dim">We do <strong>not</strong> set <code>data-wp-interactive</code> on inner blocks. Descendants inherit the wrapper's namespace. ★</p>
     </div>
   </div>
@@ -976,13 +976,14 @@ const { <mark>state, actions</mark> } =
   </div>
 </section>
 
-<section class="slide" data-type="t" data-notes="One sentence: a requestAnimationFrame tick runs OUTSIDE the Interactivity scope. Without withScope, getContext() and state are undefined. And the payoff of the string flag from the block.json slide: Number(ctx.speed) * 1000.">
+<section class="slide" data-type="t" data-notes="One sentence: a requestAnimationFrame tick runs OUTSIDE the Interactivity scope. Without withScope, getContext() and state are undefined. And the payoff of the string flag from the block.json slide: Number(ctx.speed) * 1000. If someone asks why not setInterval: rAF syncs with repaint and pauses in hidden tabs, so no work happens when nobody can see the slider.">
   <div class="eyebrow">Section 8 · Autoplay</div>
   <h2><code style="font-size: 0.85em;">withScope</code> in one slide</h2>
   <div class="split">
     <div class="lead">
       <p class="big-say">A <code>requestAnimationFrame</code> tick runs <strong>outside the Interactivity scope</strong>. Without the wrapper, <code>getContext()</code> and <code>state</code> are undefined.</p>
       <p class="big-say">Remember the <code>speed</code> <strong>string</strong> from Section 2? Convert it to a number before you multiply.</p>
+      <p class="dim">Why <code>requestAnimationFrame</code> and not <code>setInterval</code>? It lines up with the browser's repaint and pauses when the tab is hidden. <code>setInterval</code> keeps firing in the background.</p>
     </div>
     <pre class="code">const update = <mark>withScope</mark>( ( timestamp ) => {
     if ( timestamp - start >
