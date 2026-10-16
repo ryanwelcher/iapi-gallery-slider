@@ -10,9 +10,9 @@ import {
 import {
 	PanelBody,
 	Placeholder,
-	ToggleControl,
 	__experimentalNumberControl as NumberControl,
 } from '@wordpress/components';
+import { SwitchControl } from '@wordpress/ui';
 import { useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 
@@ -79,24 +79,24 @@ export default function Edit( {
 			) }
 			<InspectorControls>
 				<PanelBody title={ __( 'Slider Controls' ) }>
-					<ToggleControl
+					<SwitchControl
 						label={ __( 'Continuous' ) }
-						help={ __(
+						description={ __(
 							'If enabled, the slider will loop back to the first slide after the last slide.'
 						) }
 						checked={ continuous }
-						onChange={ () =>
-							setAttributes( { continuous: ! continuous } )
+						onCheckedChange={ ( checked ) =>
+							setAttributes( { continuous: checked } )
 						}
 					/>
-					<ToggleControl
+					<SwitchControl
 						label={ __( 'Autoplay' ) }
-						help={ __(
+						description={ __(
 							'Set the slideshow to play automatically.'
 						) }
 						checked={ autoplay }
-						onChange={ () =>
-							setAttributes( { autoplay: ! autoplay } )
+						onCheckedChange={ ( checked ) =>
+							setAttributes( { autoplay: checked } )
 						}
 					/>
 					{ autoplay && (

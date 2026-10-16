@@ -510,14 +510,14 @@ store( 'iapi-gallery', {
       <p>We're building the Inspector controls that drive the three attributes, so the IAPI sections have something to read.</p>
     </div>
     <div class="cols" style="flex-direction: column; gap: 1.4vh;">
-      <div class="card"><h3>continuous</h3><p><code>ToggleControl</code> that lets the prev/next buttons wrap around the ends (used in Section 9)</p></div>
-      <div class="card"><h3>autoplay</h3><p><code>ToggleControl</code> that drives Section 8's requestAnimationFrame loop</p></div>
+      <div class="card"><h3>continuous</h3><p><code>SwitchControl</code> that lets the prev/next buttons wrap around the ends (used in Section 9)</p></div>
+      <div class="card"><h3>autoplay</h3><p><code>SwitchControl</code> that drives Section 8's requestAnimationFrame loop</p></div>
       <div class="card"><h3>speed</h3><p><code>NumberControl</code>, rendered <em>only when autoplay is on</em></p></div>
     </div>
   </div>
 </section>
 
-<section class="slide" data-type="t" data-notes="The import-map callout is the #1 sticking point. InspectorControls comes from block-editor, the controls from components. Alias syntax for NumberControl on screen so nobody has to guess.">
+<section class="slide" data-type="t" data-notes="The import-map callout is the #1 sticking point. InspectorControls comes from block-editor, SwitchControl from the newer @wordpress/ui, and the rest from components. If anyone asks: ToggleControl is the older version, and WordPress now recommends SwitchControl. Alias syntax for NumberControl on screen so nobody has to guess.">
   <div class="eyebrow">Section 3 · Editor Controls</div>
   <h2>The pieces</h2>
   <div class="split">
@@ -525,7 +525,7 @@ store( 'iapi-gallery', {
       <ul>
         <li><code>useBlockProps</code> wires the wrapper div to the editor</li>
         <li><code>useInnerBlocksProps</code> + <code>allowedBlocks</code> limits it to Image, Cover, and Media &amp; Text</li>
-        <li>Watch the packages. <code>InspectorControls</code> is <em>block-editor</em>; the controls are <em>components</em></li>
+        <li>Watch the packages. <code>InspectorControls</code> is <em>block-editor</em>, <code>SwitchControl</code> is <em>ui</em>, and the rest are <em>components</em></li>
         <li><code>attributes</code> / <code>setAttributes</code> read and write what block.json declared</li>
         <li>Don't let the <code>__experimental</code> prefix scare you. That's still the current public import for <code>NumberControl</code></li>
       </ul>
@@ -534,10 +534,13 @@ store( 'iapi-gallery', {
          InspectorControls }
     from <mark>'@wordpress/block-editor'</mark>;
 
-import { PanelBody, ToggleControl,
+import { PanelBody,
          <mark>__experimentalNumberControl
              as NumberControl</mark> }
-    from <mark>'@wordpress/components'</mark>;</pre>
+    from <mark>'@wordpress/components'</mark>;
+
+import { SwitchControl }
+    from <mark>'@wordpress/ui'</mark>;</pre>
   </div>
 </section>
 

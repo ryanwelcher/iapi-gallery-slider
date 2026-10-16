@@ -83,7 +83,7 @@ Timing references the run sheet in `facilitator-notes.md`.
 
 ### Slide 15 [T] — The pieces
 - `useBlockProps` / `useInnerBlocksProps` + `allowedBlocks` (Image, Cover, Media & Text)
-- `InspectorControls` + `PanelBody` + `ToggleControl` + `__experimentalNumberControl as NumberControl`
+- `InspectorControls` + `PanelBody` + `SwitchControl` (from `@wordpress/ui`) + `__experimentalNumberControl as NumberControl`
 - Import-map callout: which package each import comes from (the #1 sticking point)
 - Conditional rendering: Slide Duration only when Autoplay is on
 

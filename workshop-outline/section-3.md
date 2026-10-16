@@ -13,7 +13,7 @@ This section is pure block editor — no Interactivity API yet. We're setting up
 - `useBlockProps` — wires the wrapper `<div>` to WordPress so the editor recognizes it as a block.
 - `useInnerBlocksProps` with `allowedBlocks` — embeds an inner-block area and constrains what can go inside.
 - `InspectorControls` + `PanelBody` — the sidebar slot and grouping for block settings.
-- `ToggleControl` — boolean attribute UI.
+- `SwitchControl` from `@wordpress/ui` — boolean attribute UI. It replaces `ToggleControl` from `@wordpress/components`, which WordPress now flags in favor of the newer design-system components. Its change handler is `onCheckedChange`, and it passes the new `true`/`false` value straight to you.
 - `__experimentalNumberControl as NumberControl` — numeric attribute UI; the experimental import is the current public path for this control.
 - Conditional rendering of controls based on other attribute values (Slide Duration only when Autoplay is on).
 - `attributes` and `setAttributes` — how the edit function reads and writes block attributes declared in `block.json`.
@@ -30,9 +30,9 @@ This section is pure block editor — no Interactivity API yet. We're setting up
    } from '@wordpress/block-editor';
    import {
        PanelBody,
-       ToggleControl,
        __experimentalNumberControl as NumberControl,
    } from '@wordpress/components';
+   import { SwitchControl } from '@wordpress/ui';
    import { __ } from '@wordpress/i18n';
    ```
 3. Export the `Edit` component, destructuring `attributes` and `setAttributes`:
@@ -67,22 +67,22 @@ This section is pure block editor — no Interactivity API yet. We're setting up
    ```jsx
    <InspectorControls>
        <PanelBody title={ __( 'Slider Controls' ) }>
-           <ToggleControl
+           <SwitchControl
                label={ __( 'Continuous' ) }
-               help={ __(
+               description={ __(
                    'If enabled, the slider will loop back to the first slide after the last slide.'
                ) }
                checked={ continuous }
-               onChange={ () =>
-                   setAttributes( { continuous: ! continuous } )
+               onCheckedChange={ ( checked ) =>
+                   setAttributes( { continuous: checked } )
                }
            />
-           <ToggleControl
+           <SwitchControl
                label={ __( 'Autoplay' ) }
-               help={ __( 'Set the slideshow to play automatically.' ) }
+               description={ __( 'Set the slideshow to play automatically.' ) }
                checked={ autoplay }
-               onChange={ () =>
-                   setAttributes( { autoplay: ! autoplay } )
+               onCheckedChange={ ( checked ) =>
+                   setAttributes( { autoplay: checked } )
                }
            />
            { autoplay && (
