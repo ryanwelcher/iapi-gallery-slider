@@ -105,7 +105,11 @@
   pre.code mark {
     color: inherit; background: rgba(255, 157, 0, 0.2); border-radius: 3px;
     box-shadow: 0 0 0 3px rgba(255, 157, 0, 0.2); -webkit-box-decoration-break: clone; box-decoration-break: clone;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
   }
+  /* <mark data-step-mark="N"> lights up only while bullet N is the current one
+     (and on the final step, when the whole list is back at full strength). */
+  pre.code mark.mark-off { background: none; box-shadow: none; }
   pre.code .c { color: #D7A9F5; }
   pre.code .tok-k { color: #FAD000; }
   pre.code .tok-s { color: #A5FF90; }
@@ -401,8 +405,8 @@
       <li><strong>Editor open on the plugin folder</strong>. Everything today lives in it, including the <code>workshop-outline/</code> section files and the <code>code-reference/</code> snapshots</li>
       <li class="dim">Stuck? <a class="amber repo-link" href="https://github.com/ryanwelcher/iapi-gallery-slider" target="_blank" rel="noopener">github.com/ryanwelcher/iapi-gallery-slider</a> has a Playground fallback in the README</li>
     </ul>
-    <pre class="code">cd wp-content/plugins/iapi-gallery-slider
-nvm use          <span class="c"># reads .nvmrc (Node 20)</span>
+    <pre class="code"><mark data-step-mark="4">cd wp-content/plugins/iapi-gallery-slider</mark>
+<mark data-step-mark="3">nvm use</mark>          <span class="c"># reads .nvmrc (Node 20)</span>
 npm install      <span class="c"># safe to re-run</span>
 <mark>npm run start</mark>    <span class="c"># leave running ALL session</span></pre>
   </div>
@@ -475,18 +479,19 @@ npm install      <span class="c"># safe to re-run</span>
   <div class="split" style="grid-template-columns: 4fr 7fr;">
     <div class="lead">
       <ul>
+        <li><code>"interactivity": true</code> in <code>supports</code> turns on the Interactivity API for this block. It's one half of a pair, and the next slide shows the other half</li>
         <li><code>viewScriptModule</code> is front-end only, loaded as an ES module</li>
         <li>Three attributes drive the Inspector controls we build in Section 3</li>
         <li><span class="amber">⚑</span> <code>speed</code> is a <strong>string</strong>, since that's what <code>NumberControl</code> hands back. Remember that, because we have to convert it to a number before doing math with it in Section 8</li>
       </ul>
     </div>
     <pre class="code">{
-    "supports": { <mark>"interactivity": true</mark> },
-    "viewScriptModule": "file:./view.js",
+    "supports": { <mark data-step-mark="1">"interactivity": true</mark> },
+    <mark data-step-mark="2">"viewScriptModule": "file:./view.js"</mark>,
     "attributes": {
-        "continuous": { "type": "boolean", "default": false },
-        "autoplay": { "type": "boolean", "default": false },
-        "speed": { <mark>"type": "string"</mark>, "default": "3" }
+        <mark data-step-mark="3">"continuous"</mark>: { "type": "boolean", "default": false },
+        <mark data-step-mark="3">"autoplay"</mark>: { "type": "boolean", "default": false },
+        <mark data-step-mark="3">"speed"</mark>: { <mark data-step-mark="4">"type": "string"</mark>, "default": "3" }
     }
 }</pre>
   </div>
@@ -522,10 +527,10 @@ npm install      <span class="c"># safe to re-run</span>
       </ul>
     </div>
     <pre class="code"><span class="c">&lt;!-- the starter markup --&gt;</span>
-&lt;div &lt;?php echo get_block_wrapper_attributes(); ?&gt;
-    <mark>data-wp-interactive='iapi-gallery'</mark>&gt;
-  &lt;div class="slider-container"&gt;…slides…&lt;/div&gt;
-  &lt;button&gt;&lt;&lt;/button&gt; &lt;p&gt;&lt;/p&gt; &lt;button&gt;&gt;&lt;/button&gt;
+&lt;div &lt;?php echo <mark data-step-mark="1">get_block_wrapper_attributes()</mark>; ?&gt;
+    <mark data-step-mark="2">data-wp-interactive='iapi-gallery'</mark>&gt;
+  &lt;div <mark data-step-mark="1">class="slider-container"</mark>&gt;…slides…&lt;/div&gt;
+  <mark data-step-mark="1">&lt;button&gt;&lt;&lt;/button&gt;</mark> &lt;p&gt;&lt;/p&gt; <mark data-step-mark="1">&lt;button&gt;&gt;&lt;/button&gt;</mark>
 &lt;/div&gt;</pre>
   </div>
 </section>
@@ -561,17 +566,17 @@ npm install      <span class="c"># safe to re-run</span>
         <li>Don't let the <code>__experimental</code> prefix scare you. That's still the current public import for <code>NumberControl</code></li>
       </ul>
     </div>
-    <pre class="code">import { useBlockProps, useInnerBlocksProps,
+    <pre class="code">import { <mark data-step-mark="1">useBlockProps</mark>, <mark data-step-mark="2">useInnerBlocksProps</mark>,
          InspectorControls }
-    from <mark>'@wordpress/block-editor'</mark>;
+    from <mark data-step-mark="3">'@wordpress/block-editor'</mark>;
 
 import { PanelBody,
-         <mark>__experimentalNumberControl</mark>
-             <mark>as NumberControl</mark> }
-    from <mark>'@wordpress/components'</mark>;
+         <mark data-step-mark="5">__experimentalNumberControl</mark>
+             <mark data-step-mark="5">as NumberControl</mark> }
+    from <mark data-step-mark="3">'@wordpress/components'</mark>;
 
 import { SwitchControl }
-    from <mark>'@wordpress/ui'</mark>;</pre>
+    from <mark data-step-mark="3">'@wordpress/ui'</mark>;</pre>
   </div>
 </section>
 
@@ -845,12 +850,12 @@ store( '<mark>iapi-gallery</mark>', { … } );</pre>
       <p class="dim">This is the three-kinds slide from the primer paying off.</p>
     </div>
     <pre class="code">state: {
-    get <mark>noPrevSlide</mark>() {
-        const ctx = getContext();
+    <mark data-step-mark="2">get</mark> <mark data-step-mark="1">noPrevSlide</mark>() {
+        const ctx = <mark data-step-mark="3">getContext()</mark>;
         return ctx.currentSlide === 1;
     },
-    get <mark>imageIndex</mark>() {
-        const ctx = getContext();
+    <mark data-step-mark="2">get</mark> <mark data-step-mark="1">imageIndex</mark>() {
+        const ctx = <mark data-step-mark="3">getContext()</mark>;
         return `${ ctx.currentSlide }/${
                   ctx.totalSlides }`;
     },
@@ -964,7 +969,7 @@ store( '<mark>iapi-gallery</mark>', { … } );</pre>
     </ul>
     <pre class="code"><span class="c">// store() returns the object you passed —</span>
 <span class="c">// with the getters live</span>
-const { <mark>state, actions</mark> } =
+const { <mark data-step-mark="3">state, actions</mark> } =
     store( 'iapi-gallery', { … } );</pre>
   </div>
 </section>
@@ -1187,6 +1192,9 @@ return <mark>Number( ctx.speed )</mark> * 1000;</pre>
     slide.stepItems.forEach((li, k) => {
       li.classList.toggle('li-hidden', !all && k + 1 > current);
       li.classList.toggle('li-faded', !all && k + 1 < current);
+    });
+    slide.querySelectorAll('mark[data-step-mark]').forEach(mk => {
+      mk.classList.toggle('mark-off', !all && +mk.dataset.stepMark !== current);
     });
   }
   const revealedBySlide = new Map();

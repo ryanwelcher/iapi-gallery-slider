@@ -52,7 +52,7 @@ Timing references the run sheet in `facilitator-notes.md`.
 - `edit.js` and `view.js` are near-empty stubs that Sections 3 and 5 build; the tree's comments say so, no separate slides
 
 ### Slide 8 [T] — `src/block.json`
-- Highlighted lines: `supports.interactivity: true`, `viewScriptModule`, three attributes
+- Four bullets, each lighting up its line in the code: `supports.interactivity: true` turns the API on (one half of the opt-in pair on the next slide) · `viewScriptModule` · three attributes · `speed` is a string
 - Flag now: `speed` is `"type": "string"` because `NumberControl` hands back a string — "remember that — we convert it to a number before doing math with it in Section 8"
 
 ### Slide 9 [T] — **The opt-in pair** ★ recurring motif
