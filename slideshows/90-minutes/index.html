@@ -602,20 +602,20 @@ import { __ } from '@wordpress/i18n';
   </div>
 </section>
 
-<section class="slide" data-type="p" data-notes="PRE-PLANNED CUT: running late? Demo the finished panel 3 min, point at the snapshot, jump ahead 2 slides to the primer. Decide by 0:16.">
+<section class="slide" data-type="p" data-notes="While they work: npm run checkpoint 3, so it's built before the checkpoint slide. PRE-PLANNED CUT: running late? Demo the finished panel 3 min, point at the snapshot, jump ahead 2 slides to the primer. Decide by 0:16.">
   <div class="eyebrow">Section 3 · Lab <span class="clock">· ⏱ 10 min</span></div>
   <h2>Build <code style="font-family: var(--mono); font-size: 0.8em;">edit.js</code></h2>
   <dl class="lab-grid">
     <dt>Mission</dt><dd>Editor preview + a "Slider Controls" Inspector panel</dd>
-    <dt>Where</dt><dd><code>workshop-outline/section-3.md</code>, all steps</dd>
+    <dt>Where</dt><dd><a class="repo-link" href="https://github.com/ryanwelcher/iapi-gallery-slider/blob/trunk/workshop-outline/section-3.md" target="_blank" rel="noopener"><code>workshop-outline/section-3.md</code></a>, all steps</dd>
     <dt>Files</dt><dd><code>src/edit.js</code></dd>
     <dt>Done when</dt><dd>Block inserts with the inner-block area restricted to the 3 types; both toggles work; Slide Duration (the <code>speed</code> control) appears only when Autoplay is on</dd>
-    <dt>Rescue</dt><dd><code>code-reference/section-3/src/edit.js</code></dd>
+    <dt>Rescue</dt><dd><a class="repo-link" href="https://github.com/ryanwelcher/iapi-gallery-slider/blob/trunk/code-reference/section-3/src/edit.js" target="_blank" rel="noopener"><code>code-reference/section-3/src/edit.js</code></a></dd>
     <dt>Done early?</dt><dd>Open the code editor view of the post and watch your attribute values serialize into the block comment</dd>
   </dl>
 </section>
 
-<section class="slide" data-type="c" data-demo="demo · switch to Studio" data-notes="npm run checkpoint 3, then Ctrl+Tab to the site and reload. Demo: insert block, toggle Autoplay, watch Slide Duration appear. Everyone either has it or copied it, and both are fine. Then: laptops closed for the primer.">
+<section class="slide" data-type="c" data-demo="demo · switch to Studio" data-notes="Checkpoint 3 is already live from the lab: Ctrl+Tab to the site and reload. Demo: insert block, toggle Autoplay, watch Slide Duration appear. Everyone either has it or copied it, and both are fine. Then: laptops closed for the primer.">
   <div class="eyebrow">Section 3 · Checkpoint</div>
   <h2>You should now have…</h2>
   <p class="big-say">Insert the block → restricted inner area. Toggle <strong>Autoplay</strong> → <strong>Slide Duration</strong> appears.</p>
@@ -835,20 +835,20 @@ store( '<mark>iapi-gallery</mark>', { … } );</pre>
   </div>
 </section>
 
-<section class="slide" data-type="p" data-notes="Walk the room. Silent failure = namespace typo. Console error = watcher not running, stale build. Counter blank = they wrote state.currentSlide instead of context.currentSlide.">
+<section class="slide" data-type="p" data-notes="While they work: npm run checkpoint 5, so it's built before the checkpoint slide. Walk the room. Silent failure = namespace typo. Console error = watcher not running, stale build. Counter blank = they wrote state.currentSlide instead of context.currentSlide.">
   <div class="eyebrow">Section 5 · Lab <span class="clock">· ⏱ 7 min</span></div>
   <h2>First round-trip</h2>
   <dl class="lab-grid">
     <dt>Mission</dt><dd>The next button bumps a counter on the page</dd>
-    <dt>Where</dt><dd><code>workshop-outline/section-5.md</code>, steps 1–5</dd>
+    <dt>Where</dt><dd><a class="repo-link" href="https://github.com/ryanwelcher/iapi-gallery-slider/blob/trunk/workshop-outline/section-5.md" target="_blank" rel="noopener"><code>workshop-outline/section-5.md</code></a>, steps 1–5</dd>
     <dt>Files</dt><dd><code>src/render.php</code> · <code>src/view.js</code></dd>
     <dt>Done when</dt><dd>Counter renders "1" · next bumps it 2 · 3 · 4 <strong>and keeps going past the last slide (3). That's expected!</strong> · prev is inert · no console errors</dd>
-    <dt>Rescue</dt><dd><code>code-reference/section-5/</code></dd>
+    <dt>Rescue</dt><dd><a class="repo-link" href="https://github.com/ryanwelcher/iapi-gallery-slider/tree/trunk/code-reference/section-5" target="_blank" rel="noopener"><code>code-reference/section-5/</code></a></dd>
     <dt>Done early?</dt><dd>Wire up the prev button yourself. You're starting Section 6 early</dd>
   </dl>
 </section>
 
-<section class="slide" data-type="c" data-demo="demo · switch to Studio" data-notes="npm run checkpoint 5, then Ctrl+Tab to the site and reload. RUN-SHEET GATE: if this slide isn't on screen by 0:50, engage the cut lines in facilitator-notes.md. Demo includes running PAST 3: 'that bug is Section 6's job.'">
+<section class="slide" data-type="c" data-demo="demo · switch to Studio" data-notes="Checkpoint 5 is already live from the lab: Ctrl+Tab to the site and reload. RUN-SHEET GATE: if this slide isn't on screen by 0:50, engage the cut lines in facilitator-notes.md. Demo includes running PAST 3: 'that bug is Section 6's job.'">
   <div class="eyebrow">Section 5 · Checkpoint <span class="clock">· ◆ minute-50 gate</span></div>
   <h2>You should now have…</h2>
   <p class="big-say">Click next → <strong>1, 2, 3, 4, 5…</strong> right past the end.</p>
@@ -888,20 +888,20 @@ store( '<mark>iapi-gallery</mark>', { … } );</pre>
   </div>
 </section>
 
-<section class="slide" data-type="p" data-notes="Watch for: transform off-by-one (slide 1 must be translateX(0)) and getters returning a bare number with no units.">
+<section class="slide" data-type="p" data-notes="While they work: npm run checkpoint 6, so it's built before the checkpoint slide. Watch for: transform off-by-one (slide 1 must be translateX(0)) and getters returning a bare number with no units.">
   <div class="eyebrow">Section 6 · Lab <span class="clock">· ⏱ 7 min</span></div>
   <h2>Make it slide</h2>
   <dl class="lab-grid">
     <dt>Mission</dt><dd>Slides move; buttons gray out at the ends; counter reads "X/3"</dd>
-    <dt>Where</dt><dd><code>workshop-outline/section-6.md</code>, all steps</dd>
+    <dt>Where</dt><dd><a class="repo-link" href="https://github.com/ryanwelcher/iapi-gallery-slider/blob/trunk/workshop-outline/section-6.md" target="_blank" rel="noopener"><code>workshop-outline/section-6.md</code></a>, all steps</dd>
     <dt>Files</dt><dd><code>src/view.js</code> · <code>src/render.php</code></dd>
     <dt>Done when</dt><dd>Prev <em>and</em> next both work · disabled at each end · the transform animates</dd>
-    <dt>Rescue</dt><dd><code>code-reference/section-6/</code></dd>
+    <dt>Rescue</dt><dd><a class="repo-link" href="https://github.com/ryanwelcher/iapi-gallery-slider/tree/trunk/code-reference/section-6" target="_blank" rel="noopener"><code>code-reference/section-6/</code></a></dd>
     <dt>Done early?</dt><dd>Add a 4th image and the counter breaks. That's exactly what the next section fixes</dd>
   </dl>
 </section>
 
-<section class="slide" data-type="c" data-demo="demo · switch to Studio" data-notes="npm run checkpoint 6, then Ctrl+Tab to the site and reload. Demo full slide-and-bounds. Tee up Section 7: 'still hardcoded totalSlides: 3, and the server fixes that next.'">
+<section class="slide" data-type="c" data-demo="demo · switch to Studio" data-notes="Checkpoint 6 is already live from the lab: Ctrl+Tab to the site and reload. Demo full slide-and-bounds. Tee up Section 7: 'still hardcoded totalSlides: 3, and the server fixes that next.'">
   <div class="eyebrow">Section 6 · Checkpoint</div>
   <h2>You should now have…</h2>
   <p class="big-say">A real slider: slides move, ends stop, counter says <strong>"X/3"</strong>.</p>
@@ -956,21 +956,21 @@ wp_interactivity_state(
   </div>
 </section>
 
-<section class="slide" data-type="p" data-notes="Sticking points: hook-name mismatch; class names are wp-block-image, NOT core/image. PHP is live, with no watcher on that side.">
+<section class="slide" data-type="p" data-notes="While they work: npm run checkpoint 7, so it's built before the checkpoint slide. Sticking points: hook-name mismatch; class names are wp-block-image, NOT core/image. PHP is live, with no watcher on that side.">
   <div class="eyebrow">Section 7 · Lab <span class="clock">· ⏱ 8 min</span></div>
   <h2>Real counts, no flash</h2>
   <dl class="lab-grid">
     <dt>Mission</dt><dd>The filter counts inner blocks and seeds context + state</dd>
-    <dt>Where</dt><dd><code>workshop-outline/section-7.md</code>, steps 1–5</dd>
+    <dt>Where</dt><dd><a class="repo-link" href="https://github.com/ryanwelcher/iapi-gallery-slider/blob/trunk/workshop-outline/section-7.md" target="_blank" rel="noopener"><code>workshop-outline/section-7.md</code></a>, steps 1–5</dd>
     <dt>Files</dt><dd><code>iapi-gallery-slider.php</code> · <code>src/render.php</code></dd>
     <dt>Done when</dt><dd>Adding a 4th block makes the counter read "X/4" with no flash</dd>
-    <dt>Rescue</dt><dd><code>code-reference/section-7/</code></dd>
+    <dt>Rescue</dt><dd><a class="repo-link" href="https://github.com/ryanwelcher/iapi-gallery-slider/tree/trunk/code-reference/section-7" target="_blank" rel="noopener"><code>code-reference/section-7/</code></a></dd>
     <dt>Done early?</dt><dd>Throttle CPU + network in DevTools and try to catch the flash yourself</dd>
   </dl>
   <div class="lab-warn">⚠ Don't reload between steps 1 and 3. Until the filter is registered there's no context, and the console will yell.</div>
 </section>
 
-<section class="slide" data-type="c" data-demo="demo · switch to Studio" data-notes="npm run checkpoint 7, then Ctrl+Tab to the site and reload. Demo: add/remove an inner block in the editor, counter adapts. 'The slider is now adaptive. The last piece we build together is autoplay.'">
+<section class="slide" data-type="c" data-demo="demo · switch to Studio" data-notes="Checkpoint 7 is already live from the lab: Ctrl+Tab to the site and reload. Demo: add/remove an inner block in the editor, counter adapts. 'The slider is now adaptive. The last piece we build together is autoplay.'">
   <div class="eyebrow">Section 7 · Checkpoint</div>
   <h2>You should now have…</h2>
   <p class="big-say">Add a block in the editor → <strong>"1/4"</strong>. Remove one → <strong>"1/3"</strong>. No hardcoding, no flash.</p>
@@ -1031,21 +1031,21 @@ get transitionsSpeed() {
   </div>
 </section>
 
-<section class="slide" data-type="p" data-notes="'Autoplay doesn't start' → check the toggle in the Inspector BEFORE the code. Running late? This section demos well, so use cut line 3 and finish it solo on the projector.">
+<section class="slide" data-type="p" data-notes="While they work: npm run checkpoint 8, so it's built before the checkpoint slide. 'Autoplay doesn't start' → check the toggle in the Inspector BEFORE the code. Running late? This section demos well, so use cut line 3 and finish it solo on the projector.">
   <div class="eyebrow">Section 8 · Lab <span class="clock">· ⏱ 9 min</span></div>
   <h2>Autoplay</h2>
   <dl class="lab-grid">
     <dt>Mission</dt><dd>The Autoplay toggle drives the slider at the chosen speed; the loop cleans up after itself</dd>
-    <dt>Where</dt><dd><code>workshop-outline/section-8.md</code>. Start with the setup edits: <code>autoplay</code> and <code>speed</code> into context in PHP, then the <code>view.js</code> prep. Add the callbacks block last</dd>
+    <dt>Where</dt><dd><a class="repo-link" href="https://github.com/ryanwelcher/iapi-gallery-slider/blob/trunk/workshop-outline/section-8.md" target="_blank" rel="noopener"><code>workshop-outline/section-8.md</code></a>. Start with the setup edits: <code>autoplay</code> and <code>speed</code> into context in PHP, then the <code>view.js</code> prep. Add the callbacks block last</dd>
     <dt>Files</dt><dd><code>src/view.js</code> · <code>iapi-gallery-slider.php</code> · <code>src/render.php</code></dd>
     <dt>Done when</dt><dd>Autoplay advances and wraps · toggling off stops it · no leaked frames</dd>
-    <dt>Rescue</dt><dd><code>code-reference/section-8/</code></dd>
+    <dt>Rescue</dt><dd><a class="repo-link" href="https://github.com/ryanwelcher/iapi-gallery-slider/tree/trunk/code-reference/section-8" target="_blank" rel="noopener"><code>code-reference/section-8/</code></a></dd>
     <dt>Done early?</dt><dd>Two sliders on one page at different speeds, which proves that context is per-instance</dd>
   </dl>
   <div class="lab-warn">⚑ Mid-lab checkpoint: after the setup edits, save + reload. Behavior should be <em>unchanged</em> before you add the callbacks block.</div>
 </section>
 
-<section class="slide" data-type="c" data-demo="demo · switch to Studio" data-notes="npm run checkpoint 8, then Ctrl+Tab to the site and reload. Afterwards, npm run checkpoint reset. Demo autoplay at two speeds; toggle off mid-run. 'That's the complete slider.'">
+<section class="slide" data-type="c" data-demo="demo · switch to Studio" data-notes="Checkpoint 8 is already live from the lab: Ctrl+Tab to the site and reload. Afterwards, npm run checkpoint reset. Demo autoplay at two speeds; toggle off mid-run. 'That's the complete slider.'">
   <div class="eyebrow">Section 8 · Checkpoint</div>
   <h2>You should now have…</h2>
   <p class="big-say">Toggle Autoplay on → it runs at your speed. Toggle off → it stops, cleanly.</p>
@@ -1078,7 +1078,7 @@ get transitionsSpeed() {
     </ul>
     <div class="lead">
       <p class="big-say"><strong>There are no new IAPI primitives in it.</strong> You already know everything it needs.</p>
-      <p class="dim"><code>workshop-outline/section-9.md</code> · answer key in <code>code-reference/section-9/</code></p>
+      <p class="dim"><a class="repo-link" href="https://github.com/ryanwelcher/iapi-gallery-slider/blob/trunk/workshop-outline/section-9.md" target="_blank" rel="noopener"><code>workshop-outline/section-9.md</code></a> · answer key in <a class="repo-link" href="https://github.com/ryanwelcher/iapi-gallery-slider/tree/trunk/code-reference/section-9" target="_blank" rel="noopener"><code>code-reference/section-9/</code></a></p>
       <div class="pg-launch">
         <button onclick="openPG(event)">▶ The finished slider, in Playground</button>
         <a href="https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/ryanwelcher/iapi-gallery-slider/demo/demo-blueprint.json" target="_blank" rel="noopener">open in new tab ↗</a>

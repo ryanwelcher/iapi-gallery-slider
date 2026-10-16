@@ -34,7 +34,7 @@ This is the section where `callbacks` enter the picture. They're the third part 
    );
    ```
    The `array_merge` pattern keeps the attribute-driven values visually separated from the runtime-driven ones — it'll make Section 9c easier to read when we add `continuous` to the same block.
-2. In `src/view.js`, four edits — three setup edits, then the new `callbacks` block. There's a natural checkpoint partway through; we'll call it out.
+2. In `src/view.js`, five edits: four setup edits, then the new `callbacks` block. There's a natural checkpoint partway through; we'll call it out.
    - Add `withScope` to the `@wordpress/interactivity` import. Replace the import line at the top of the file with:
 
      ```js

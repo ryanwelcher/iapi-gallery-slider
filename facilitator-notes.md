@@ -23,7 +23,7 @@ Present with a mirrored display, and keep everything in one full-screen browser 
 
 1. Open the deck in the first tab and the Studio site (the test post and `wp-admin`) in the tabs after it.
 2. Before the session, run `npm run checkpoint 9`. The opening demo then shows the finished slider.
-3. At each checkpoint slide, run `npm run checkpoint <N>` for that section (3, 5, 6, 7, 8). Each demo slide's speaker notes say which one.
+3. While each lab runs, run `npm run checkpoint <N>` for that section (3, 5, 6, 7, 8), so it's built by the checkpoint slide. Each lab slide's speaker notes say which one, and each section below repeats it.
 4. Press **Ctrl+Tab** to go to the site and reload it. Press **Ctrl+Shift+Tab** to go back to the deck. The deck stays on the same slide and build step.
 5. After the last checkpoint, run `npm run checkpoint reset` to put the plugin back to the starter.
 
@@ -79,6 +79,8 @@ If the wheels come off early (wifi, Studio installs), the floor is: Sections 1�
 
 **Goal:** Studio site running, plugin active, `npm run start` watching, test post in place.
 
+**Your demo site:** run `npm run checkpoint 9` before doors open, so the opening demo (slide 3) is the finished slider.
+
 **Talking points:**
 - Frame the arc up front: "editor controls first, then the smallest possible interactive loop, then we grow it — sliding, server-seeded context, autoplay."
 - Point at `code-reference/` now, before anyone needs it.
@@ -102,6 +104,8 @@ If the wheels come off early (wifi, Studio installs), the floor is: Sections 1�
 ### Section 3 — Editor Controls (~15 min) — *pre-planned cut*
 
 **Goal:** `edit.js` built from scratch: inner-block area with `allowedBlocks`, Inspector panel with two toggles + conditional NumberControl.
+
+**Your demo site:** run `npm run checkpoint 3` while the room works on the lab. At the checkpoint slide, Ctrl+Tab to the site and reload.
 
 **Talking points:**
 - Say explicitly: "no Interactivity API in this section — we're building the attributes the IAPI sections will read."
@@ -127,6 +131,8 @@ If the wheels come off early (wifi, Studio installs), the floor is: Sections 1�
 
 **Goal:** The smallest round-trip: hardcoded context on the wrapper, `data-wp-text` counter, next button bumps `ctx.currentSlide`.
 
+**Your demo site:** run `npm run checkpoint 5` during the lab, then Ctrl+Tab and reload at the checkpoint.
+
 **Talking points:**
 - The namespace contract: `data-wp-interactive='iapi-gallery'` and `store('iapi-gallery', …)` must agree — and neither has to match the block name `iapi/gallery-slider`. Say this before someone hits the typo.
 - The counter running past 3 is *expected* — resist the urge to fix it early; Section 6 owns bounds.
@@ -140,6 +146,8 @@ If the wheels come off early (wifi, Studio installs), the floor is: Sections 1�
 
 **Goal:** Derived state getters; `data-wp-style--transform` slides the track; `data-wp-bind--disabled` grays out buttons at the ends; counter shows "X/3".
 
+**Your demo site:** run `npm run checkpoint 6` during the lab, then Ctrl+Tab and reload at the checkpoint.
+
 **Talking points:**
 - The section's own framing is the right one: disable logic is *derived* from context, so it lives in `state` getters, not in context. This is the context-vs-state payoff from Section 4.
 - Getters re-run on every read — that's why the UI stays in sync with no extra wiring.
@@ -151,6 +159,8 @@ If the wheels come off early (wifi, Studio installs), the floor is: Sections 1�
 ### Section 7 — Server-Side Directive Injection (~13 min) — *never cut*
 
 **Goal:** `render_block_iapi/gallery-slider` filter counts real inner blocks with `WP_HTML_Tag_Processor`, seeds `data-wp-context`; `wp_interactivity_state()` kills the hydration flash.
+
+**Your demo site:** stay on checkpoint 6 for the flash demo (slide 30); that version has the flash. Run `npm run checkpoint 7` once the lab starts.
 
 **Talking points:**
 - **Honor the outline's "don't reload between steps 1 and 3" warning** — say it before anyone deletes the hardcoded context, or half the room hits "currentSlide is not defined" and thinks they broke something.
@@ -168,8 +178,10 @@ If the wheels come off early (wifi, Studio installs), the floor is: Sections 1�
 
 **Goal:** `callbacks` + `data-wp-init` start a rAF loop when the Autoplay toggle is on; `withScope` keeps ticks inside the IAPI scope; returned cleanup cancels the frame.
 
+**Your demo site:** run `npm run checkpoint 8` during the lab, then Ctrl+Tab and reload at the checkpoint. Run `npm run checkpoint reset` after the session.
+
 **Talking points:**
-- Use the section's built-in **mid-section checkpoint**: after the three setup edits, save/reload and confirm nothing changed before writing the callbacks block. Cheap insurance against compound errors.
+- Use the section's built-in **mid-section checkpoint**: after the four `view.js` setup edits, save/reload and confirm nothing changed before writing the callbacks block. Cheap insurance against compound errors.
 - `withScope` gets one clear sentence: a rAF tick runs outside the Interactivity scope, so `getContext()`/`state` would be undefined without the wrapper.
 - `Number( ctx.speed ) * 1000` — the string-attribute coercion you promised back in Section 2.
 - Returning a function from a callback *is* the cleanup registration — no removeEventListener ceremony.

@@ -223,7 +223,7 @@ A focus ring is the only cue keyboard users get that they've arrived somewhere. 
        )
    );
    ```
-2. In `src/view.js`, three edits — two getters in the `state` block and two actions in the `actions` block. All four exist already; you're modifying them in place.
+2. In `src/view.js`, four edits: two getters in the `state` block and two actions in the `actions` block. All four exist already; you're modifying them in place.
 
    **a. `state.noPrevSlide`** — replace the existing getter with this version. The added line is the first one inside the function; when continuous is on, the prev button is never disabled.
 
