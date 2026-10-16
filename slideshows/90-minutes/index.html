@@ -11,6 +11,9 @@
      codeSurface #211F40 · codeStroke #4A4780 · fonts Jost + JetBrains Mono.
      Green stays as a functional success color; code tokens are Shades of Purple. */
   :root {
+    /* 1% of a 16:9 frame: font sizes are their 1920x1080 size times this, so any
+       16:9 screen shows the same layout scaled, and wider screens are limited by height. */
+    --u: min(1vw, 1.7778vh);
     --ground: #2D2B55;
     --ground-raise: #211F40;
     --line: #7D79BE;
@@ -44,7 +47,7 @@
   .slide.current { display: flex; }
   .eyebrow {
     font-family: var(--mono);
-    font-size: clamp(11px, 1.3vw, 15px);
+    font-size: clamp(11px, calc(var(--u) * 0.781), 15px);
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--accent);
@@ -54,7 +57,7 @@
   h1 {
     font-family: var(--display);
     font-weight: 800;
-    font-size: clamp(40px, 7vw, 96px);
+    font-size: clamp(40px, calc(var(--u) * 5.0), 96px);
     line-height: 1.02;
     margin: 0 0 3vh;
     text-wrap: balance;
@@ -62,12 +65,12 @@
   h2 {
     font-family: var(--display);
     font-weight: 800;
-    font-size: clamp(28px, 4.2vw, 58px);
+    font-size: clamp(28px, calc(var(--u) * 3.021), 58px);
     line-height: 1.05;
     margin: 0 0 3vh;
     text-wrap: balance;
   }
-  .slide p, .slide li { font-size: clamp(18px, 2.1vw, 28px); line-height: 1.5; font-weight: 500; }
+  .slide p, .slide li { font-size: clamp(18px, calc(var(--u) * 1.458), 28px); line-height: 1.5; font-weight: 500; }
   .slide p { margin: 0 0 1.6vh; }
   .slide ul { margin: 0; padding-left: 1.1em; display: flex; flex-direction: column; gap: 1.4vh; }
   .slide li::marker { color: var(--accent); }
@@ -76,14 +79,14 @@
   .big-say {
     font-family: var(--display);
     font-weight: 600;
-    font-size: clamp(24px, 2.9vw, 41px);
+    font-size: clamp(24px, calc(var(--u) * 2.135), 41px);
     line-height: 1.28;
     text-wrap: balance;
   }
   .big-say strong { color: var(--amber); font-weight: 800; }
   pre.code {
     font-family: var(--mono);
-    font-size: clamp(14px, 1.7vw, 23px);
+    font-size: clamp(12px, calc(var(--u) * 1.198), 23px);
     line-height: 1.55;
     background: var(--ground-raise);
     border: 1px solid var(--line);
@@ -97,9 +100,9 @@
   pre.code .c { color: #D7A9F5; }
   pre.code .tok-k { color: #FAD000; }
   pre.code .tok-s { color: #A5FF90; }
-  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5vh 2vw; }
-  .card pre.code.mini { font-size: clamp(12px, 1.4vw, 18px); line-height: 1.5; padding: 1.2vh 1vw; margin-top: 1vh; }
-  .file-tag { font-family: var(--mono); font-size: clamp(10px, 1.1vw, 13px); letter-spacing: 0.08em; color: var(--ink-dim); display: block; margin-top: 0.7vh; }
+  .grid2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.5vh 2vw; }
+  .card pre.code.mini { font-size: clamp(12px, calc(var(--u) * 0.938), 18px); line-height: 1.5; padding: 1.2vh 1vw; margin-top: 1vh; }
+  .file-tag { font-family: var(--mono); font-size: clamp(10px, calc(var(--u) * 0.677), 13px); letter-spacing: 0.08em; color: var(--ink-dim); display: block; margin-top: 0.7vh; }
   /* two-column body: text lead left, evidence (code/cards) right */
   .split { display: grid; grid-template-columns: 5fr 6fr; gap: 3.5vw; align-items: center; }
   .split.even { grid-template-columns: 1fr 1fr; }
@@ -114,18 +117,18 @@
   }
   .card h3 {
     font-family: var(--mono);
-    font-size: clamp(12px, 1.4vw, 17px);
+    font-size: clamp(12px, calc(var(--u) * 0.885), 17px);
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--accent);
     margin: 0 0 1.2vh;
   }
-  .card p, .card li { font-size: clamp(16px, 1.8vw, 23px); font-weight: 500; }
+  .card p, .card li { font-size: clamp(16px, calc(var(--u) * 1.198), 23px); font-weight: 500; }
   .pair-link {
     align-self: center;
     flex: 0 0 auto;
     font-family: var(--mono);
-    font-size: clamp(24px, 3vw, 44px);
+    font-size: clamp(24px, calc(var(--u) * 2.292), 44px);
     color: var(--amber);
   }
   /* cycle diagram */
@@ -134,15 +137,15 @@
     background: var(--ground-raise); border: 1px solid var(--line); border-radius: 10px;
     padding: 2vh 1.2vw; text-align: center; position: relative;
   }
-  .cycle .node b { display: block; font-family: var(--mono); font-size: clamp(14px, 1.65vw, 21px); color: var(--amber); margin-bottom: 0.8vh; }
-  .cycle .node span { font-size: clamp(14px, 1.65vw, 21px); color: var(--ink-dim); }
+  .cycle .node b { display: block; font-family: var(--mono); font-size: clamp(14px, calc(var(--u) * 1.094), 21px); color: var(--amber); margin-bottom: 0.8vh; }
+  .cycle .node span { font-size: clamp(14px, calc(var(--u) * 1.094), 21px); color: var(--ink-dim); }
   .cycle .node:not(:last-child)::after {
     content: "→"; position: absolute; right: calc(-1.1vw - 8px); top: 50%; transform: translateY(-50%);
-    color: var(--amber); font-size: clamp(16px, 2vw, 28px);
+    color: var(--amber); font-size: clamp(16px, calc(var(--u) * 1.458), 28px);
   }
   .cycle-back {
     text-align: center; font-family: var(--mono); color: var(--amber);
-    font-size: clamp(14px, 1.6vw, 21px); margin-top: 1vh;
+    font-size: clamp(14px, calc(var(--u) * 1.094), 21px); margin-top: 1vh;
   }
   /* stepper */
   .steps { display: flex; flex-direction: column; gap: 1.2vh; counter-reset: step; }
@@ -153,9 +156,9 @@
   .steps .step::before {
     counter-increment: step; content: counter(step);
     font-family: var(--mono); font-weight: 600; color: var(--amber);
-    font-size: clamp(15px, 1.8vw, 24px); min-width: 1.4em;
+    font-size: clamp(15px, calc(var(--u) * 1.25), 24px); min-width: 1.4em;
   }
-  .steps .step div { font-size: clamp(17px, 2vw, 25px); font-weight: 500; }
+  .steps .step div { font-size: clamp(17px, calc(var(--u) * 1.302), 25px); font-weight: 500; }
   .steps code { font-family: var(--mono); color: var(--amber); font-size: 0.92em; }
   p code, li code, .big-say code, .card code { font-family: var(--mono); color: #F8A48F; font-size: 0.95em; }
   /* directive rows: name+role left, live example right */
@@ -164,10 +167,10 @@
     display: grid; grid-template-columns: 5fr 6fr; gap: 2vw; align-items: center;
     background: var(--ground-raise); border: 1px solid var(--line); border-radius: 8px; padding: 1.5vh 1.5vw;
   }
-  .dir-rows .dir .name { font-family: var(--mono); color: var(--amber); font-weight: 600; font-size: clamp(14px, 1.7vw, 22px); }
-  .dir-rows .dir .what { font-size: clamp(15px, 1.7vw, 22px); color: var(--ink-dim); margin-top: 0.5vh; }
+  .dir-rows .dir .name { font-family: var(--mono); color: var(--amber); font-weight: 600; font-size: clamp(14px, calc(var(--u) * 1.146), 22px); }
+  .dir-rows .dir .what { font-size: clamp(15px, calc(var(--u) * 1.146), 22px); color: var(--ink-dim); margin-top: 0.5vh; }
   .dir-rows .dir .ex {
-    font-family: var(--mono); font-size: clamp(13px, 1.6vw, 21px); color: var(--ink);
+    font-family: var(--mono); font-size: clamp(13px, calc(var(--u) * 1.094), 21px); color: var(--ink);
     overflow-x: auto; white-space: nowrap;
   }
   .dir-rows .dir .ex b { color: var(--amber); font-weight: 600; }
@@ -178,22 +181,22 @@
   .slide[data-type="p"] li::marker { color: var(--pause-ink); }
   .lab-grid { display: grid; grid-template-columns: auto 1fr; gap: 1.3vh 2.5vw; max-width: 50em; }
   .lab-grid dt {
-    font-family: var(--mono); font-size: clamp(12px, 1.4vw, 18px);
+    font-family: var(--mono); font-size: clamp(12px, calc(var(--u) * 0.938), 18px);
     letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; padding-top: 0.3vh;
     white-space: nowrap;
   }
-  .lab-grid dd { margin: 0; font-size: clamp(16px, 2vw, 26px); font-weight: 500; }
+  .lab-grid dd { margin: 0; font-size: clamp(16px, calc(var(--u) * 1.354), 26px); font-weight: 500; }
   .lab-grid code { font-family: var(--mono); color: inherit; background: rgba(0,0,0,0.12); padding: 0.05em 0.35em; border-radius: 5px; font-size: 0.9em; }
   .lab-warn {
     margin-top: 2.5vh; max-width: 44em;
     border: 2px solid var(--pause-ink); border-radius: 8px; padding: 1.3vh 1.4vw;
-    font-size: clamp(15px, 1.9vw, 24px); font-weight: 600;
+    font-size: clamp(15px, calc(var(--u) * 1.25), 24px); font-weight: 600;
   }
   /* live-demo chip: any slide with data-demo shows a badge naming where the demo runs */
   .slide[data-demo]::after {
     content: attr(data-demo);
     position: absolute; top: 3.5vh; right: 3vw;
-    font-family: var(--mono); font-size: clamp(11px, 1.2vw, 15px);
+    font-family: var(--mono); font-size: clamp(11px, calc(var(--u) * 0.781), 15px);
     letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600;
     color: var(--green); border: 1.5px solid var(--green);
     border-radius: 999px; padding: 0.7vh 1.1vw;
@@ -201,12 +204,12 @@
   /* Playground launcher + overlay */
   .pg-launch { display: flex; align-items: center; gap: 1.2vw; flex-wrap: wrap; margin-top: 1.5vh; }
   .pg-launch button {
-    font-family: var(--mono); font-size: clamp(13px, 1.5vw, 19px); font-weight: 600;
+    font-family: var(--mono); font-size: clamp(13px, calc(var(--u) * 0.99), 19px); font-weight: 600;
     color: var(--pause-ink); background: var(--amber); border: none; border-radius: 8px;
     padding: 1.2vh 1.4vw; cursor: pointer;
   }
-  .pg-launch a { font-family: var(--mono); font-size: clamp(12px, 1.4vw, 17px); color: var(--accent); }
-  .pg-launch .pg-hint { font-size: clamp(11px, 1.3vw, 15px); color: var(--ink-dim); }
+  .pg-launch a { font-family: var(--mono); font-size: clamp(12px, calc(var(--u) * 0.885), 17px); color: var(--accent); }
+  .pg-launch .pg-hint { font-size: clamp(11px, calc(var(--u) * 0.781), 15px); color: var(--ink-dim); }
   #pg-overlay {
     position: fixed; inset: 3vh 3vw; z-index: 9; display: none;
     background: var(--ground); border: 1px solid var(--line); border-radius: 12px;
@@ -272,7 +275,7 @@
 <section class="slide" data-type="t" data-notes="Welcome people in as they settle. Watcher check happens on slide 4, not now.">
   <div class="eyebrow">Hands-on workshop <span class="clock">· 90 min</span></div>
   <h1>Building Interactive Blocks<br>with the Interactivity&nbsp;API</h1>
-  <p class="dim" style="font-size: clamp(18px, 2.2vw, 30px);">Ryan Welcher · Automattic · @ryanwelcher</p>
+  <p class="dim" style="font-size: clamp(18px, calc(var(--u) * 1.562), 30px);">Ryan Welcher · Automattic · @ryanwelcher</p>
 </section>
 
 <section class="slide" data-type="t" data-notes="30 seconds max. They came for the API, not the bio.">
@@ -665,7 +668,7 @@ nextImage() { getContext().currentSlide++; }</pre>
       </ul>
     </div>
     <div class="card" style="border-color: var(--amber);">
-      <p class="big-say" style="margin: 0; font-size: clamp(30px, 3.8vw, 56px); line-height: 1.2;"><strong>The state updates the UI</strong>, not the other way around.</p>
+      <p class="big-say" style="margin: 0; font-size: clamp(30px, calc(var(--u) * 2.917), 56px); line-height: 1.2;"><strong>The state updates the UI</strong>, not the other way around.</p>
     </div>
   </div>
 </section>
@@ -689,7 +692,7 @@ nextImage() { getContext().currentSlide++; }</pre>
 <section class="slide" data-type="t" data-notes="Read the directive like a sentence, left to right: data-wp prefix, directive name, parameter after the double dash. The -- pattern generalizes to any event, attribute, or CSS property.">
   <div class="eyebrow">Section 4 · IAPI Primer</div>
   <h2>Anatomy of a directive</h2>
-  <div style="font-family: var(--mono); font-size: clamp(22px, 3.2vw, 46px); font-weight: 600; margin: 2vh 0 3vh;">
+  <div style="font-family: var(--mono); font-size: clamp(22px, calc(var(--u) * 2.396), 46px); font-weight: 600; margin: 2vh 0 3vh;">
     <span class="dim" data-frag="1">data-wp-</span><span class="amber" data-frag="2">bind</span><span style="color: #FAD000;" data-frag="3">--hidden</span><span style="color: var(--green);" data-frag="4">---id</span>
   </div>
   <div class="cols">
@@ -730,7 +733,8 @@ nextImage() { getContext().currentSlide++; }</pre>
       <pre class="code mini">&lt;div &lt;?php echo wp_interactivity_data_wp_context(
     array( 'currentSlide' => 1, 'totalSlides' => 3 )
 ); ?&gt;&gt;
-<span class="c">&lt;!-- outputs: data-wp-context='{"currentSlide":1,"totalSlides":3}' --&gt;</span></pre>
+<span class="c">&lt;!-- outputs:
+  data-wp-context='{"currentSlide":1,"totalSlides":3}' --&gt;</span></pre>
       <span class="file-tag">render.php</span>
     </div>
     <div class="card" style="border-color: var(--amber);" data-frag="3">
@@ -1098,10 +1102,10 @@ return <mark>Number( ctx.speed )</mark> * 1000;</pre>
   <div class="eyebrow">Thanks</div>
   <div class="split" style="align-items: center;">
     <div class="lead">
-      <h1 style="font-size: clamp(36px, 5.5vw, 76px); margin-bottom: 2vh;">Thank you 🎉</h1>
+      <h1 style="font-size: clamp(36px, calc(var(--u) * 3.958), 76px); margin-bottom: 2vh;">Thank you 🎉</h1>
       <p class="big-say">Repo: <strong>github.com/ryanwelcher/iapi-gallery-slider</strong></p>
       <p class="big-say">Scan the QR and let me know how this went. It helps me make the next one better.</p>
-      <p class="dim" style="font-size: clamp(17px, 2vw, 26px);">@ryanwelcher · @ryanwelchercodes · Questions?</p>
+      <p class="dim" style="font-size: clamp(17px, calc(var(--u) * 1.354), 26px);">@ryanwelcher · @ryanwelchercodes · Questions?</p>
     </div>
     <!-- FEEDBACK QR — to swap for a different event, replace the entire src="data:..."
          value below with a new data URI (or any image path when serving from the repo).
