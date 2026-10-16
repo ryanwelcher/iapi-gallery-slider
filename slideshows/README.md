@@ -19,6 +19,19 @@ versions change the lab timeboxes, the checkpoint gates, and which sections surv
 so start a variant by writing its timing table, then copy the nearest deck folder and
 cut to fit.
 
+## Publishing
+
+Each deck folder is its own Spacefast Space, connected to this repository. A push to
+`trunk` that changes a deck folder deploys that deck automatically, usually within a
+minute. Pushes that don't touch the folder are skipped.
+
+| Folder | Live link |
+|--------|-----------|
+| `90-minutes/` | https://building-interactive-blocks-with-the-interactivity-api.space.fast/ |
+
+To add a deck, create a new Space for its folder and connect it to this repository with the
+root directory set to that folder before the first build runs.
+
 ## Presenting
 
 - **← / → / space / Page Up / Page Down**: navigate; slides with build steps reveal one
