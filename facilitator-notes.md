@@ -10,12 +10,24 @@
 
 ## Before the workshop
 
-- Demo machine: Studio site created from `blueprint.json`, plugin active, `npm install` done, `npm run start` tested once and stopped.
+- Demo machine: Studio site created from `blueprint.json`, plugin active, `npm install` done, and `npm run checkpoint 9` tested once (see "Showing the checkpoints" below).
 - Have the repo open in your editor with `src/`, `workshop-outline/`, and `code-reference/` in the file tree — you'll point people at snapshots all session.
 - Have a browser tab on the test post and one on `wp-admin`.
 - DevTools ready with CPU/Network throttling profiles saved (needed for the Section 7 flash demo).
 - Projector-check the focus ring and disabled-button styling — some themes make both nearly invisible at projector contrast.
 - Remind the room at the top: **every section has a full snapshot in `code-reference/section-N/`**. Falling behind is never fatal — copy the snapshot and rejoin.
+
+### Showing the checkpoints
+
+Present with a mirrored display, and keep everything in one full-screen browser window:
+
+1. Open the deck in the first tab and the Studio site (the test post and `wp-admin`) in the tabs after it.
+2. Before the session, run `npm run checkpoint 9`. The opening demo then shows the finished slider.
+3. At each checkpoint slide, run `npm run checkpoint <N>` for that section (3, 5, 6, 7, 8). Each demo slide's speaker notes say which one.
+4. Press **Ctrl+Tab** to go to the site and reload it. Press **Ctrl+Shift+Tab** to go back to the deck. The deck stays on the same slide and build step.
+5. After the last checkpoint, run `npm run checkpoint reset` to put the plugin back to the starter.
+
+The script builds `code-reference/section-<N>/` straight into `build/` and swaps in that section's `iapi-gallery-slider.php`. It never touches `src/`. **Don't run `npm run start` on the demo machine during the session**, because the watcher rebuilds `build/` from `src/` and undoes the checkpoint.
 
 ---
 
@@ -38,12 +50,12 @@ Coding sections split roughly ⅓ talk track / ⅔ lab. Slide numbers reference 
 | 0:00–0:08 | 1 — Welcome & Setup | tour | 8 min | all talk | 1–6 |
 | 0:08–0:16 | 2 — Anatomy of the Starter | tour | 8 min | all talk | 7–10 |
 | 0:16–0:31 | 3 — Editor Controls | coding | 15 min | 4 / 10 (+1 checkpoint) | 11–14 |
-| 0:31–0:39 | 4 — Interactivity API Primer | reading | 8 min | all talk | 15–22 |
-| 0:39–0:49 | 5 — Hello, Store | coding | 10 min | 3 / 7 | 23–26 |
-| 0:49–0:59 | 6 — Sliding + Bounds | coding | 10 min | 3 / 7 | 27–29 |
-| 0:59–1:12 | 7 — Server-Side Directive Injection | coding | 13 min | 5 / 8 | 30–33 |
-| 1:12–1:25 | 8 — Autoplay | coding | 13 min | 4 / 9 | 34–37 |
-| 1:25–1:30 | Wrap-up + pointer to Section 9 | — | 5 min | all talk | 38–41 |
+| 0:31–0:39 | 4 — Interactivity API Primer | reading | 8 min | all talk | 15–21 |
+| 0:39–0:49 | 5 — Hello, Store | coding | 10 min | 3 / 7 | 22–25 |
+| 0:49–0:59 | 6 — Sliding + Bounds | coding | 10 min | 3 / 7 | 26–28 |
+| 0:59–1:12 | 7 — Server-Side Directive Injection | coding | 13 min | 5 / 8 | 29–32 |
+| 1:12–1:25 | 8 — Autoplay | coding | 13 min | 4 / 9 | 33–36 |
+| 1:25–1:30 | Wrap-up + pointer to Section 9 | — | 5 min | all talk | 37–40 |
 | take-home | 9 — Polish: Focus, Touch, Continuous | coding | ~25–30 min solo | — | — |
 
 ### The minute-50 checkpoint
@@ -53,7 +65,7 @@ Coding sections split roughly ⅓ talk track / ⅔ lab. Slide numbers reference 
 ### Cut lines (in order of preference)
 
 1. **Compress Section 3 to a hand-out.** It's pure block editor — no IAPI content, and the section says so itself. Demo the finished Inspector panel for 3 minutes, tell everyone to copy `code-reference/section-3/src/edit.js`, and jump straight from slide 12 to slide 15 (skip Section 3's pause slide, keep its theory slides). Recovers ~10 min. Decide by 0:16; this is the cut to pre-plan.
-2. **Compress Section 4 to 4 minutes.** Talk the directives table and the context-vs-state distinction; skip the rest — Sections 5–8 re-teach every concept at the moment it's used. Recovers ~4 min.
+2. **Compress Section 4 to 4 minutes.** Talk the directive anatomy slide and the context-vs-state distinction; skip the rest — Sections 5–8 re-teach every concept at the moment it's used. Recovers ~4 min.
 3. **Demo-only Section 8.** If you reach 1:12 without Section 7 finished, finish Section 7 with the room, then live-code Section 8 solo on the projector while they watch, and point at the snapshot. Autoplay is the most self-contained section — watching it still teaches `callbacks`/`withScope`/cleanup.
 4. **Never cut Section 5, Section 6, or Section 7.** They're the spine: round-trip, derived state, server-side seeding.
 
@@ -102,7 +114,7 @@ If the wheels come off early (wifi, Studio installs), the floor is: Sections 1�
 
 ### Section 4 — Interactivity API Primer (~8 min)
 
-**Goal:** Mental model: what the API is and why it's standardized, the declarative/reactive mindset, directive anatomy, the three kinds of data (global state / local context / derived state), server seeding. Eight slides, fast beats — content drawn from the "From Static to Dynamic" talk.
+**Goal:** Mental model: what the API is and why it's standardized, the declarative/reactive mindset, directive anatomy, the three kinds of data (global state / local context / derived state), server seeding. Seven slides, fast beats — content drawn from the "From Static to Dynamic" talk.
 
 **Talking points:**
 - This is a talk, not a follow-along — tell people to close their editors and listen.

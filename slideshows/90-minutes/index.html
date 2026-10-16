@@ -100,6 +100,8 @@
     margin: 0;
   }
   /* Shades of Purple token colors */
+  /* Slightly smaller code for blocks whose source lines are long. */
+  pre.code.tight { font-size: clamp(12px, calc(var(--u) * 1.042), 20px); }
   /* Highlighted code: a highlighter-pen box behind the text, normal syntax colors on top.
      box-shadow pads the box without shifting the monospace columns. */
   pre.code mark {
@@ -372,7 +374,7 @@
   </div>
 </section>
 
-<section class="slide" data-type="t" data-demo="demo · Studio or Playground" data-notes="LIVE demo. Studio window is primary (slide, hit the ends, toggle autoplay, add a 4th image, show the count adapt). The Playground button is the embedded fallback: boots the finished slider on a populated post; needs network. This is the contract for the next 90 minutes.">
+<section class="slide" data-type="t" data-demo="demo · Studio or Playground" data-notes="npm run checkpoint 9 before the session starts, so the opening demo is the finished slider. LIVE demo. Studio window is primary (slide, hit the ends, toggle autoplay, add a 4th image, show the count adapt). The Playground button is the embedded fallback: boots the finished slider on a populated post; needs network. This is the contract for the next 90 minutes.">
   <div class="eyebrow">The goal</div>
   <h2>What are we building?</h2>
   <div class="split">
@@ -429,19 +431,19 @@ npm install      <span class="c"># safe to re-run</span>
   <p class="dim">These are the sections where you write code. Everything else is setup, a quick tour, or me talking about the API.</p>
   <div class="dir-rows">
     <div class="dir" data-frag="1">
-      <div><div class="name">Section 3 · Editor controls</div></div>
+      <div><div class="name">Section 3 · Editor Controls</div></div>
       <div class="ex" style="white-space: normal; font-family: var(--body);">The Inspector panel and the three attributes every later section reads from</div>
     </div>
     <div class="dir" data-frag="2">
-      <div><div class="name">Section 5 · The smallest loop</div></div>
+      <div><div class="name">Section 5 · Hello, Store</div></div>
       <div class="ex" style="white-space: normal; font-family: var(--body);">A button, an action, and a counter. This is the round-trip everything else sits on</div>
     </div>
     <div class="dir" data-frag="3">
-      <div><div class="name">Section 6 · Sliding + bounds</div></div>
+      <div><div class="name">Section 6 · Sliding + Bounds</div></div>
       <div class="ex" style="white-space: normal; font-family: var(--body);">Derived state makes it actually move, and stop at the ends</div>
     </div>
     <div class="dir" data-frag="4">
-      <div><div class="name">Section 7 · Server-side injection</div></div>
+      <div><div class="name">Section 7 · Server-Side Injection</div></div>
       <div class="ex" style="white-space: normal; font-family: var(--body);">PHP counts the real slides and paints a correct first frame with no flash</div>
     </div>
     <div class="dir" data-frag="5">
@@ -460,7 +462,7 @@ npm install      <span class="c"># safe to re-run</span>
   <div class="split" style="grid-template-columns: 4fr 7fr;">
     <div class="lead">
       <p class="big-say">We tour the starter now so every later change lands in a file you <strong>recognize</strong>.</p>
-      <p class="dim">There are five files, split across two sides. PHP renders the markup and JS reacts to it.</p>
+      <p class="dim">Five files matter today, split across two sides. PHP renders the markup and JS reacts to it.</p>
       <p class="dim">The PHP file just calls <code>register_block_type</code>, which reads <code>build/block.json</code> and loads every asset for you. Section 7 adds a render filter to it, and that's its only change today.</p>
     </div>
     <pre class="code">iapi-gallery-slider/
@@ -469,7 +471,8 @@ npm install      <span class="c"># safe to re-run</span>
     ├── <mark>block.json</mark>           <span class="c">← metadata + the opt-in</span>
     ├── <mark>edit.js</mark>              <span class="c">← editor side; Section 3 builds it</span>
     ├── <mark>render.php</mark>           <span class="c">← server-rendered markup</span>
-    └── <mark>view.js</mark>              <span class="c">← the store; Section 5 creates it</span></pre>
+    └── <mark>view.js</mark>              <span class="c">← the store; Section 5 creates it</span>
+    <span class="c">(index.js and the .scss files left out)</span></pre>
   </div>
 </section>
 
@@ -486,13 +489,18 @@ npm install      <span class="c"># safe to re-run</span>
       </ul>
     </div>
     <pre class="code">{
-    "supports": { <mark data-step-mark="1">"interactivity": true</mark> },
-    <mark data-step-mark="2">"viewScriptModule": "file:./view.js"</mark>,
+    …
+    "supports": {
+        <mark data-step-mark="1">"interactivity": true</mark>,
+        …
+    },
     "attributes": {
         <mark data-step-mark="3">"continuous"</mark>: { "type": "boolean", "default": false },
         <mark data-step-mark="3">"autoplay"</mark>: { "type": "boolean", "default": false },
         <mark data-step-mark="3">"speed"</mark>: { <mark data-step-mark="4">"type": "string"</mark>, "default": "3" }
-    }
+    },
+    …
+    <mark data-step-mark="2">"viewScriptModule": "file:./view.js"</mark>
 }</pre>
   </div>
 </section>
@@ -519,18 +527,24 @@ npm install      <span class="c"># safe to re-run</span>
 <section class="slide" data-type="t" data-notes="Wrapper, slider-container, prev/next buttons, and the ONE directive already present: the other half of the opt-in pair from the last slide. Flash back to the pair slide if it helps.">
   <div class="eyebrow">Section 2 · Anatomy</div>
   <h2><code style="font-size: 0.85em;">src/render.php</code></h2>
-  <div class="split">
+  <div class="split" style="grid-template-columns: 4fr 7fr;">
     <div class="lead">
       <ul>
         <li>The server-rendered markup: wrapper, <code>.slider-container</code>, prev/next buttons</li>
         <li>One directive is already in place. It's <code>data-wp-interactive</code>, the other half of the opt-in pair we just saw</li>
       </ul>
     </div>
-    <pre class="code"><span class="c">&lt;!-- the starter markup --&gt;</span>
-&lt;div &lt;?php echo <mark data-step-mark="1">get_block_wrapper_attributes()</mark>; ?&gt;
-    <mark data-step-mark="2">data-wp-interactive='iapi-gallery'</mark>&gt;
-  &lt;div <mark data-step-mark="1">class="slider-container"</mark>&gt;…slides…&lt;/div&gt;
-  <mark data-step-mark="1">&lt;button&gt;&lt;&lt;/button&gt;</mark> &lt;p&gt;&lt;/p&gt; <mark data-step-mark="1">&lt;button&gt;&gt;&lt;/button&gt;</mark>
+    <pre class="code">&lt;div &lt;?php echo wp_kses_data( <mark data-step-mark="1">get_block_wrapper_attributes()</mark> ); ?&gt;
+  <mark data-step-mark="2">data-wp-interactive='iapi-gallery'</mark>
+&gt;
+  &lt;div <mark data-step-mark="1">class="slider-container"</mark>&gt;
+    &lt;?php echo wp_kses_post( $content ); ?&gt;
+  &lt;/div&gt;
+  &lt;div <mark data-step-mark="1">class="buttons"</mark>&gt;
+    &lt;button aria-label="go to previous slide"&gt;&amp;lt;&lt;/button&gt;
+    &lt;p&gt;1/3&lt;/p&gt;
+    &lt;button aria-label="go to next slide"&gt;&amp;gt;&lt;/button&gt;
+  &lt;/div&gt;
 &lt;/div&gt;</pre>
   </div>
 </section>
@@ -572,11 +586,13 @@ import { <mark data-step-mark="1">useBlockProps</mark>, <mark data-step-mark="2"
 import { PanelBody, <mark data-step-mark="5">__experimentalNumberControl</mark>
     <mark data-step-mark="5">as NumberControl</mark> } from <mark data-step-mark="3">'@wordpress/components'</mark>;
 import { SwitchControl } from <mark data-step-mark="3">'@wordpress/ui'</mark>;
+import { __ } from '@wordpress/i18n';
 
-<span class="c">// the Inspector panel</span>
+<span class="c">// the Inspector panel, trimmed</span>
 &lt;InspectorControls&gt;
   &lt;PanelBody title={ __( 'Slider Controls' ) }&gt;
-    &lt;SwitchControl label={ __( 'Autoplay' ) }
+    …
+    &lt;SwitchControl label={ __( 'Autoplay' ) } …
       checked={ <mark data-step-mark="4">autoplay</mark> }
       onCheckedChange={ ( checked ) =&gt;
         <mark data-step-mark="4">setAttributes( { autoplay: checked } )</mark> } /&gt;
@@ -599,7 +615,7 @@ import { SwitchControl } from <mark data-step-mark="3">'@wordpress/ui'</mark>;
   </dl>
 </section>
 
-<section class="slide" data-type="c" data-demo="demo · switch to Studio" data-notes="Demo: insert block, toggle Autoplay, watch Slide Duration appear. Everyone either has it or copied it, and both are fine. Then: laptops closed for the primer.">
+<section class="slide" data-type="c" data-demo="demo · switch to Studio" data-notes="npm run checkpoint 3, then Ctrl+Tab to the site and reload. Demo: insert block, toggle Autoplay, watch Slide Duration appear. Everyone either has it or copied it, and both are fine. Then: laptops closed for the primer.">
   <div class="eyebrow">Section 3 · Checkpoint</div>
   <h2>You should now have…</h2>
   <p class="big-say">Insert the block → restricted inner area. Toggle <strong>Autoplay</strong> → <strong>Slide Duration</strong> appears.</p>
@@ -649,7 +665,7 @@ import { SwitchControl } from <mark data-step-mark="3">'@wordpress/ui'</mark>;
   <h2>Declarative, not imperative</h2>
   <div class="split even code-pair">
     <div data-frag="1">
-      <pre class="code"><span class="c">// imperative: the HOW</span>
+      <pre class="code"><span class="c">// imperative: the HOW (plain JS, for comparison)</span>
 let current = 1;
 nextButton.addEventListener( 'click', () =&gt; {
     current++;
@@ -658,12 +674,15 @@ nextButton.addEventListener( 'click', () =&gt; {
       <p class="dim" style="margin-top: 1.2vh;">You change the value, then you update the DOM yourself.</p>
     </div>
     <div data-frag="2">
-      <pre class="code"><span class="c">&lt;!-- declarative: the WHAT --&gt;</span>
+      <pre class="code"><span class="c">&lt;!-- declarative: the WHAT (trimmed) --&gt;</span>
 &lt;button data-wp-on--click="actions.nextImage"&gt;
 &lt;p data-wp-text="context.currentSlide"&gt;&lt;/p&gt;
 
 <span class="c">// view.js</span>
-nextImage() { getContext().currentSlide++; }</pre>
+nextImage: () =&gt; {
+    const ctx = getContext();
+    ctx.currentSlide++;
+},</pre>
       <p class="dim" style="margin-top: 1.2vh;">You change the value. The directives keep the DOM in sync.</p>
     </div>
   </div>
@@ -719,19 +738,7 @@ nextImage() { getContext().currentSlide++; }</pre>
     <div class="card" style="border-color: var(--green);" data-frag="4"><h3 style="color: var(--green);">---id</h3><p>Optional unique ID (three dashes) that lets the <em>same</em> directive appear more than once on one element</p></div>
   </div>
   <p class="big-say" style="margin-top: 3vh;" data-frag="5">The <code>--parameter</code> pattern generalizes: <strong>any event, any attribute, any CSS property</strong>. Add <code>---id</code> when you need the same one twice.</p>
-</section>
-
-<section class="slide" data-type="t" data-notes="Don't read the list. Show the shape of the toolbox. Orange = the seven we use today. The rest exist when they need them: wp-each for lists, wp-watch for reacting to state changes, wp-on-window for global events.">
-  <div class="eyebrow">Section 4 · IAPI Primer</div>
-  <h2>There's a directive for that</h2>
-  <div class="cols" style="align-items: start;">
-    <div class="card" data-frag="1"><h3>Data providers</h3><p><span class="amber">wp-interactive</span><br><span class="amber">wp-context</span></p></div>
-    <div class="card" data-frag="2"><h3>Attribute-based</h3><p><span class="amber">wp-bind</span><br>wp-class<br><span class="amber">wp-style</span><br><span class="amber">wp-text</span></p></div>
-    <div class="card" data-frag="3"><h3>Event-based</h3><p><span class="amber">wp-on</span><br>wp-on-async<br>wp-on-window<br>wp-on-document</p></div>
-    <div class="card" data-frag="4"><h3>Programmatic</h3><p><span class="amber">wp-init</span><br>wp-watch<br>wp-run</p></div>
-    <div class="card" data-frag="5"><h3>Looping</h3><p>wp-each<br>wp-key<br>wp-each-child</p></div>
-  </div>
-  <p class="dim" style="margin-top: 2.5vh;" data-frag="5"><span class="amber">Orange</span> = the seven we use today. The rest are there when you need them, and each gets re-taught the moment we use it.</p>
+  <p class="dim" data-frag="5">Today you'll use seven of them: <code>wp-interactive</code>, <code>wp-context</code>, <code>wp-bind</code>, <code>wp-style</code>, <code>wp-text</code>, <code>wp-on</code>, and <code>wp-init</code>. The rest are there when you need them.</p>
 </section>
 
 <section class="slide" data-type="t" data-notes="★ REUSED in Sections 6 and 7. Config (REST URLs, nonces) is the fourth kind; it waits for the Beyond today slide. Say it out loud: two sliders on one page each carry their own context; one store serves them both. Read from the wrong branch and the value is undefined, or it's the other slider's. THE sentence: context is per-instance; state is shared and derived.">
@@ -739,19 +746,26 @@ nextImage() { getContext().currentSlide++; }</pre>
   <h2>Three kinds of data</h2>
   <div class="grid2">
     <div class="card" data-frag="1">
-      <h3>Global state <span class="dim" style="text-transform: none; letter-spacing: 0;">· when blocks share or sync data</span></h3>
-      <pre class="code mini">wp_interactivity_state( 'iapi-gallery', array(
-    'imageIndex' => '1/3',
-) );</pre>
-      <span class="file-tag">render.php</span>
+      <h3>Global state <span class="dim" style="text-transform: none; letter-spacing: 0;">· when blocks share data, or the server seeds a value</span></h3>
+      <pre class="code mini">wp_interactivity_state(
+    'iapi-gallery',
+    array(
+        'noPrevSlide' =&gt; true,
+        'imageIndex'  =&gt; …,
+    )
+);</pre>
+      <span class="file-tag">iapi-gallery-slider.php · Section 7</span>
     </div>
     <div class="card" data-frag="2">
       <h3>Local context <span class="dim" style="text-transform: none; letter-spacing: 0;">· when each instance is independent</span></h3>
-      <pre class="code mini">&lt;div &lt;?php echo wp_interactivity_data_wp_context(
-    array( 'currentSlide' => 1, 'totalSlides' => 3 )
-); ?&gt;&gt;
-<span class="c">&lt;!-- outputs:
-  data-wp-context='{"currentSlide":1,"totalSlides":3}' --&gt;</span></pre>
+      <pre class="code mini">$context = array(
+    'currentSlide' =&gt; 1,
+    'totalSlides'  =&gt; 3,
+);
+…
+&lt;?php echo wp_interactivity_data_wp_context( $context ); ?&gt;
+<span class="c">&lt;!-- outputs:</span>
+<span class="c">  data-wp-context='{"currentSlide":1,"totalSlides":3}' --&gt;</span></pre>
       <span class="file-tag">render.php</span>
     </div>
     <div class="card" style="border-color: var(--amber); grid-column: 1 / -1;" data-frag="3">
@@ -781,27 +795,28 @@ nextImage() { getContext().currentSlide++; }</pre>
   </div>
   <div class="cycle-back" data-frag="4">⟲ same loop as the primer, with real names now</div>
   <div class="split even code-pair" style="margin-top: 2.5vh;" data-frag="5">
-    <pre class="code"><span class="c">&lt;!-- render.php, as rendered --&gt;</span>
+    <pre class="code tight"><span class="c">&lt;!-- render.php, as rendered (trimmed) --&gt;</span>
 &lt;div data-wp-interactive='iapi-gallery'
-     <mark>data-wp-context</mark>='{"currentSlide":1}'&gt;
+     <mark>data-wp-context</mark>='{"currentSlide":1,"totalSlides":3}'&gt;
   …
   &lt;p data-wp-text="<mark>context.currentSlide</mark>"&gt;&lt;/p&gt;
   &lt;button data-wp-on--click="<mark>actions.nextImage</mark>"&gt;
 &lt;/div&gt;</pre>
-    <pre class="code"><span class="c">// view.js: the whole store, Section 5 edition</span>
-import { store, getContext }
-    from '@wordpress/interactivity';
+    <pre class="code tight"><span class="c">// view.js: the store has three parts</span>
+import { store, getContext } from '@wordpress/interactivity';
 
 store( 'iapi-gallery', {
-    state: {},
-    actions: {
+    state: {},    <span class="c">// part 1: Section 6</span>
+    actions: {    <span class="c">// part 2: now</span>
         <mark>nextImage</mark>: () => {
-            getContext().<mark>currentSlide++</mark>;
+            const ctx = getContext();
+            <mark>ctx.currentSlide++</mark>;
         },
     },
+    <span class="c">// callbacks: part 3, Section 8</span>
 } );</pre>
   </div>
-  <p class="dim" style="margin-top: 1.5vh;">That's two of the store's three slots already: <code>state</code> and <code>actions</code>. The third one, <code>callbacks</code>, shows up in Section 8.</p>
+  <p class="dim" style="margin-top: 1.5vh;">That's two of the store's three parts already: <code>state</code> and <code>actions</code>. The third one, <code>callbacks</code>, shows up in Section 8.</p>
 </section>
 
 <section class="slide" data-type="t" data-notes="Say this BEFORE they type: a namespace typo fails SILENTLY. No error, just nothing. It's the #1 failure of the day. Neither string has to match the block name iapi/gallery-slider.">
@@ -813,7 +828,7 @@ store( 'iapi-gallery', {
       <p class="dim">A typo here fails <em>silently</em>. No error, no binding, nothing. It's the #1 failure of the day. If clicking does nothing and the console is clean, check this first.</p>
     </div>
     <pre class="code"><span class="c">&lt;!-- render.php --&gt;</span>
-&lt;div data-wp-interactive='<mark>iapi-gallery</mark>'&gt;
+&lt;div … data-wp-interactive='<mark>iapi-gallery</mark>'&gt;
 
 <span class="c">// view.js</span>
 store( '<mark>iapi-gallery</mark>', { … } );</pre>
@@ -833,7 +848,7 @@ store( '<mark>iapi-gallery</mark>', { … } );</pre>
   </dl>
 </section>
 
-<section class="slide" data-type="c" data-demo="demo · switch to Studio" data-notes="RUN-SHEET GATE: if this slide isn't on screen by 0:50, engage the cut lines in facilitator-notes.md. Demo includes running PAST 3: 'that bug is Section 6's job.'">
+<section class="slide" data-type="c" data-demo="demo · switch to Studio" data-notes="npm run checkpoint 5, then Ctrl+Tab to the site and reload. RUN-SHEET GATE: if this slide isn't on screen by 0:50, engage the cut lines in facilitator-notes.md. Demo includes running PAST 3: 'that bug is Section 6's job.'">
   <div class="eyebrow">Section 5 · Checkpoint <span class="clock">· ◆ minute-50 gate</span></div>
   <h2>You should now have…</h2>
   <p class="big-say">Click next → <strong>1, 2, 3, 4, 5…</strong> right past the end.</p>
@@ -855,18 +870,21 @@ store( '<mark>iapi-gallery</mark>', { … } );</pre>
       </ul>
       <p class="dim">This is the three-kinds slide from the primer paying off.</p>
     </div>
-    <pre class="code">state: {
+    <pre class="code tight">state: {
     <mark data-step-mark="2">get</mark> <mark data-step-mark="1">noPrevSlide</mark>() {
         const ctx = <mark data-step-mark="3">getContext()</mark>;
         return ctx.currentSlide === 1;
     },
     <mark data-step-mark="2">get</mark> <mark data-step-mark="1">imageIndex</mark>() {
         const ctx = <mark data-step-mark="3">getContext()</mark>;
-        return `${ ctx.currentSlide }/${
-                  ctx.totalSlides }`;
+        return `${ ctx.currentSlide }/${ ctx.totalSlides }`;
     },
     <span class="c">// + noNextSlide, currentPos</span>
-}</pre>
+}
+
+<span class="c">&lt;!-- render.php, trimmed --&gt;</span>
+&lt;div … <mark data-step-mark="4">data-wp-style--transform</mark>="state.currentPos"&gt;
+&lt;button … <mark data-step-mark="4">data-wp-bind--disabled</mark>="state.noPrevSlide" …&gt;</pre>
   </div>
 </section>
 
@@ -883,7 +901,7 @@ store( '<mark>iapi-gallery</mark>', { … } );</pre>
   </dl>
 </section>
 
-<section class="slide" data-type="c" data-demo="demo · switch to Studio" data-notes="Demo full slide-and-bounds. Tee up Section 7: 'still hardcoded totalSlides: 3, and the server fixes that next.'">
+<section class="slide" data-type="c" data-demo="demo · switch to Studio" data-notes="npm run checkpoint 6, then Ctrl+Tab to the site and reload. Demo full slide-and-bounds. Tee up Section 7: 'still hardcoded totalSlides: 3, and the server fixes that next.'">
   <div class="eyebrow">Section 6 · Checkpoint</div>
   <h2>You should now have…</h2>
   <p class="big-say">A real slider: slides move, ends stop, counter says <strong>"X/3"</strong>.</p>
@@ -895,6 +913,7 @@ store( '<mark>iapi-gallery</mark>', { … } );</pre>
 <section class="slide" data-type="t" data-notes="The bookmark/seek walk is the star. Exact hook name on screen. And the inheritance point. We do NOT set data-wp-interactive on inner blocks; flash back to the opt-in pair slide.">
   <div class="eyebrow">Section 7 · Server-Side Injection <span class="clock">· 0:59–1:12</span></div>
   <h2>The render filter walk</h2>
+  <p class="dim" style="margin-top: -1vh;">The count is still hardcoded to 3. On the server, the filter sees the real inner blocks, so it can count them.</p>
   <div class="split even">
     <div class="steps">
       <div class="step"><div>Land on the wrapper with <code>next_tag()</code></div></div>
@@ -915,21 +934,22 @@ store( '<mark>iapi-gallery</mark>', { … } );</pre>
   </div>
 </section>
 
-<section class="slide" data-type="t" data-demo="demo · Studio + DevTools throttling" data-notes="LIVE demo on the projector: CPU 6x + Slow 4G, hard reload. Empty counter, then '1/N' snaps in. On their fast laptops they may never see it; real devices do. Then the fix and the contract.">
+<section class="slide" data-type="t" data-demo="demo · Studio + DevTools throttling" data-notes="Still on checkpoint 6: that version has the flash, which is the point. LIVE demo on the projector: CPU 6x + Slow 4G, hard reload. Empty counter, then '1/N' snaps in. On their fast laptops they may never see it; real devices do. Then the fix and the contract.">
   <div class="eyebrow">Section 7 · Server-Side Injection</div>
   <h2>The hydration flash</h2>
-  <div class="split even">
+  <div class="split" style="grid-template-columns: 1fr 2.6fr;">
     <div class="cols" style="flex-direction: column; gap: 1.4vh;">
       <div class="card"><h3>frame 1 · pre-hydration</h3><p style="font-family: var(--mono);">‹ <span style="display: inline-block; min-width: 4ch;">&nbsp;</span> ›<br><span class="dim">counter: empty</span></p></div>
       <div class="card" style="border-color: var(--green);"><h3 style="color: var(--green);">frame 2 · hydrated</h3><p style="font-family: var(--mono);">‹ &nbsp;1/4&nbsp; ›<br><span class="dim">counter: filled</span></p></div>
     </div>
     <div class="lead">
       <pre class="code"><span class="c">// the fix: seed state server-side</span>
-<mark>wp_interactivity_state</mark>( 'iapi-gallery',
-  array(
-    'noPrevSlide' => true,
-    'imageIndex'  => "1/{$total}",
-  )
+wp_interactivity_state(
+    'iapi-gallery',
+    array(
+        'noPrevSlide' =&gt; true,
+        'imageIndex'  =&gt; "{$context['currentSlide']}/{$context['totalSlides']}",
+    )
 );</pre>
       <p class="big-say" style="margin-top: 1.5vh;">Whatever you pass to <code>wp_interactivity_state()</code> has to match <strong>what the client getter computes</strong> on first paint. If they disagree, hydration visibly snaps the counter.</p>
     </div>
@@ -950,7 +970,7 @@ store( '<mark>iapi-gallery</mark>', { … } );</pre>
   <div class="lab-warn">⚠ Don't reload between steps 1 and 3. Until the filter is registered there's no context, and the console will yell.</div>
 </section>
 
-<section class="slide" data-type="c" data-demo="demo · switch to Studio" data-notes="Demo: add/remove an inner block in the editor, counter adapts. 'The slider is now adaptive. The last piece we build together is autoplay.'">
+<section class="slide" data-type="c" data-demo="demo · switch to Studio" data-notes="npm run checkpoint 7, then Ctrl+Tab to the site and reload. Demo: add/remove an inner block in the editor, counter adapts. 'The slider is now adaptive. The last piece we build together is autoplay.'">
   <div class="eyebrow">Section 7 · Checkpoint</div>
   <h2>You should now have…</h2>
   <p class="big-say">Add a block in the editor → <strong>"1/4"</strong>. Remove one → <strong>"1/3"</strong>. No hardcoding, no flash.</p>
@@ -959,9 +979,9 @@ store( '<mark>iapi-gallery</mark>', { … } );</pre>
 
 <!-- ===================== SECTION 8 AUTOPLAY 1:12–1:25 ===================== -->
 
-<section class="slide" data-type="t" data-notes="Pays off the promise from Section 5: 'the third slot shows up in Section 8.' Reveal state+actions first (already built), then callbacks as its own beat. Returning a function from a callback IS the cleanup registration, so there's no removeEventListener ceremony. Destructure store()'s return because callbacks call actions directly from a requestAnimationFrame tick.">
+<section class="slide" data-type="t" data-notes="Pays off the promise from Section 5: 'the third part shows up in Section 8.' Reveal state+actions first (already built), then callbacks as its own beat. Returning a function from a callback IS the cleanup registration, so there's no removeEventListener ceremony. Destructure store()'s return because callbacks call actions directly from a requestAnimationFrame tick.">
   <div class="eyebrow">Section 8 · Autoplay <span class="clock">· 1:12–1:25</span></div>
-  <h2>Callbacks: the third slot</h2>
+  <h2>Callbacks: the third part</h2>
   <div class="cols">
     <div class="card" data-frag="1"><h3>state</h3><p>derived getters<br><span class="dim">Section 6</span></p></div>
     <div class="card" data-frag="1"><h3>actions</h3><p>event handlers<br><span class="dim">Section 5</span></p></div>
@@ -969,13 +989,14 @@ store( '<mark>iapi-gallery</mark>', { … } );</pre>
   </div>
   <div class="split" style="margin-top: 3vh;" data-frag="3">
     <ul>
+      <li>The Section 7 filter now also passes <code>autoplay</code> and <code>speed</code> into context, so the store can read the editor's settings</li>
       <li><code>data-wp-init</code> fires when the element initializes. We add <code>data-wp-init="callbacks.initSlideShow"</code> to the wrapper in <code>render.php</code></li>
       <li><strong>Returning a function</strong> from a callback <em>is</em> the cleanup registration, and it runs when the element leaves the DOM</li>
       <li>Inside a callback you're in plain JS, so you can't look up <code>actions.nextImage</code> by name the way a directive does. Destructure <code>store()</code> to get real references</li>
     </ul>
     <pre class="code"><span class="c">// store() returns the object you passed —</span>
 <span class="c">// with the getters live</span>
-const { <mark data-step-mark="3">state, actions</mark> } =
+const { <mark data-step-mark="4">state, actions</mark> } =
     store( 'iapi-gallery', { … } );</pre>
   </div>
 </section>
@@ -989,19 +1010,24 @@ const { <mark data-step-mark="3">state, actions</mark> } =
       <p class="big-say">Remember the <code>speed</code> <strong>string</strong> from Section 2? Convert it to a number before you multiply.</p>
       <p class="dim">Why <code>requestAnimationFrame</code> and not <code>setInterval</code>? It lines up with the browser's repaint and pauses when the tab is hidden. <code>setInterval</code> keeps firing in the background.</p>
     </div>
-    <pre class="code">let start = null, rafId = null;
-const update = <mark>withScope</mark>( ( timestamp ) => {
-    if ( ! start ) { start = timestamp; }
-    if ( timestamp - start >
-         state.transitionsSpeed ) {
+    <pre class="code">let start = null;
+let rafId = null;
+const update = <mark>withScope</mark>( ( timestamp ) =&gt; {
+    if ( ! start ) {
+        start = timestamp;
+    }
+    if ( timestamp - start &gt; state.transitionsSpeed ) {
         actions.nextImage();
         start = null;
     }
     rafId = requestAnimationFrame( update );
 } );
 
-<span class="c">// the getter behind transitionsSpeed:</span>
-return <mark>Number( ctx.speed )</mark> * 1000;</pre>
+<span class="c">// the getter behind transitionsSpeed</span>
+get transitionsSpeed() {
+    const ctx = getContext();
+    return <mark>Number( ctx.speed )</mark> * 1000;
+},</pre>
   </div>
 </section>
 
@@ -1010,16 +1036,16 @@ return <mark>Number( ctx.speed )</mark> * 1000;</pre>
   <h2>Autoplay</h2>
   <dl class="lab-grid">
     <dt>Mission</dt><dd>The Autoplay toggle drives the slider at the chosen speed; the loop cleans up after itself</dd>
-    <dt>Where</dt><dd><code>workshop-outline/section-8.md</code>. Do the setup edits first, then the callbacks block</dd>
+    <dt>Where</dt><dd><code>workshop-outline/section-8.md</code>. Start with the setup edits: <code>autoplay</code> and <code>speed</code> into context in PHP, then the <code>view.js</code> prep. Add the callbacks block last</dd>
     <dt>Files</dt><dd><code>src/view.js</code> · <code>iapi-gallery-slider.php</code> · <code>src/render.php</code></dd>
     <dt>Done when</dt><dd>Autoplay advances and wraps · toggling off stops it · no leaked frames</dd>
     <dt>Rescue</dt><dd><code>code-reference/section-8/</code></dd>
     <dt>Done early?</dt><dd>Two sliders on one page at different speeds, which proves that context is per-instance</dd>
   </dl>
-  <div class="lab-warn">⚑ Mid-lab checkpoint: after the three setup edits, save + reload. Behavior should be <em>unchanged</em> before you add the callbacks block.</div>
+  <div class="lab-warn">⚑ Mid-lab checkpoint: after the setup edits, save + reload. Behavior should be <em>unchanged</em> before you add the callbacks block.</div>
 </section>
 
-<section class="slide" data-type="c" data-demo="demo · switch to Studio" data-notes="Demo autoplay at two speeds; toggle off mid-run. 'That's the complete slider.'">
+<section class="slide" data-type="c" data-demo="demo · switch to Studio" data-notes="npm run checkpoint 8, then Ctrl+Tab to the site and reload. Afterwards, npm run checkpoint reset. Demo autoplay at two speeds; toggle off mid-run. 'That's the complete slider.'">
   <div class="eyebrow">Section 8 · Checkpoint</div>
   <h2>You should now have…</h2>
   <p class="big-say">Toggle Autoplay on → it runs at your speed. Toggle off → it stops, cleanly.</p>

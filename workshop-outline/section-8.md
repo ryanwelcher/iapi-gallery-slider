@@ -6,11 +6,11 @@
 
 Make the slider advance automatically when the "Autoplay" inspector toggle is on, at the speed the editor chose. When autoplay turns off (or the slider leaves the DOM), the animation loop cleans itself up — no leaked frames.
 
-This is the section where `callbacks` enter the picture. They're the third slot in the store, distinct from `state` and `actions`. They run at element lifecycle moments rather than DOM events.
+This is the section where `callbacks` enter the picture. They're the third part of the store, distinct from `state` and `actions`. They run at element lifecycle moments rather than DOM events.
 
 ## Concepts introduced
 
-- `callbacks` — the lifecycle slot on the store.
+- `callbacks` — the lifecycle part of the store.
 - `data-wp-init` — fires its callback when the element is initialized.
 - `withScope` — wraps a callback so it can read state/context and call actions even when invoked outside the Interactivity scope (a `requestAnimationFrame` tick is a classic example).
 - **Cleanup functions** — returning a function from a callback registers cleanup; Interactivity calls it when the element is removed from the DOM.
