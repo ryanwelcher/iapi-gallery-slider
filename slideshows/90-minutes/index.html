@@ -279,6 +279,32 @@
   #keys th { font-family: var(--mono); font-weight: 600; color: var(--amber); white-space: nowrap; padding-right: 20px; font-size: 14px; }
   #keys td { color: var(--ink-dim); }
   #notes .tag { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 4px; }
+  /* Presenter view (P opens it in a second window, ?presenter) and the slide
+     previews inside it (?embed). */
+  body.embed #progress, body.embed #counter, body.embed #timer, body.embed #help,
+  body.embed #notes, body.embed .pg-launch { display: none !important; }
+  body.presenter #deck, body.presenter #progress, body.presenter #counter,
+  body.presenter #timer, body.presenter #help, body.presenter #notes { display: none !important; }
+  #presenter {
+    position: fixed; inset: 0; display: grid; gap: 14px 18px; padding: 14px 18px;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); grid-template-rows: auto minmax(0, 1fr);
+    background: var(--ground); color: var(--ink); font-family: var(--body);
+  }
+  #p-bar { grid-column: 1 / -1; display: flex; align-items: baseline; gap: 22px; font-family: var(--mono); color: var(--ink-dim); font-size: 15px; }
+  #p-bar .p-count { color: var(--ink); font-size: 22px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  #p-bar .p-section { flex: 1; letter-spacing: 0.08em; text-transform: uppercase; font-size: 13px; }
+  #p-bar .p-timer { color: var(--amber); font-size: 30px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  #p-bar .p-clock { font-variant-numeric: tabular-nums; }
+  #p-bar .p-link { color: var(--accent); }
+  .p-col { display: flex; flex-direction: column; gap: 8px; min-height: 0; }
+  .p-label { font-family: var(--mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+  .p-label .dim { letter-spacing: 0; text-transform: none; }
+  .p-frame { position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: #000; flex: none; }
+  #p-now { max-width: calc((100vh - 110px) * 16 / 9); }
+  .p-frame iframe { position: absolute; top: 0; left: 0; width: 1920px; height: 1080px; border: 0; transform-origin: 0 0; pointer-events: none; }
+  .p-frame .p-end { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--mono); color: var(--ink-dim); }
+  .p-frame .p-end[hidden] { display: none; }
+  #p-notes { flex: 1; min-height: 0; overflow-y: auto; font-size: 22px; line-height: 1.5; background: var(--ground-raise); border: 1px solid var(--line); border-radius: 8px; padding: 14px 18px; }
   #help {
     position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%); z-index: 5;
     font-family: var(--mono); font-size: 12px; color: var(--ink-dim); opacity: 0.7;
@@ -1162,10 +1188,11 @@ return <mark>Number( ctx.speed )</mark> * 1000;</pre>
   <tr><th>O · click the counter</th><td>Slide outline. Click a slide to jump to it</td></tr>
   <tr><th>N</th><td>Show or hide speaker notes (they show on the projector too)</td></tr>
   <tr><th>T</th><td>Start or stop the timer</td></tr>
+  <tr><th>P</th><td>Presenter view in a second window: current and next slide, notes, timer. Drive the deck from either window</td></tr>
   <tr><th>?</th><td>This panel</td></tr>
   <tr><th>#28 in the URL</th><td>Open the deck at that slide</td></tr>
 </table></div>
-<div id="help">← → navigate · type a number + Enter to jump · O outline · N notes · T timer · ? all controls</div>
+<div id="help">← → navigate · type a number + Enter to jump · O outline · N notes · T timer · P presenter view · ? all controls</div>
 <div id="jump"><span id="jump-num"></span><small>Enter to jump · Esc to cancel</small></div>
 
 <script>
@@ -1227,10 +1254,14 @@ return <mark>Number( ctx.speed )</mark> * 1000;</pre>
   const revealedBySlide = new Map();
 
   function show(i, mode) {
+    const n = Math.max(0, Math.min(slides.length - 1, i));
+    setState(n, mode === 'fwd' ? 0 : fragSteps(slides[n]).length, true);
+  }
+  // Render slide i with `revealed` build steps showing. `send` passes the
+  // change to the other window (audience <-> presenter view).
+  function setState(i, revealed, send) {
     idx = Math.max(0, Math.min(slides.length - 1, i));
     const slide = slides[idx];
-    const steps = fragSteps(slide);
-    let revealed = mode === 'fwd' ? 0 : steps.length;
     revealedBySlide.set(idx, revealed);
     applyFrags(slide, revealed);
     slides.forEach((s, n) => s.classList.toggle('current', n === idx));
@@ -1241,14 +1272,15 @@ return <mark>Number( ctx.speed )</mark> * 1000;</pre>
     counter.style.color = onPause ? 'var(--pause-ink)' : 'var(--ink-dim)';
     help.style.color = onPause ? 'var(--pause-ink)' : 'var(--ink-dim)';
     try { history.replaceState(null, '', '#' + (idx + 1)); } catch (e) {}
+    if (MODE === 'presenter') renderPresenter();
+    if (send) sendToPeer({ type: 'state', idx, revealed });
   }
 
   function forward() {
     const steps = fragSteps(slides[idx]);
     const revealed = revealedBySlide.get(idx) || 0;
     if (revealed < steps.length) {
-      revealedBySlide.set(idx, revealed + 1);
-      applyFrags(slides[idx], revealed + 1);
+      setState(idx, revealed + 1, true);
     } else {
       show(idx + 1, 'fwd');
     }
@@ -1256,8 +1288,7 @@ return <mark>Number( ctx.speed )</mark> * 1000;</pre>
   function backward() {
     const revealed = revealedBySlide.get(idx) || 0;
     if (revealed > 0) {
-      revealedBySlide.set(idx, revealed - 1);
-      applyFrags(slides[idx], revealed - 1);
+      setState(idx, revealed - 1, true);
     } else {
       show(idx - 1, 'back');
     }
@@ -1342,6 +1373,7 @@ return <mark>Number( ctx.speed )</mark> * 1000;</pre>
   const keysEl = document.getElementById('keys');
 
   document.addEventListener('keydown', (e) => {
+    if (MODE === 'embed') return;
     if (keysEl.classList.contains('on')) {
       if (e.key === 'Escape' || e.key === '?') keysEl.classList.remove('on');
       return;
@@ -1380,6 +1412,7 @@ return <mark>Number( ctx.speed )</mark> * 1000;</pre>
     else if (e.key === 't' || e.key === 'T') { toggleTimer(); }
     else if (e.key === 'o' || e.key === 'O') { toggleOutline(true); }
     else if (e.key === '?') { keysEl.classList.add('on'); }
+    else if ((e.key === 'p' || e.key === 'P') && MODE === 'audience') { openPresenter(); }
   });
 
   // Elapsed timer — press T at 0:00 of the session. The run sheet's
@@ -1387,14 +1420,116 @@ return <mark>Number( ctx.speed )</mark> * 1000;</pre>
   const timerEl = document.getElementById('timer');
   let timerStart = null, timerTick = null;
   function toggleTimer() {
-    if (timerTick) { clearInterval(timerTick); timerTick = null; timerEl.classList.remove('on'); return; }
-    timerStart = Date.now();
-    timerEl.classList.add('on');
-    timerTick = setInterval(() => {
-      const s = Math.floor((Date.now() - timerStart) / 1000);
-      const m = String(Math.floor(s / 60)).padStart(2, '0');
-      timerEl.textContent = m + ':' + String(s % 60).padStart(2, '0');
-    }, 1000);
+    setTimer(timerStart !== null ? null : Date.now(), true);
+  }
+  // Both windows share one start time, so the presenter view and the
+  // projector always show the same elapsed time.
+  function setTimer(start, send) {
+    clearInterval(timerTick); timerTick = null; timerStart = start;
+    timerEl.classList.toggle('on', start !== null);
+    const tick = () => {
+      let text = '';
+      if (timerStart !== null) {
+        const s = Math.floor((Date.now() - timerStart) / 1000);
+        text = String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+        timerEl.textContent = text;
+      }
+      if (MODE === 'presenter') {
+        pTimer.textContent = text || 'T to start timer';
+        pClock.textContent = new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+      }
+    };
+    tick();
+    if (start !== null || MODE === 'presenter') timerTick = setInterval(tick, 1000);
+    if (send) sendToPeer({ type: 'timer', start });
+  }
+
+  // ---- Presenter view -------------------------------------------------
+  // P opens this same file with ?presenter in a second window. Each slide
+  // preview in it is this file again with ?embed, scaled from 1920x1080.
+  // The windows talk with postMessage, which also works from file://.
+  const params = new URLSearchParams(location.search);
+  const MODE = params.has('presenter') ? 'presenter' : params.has('embed') ? 'embed' : 'audience';
+  const MSG = 'iapi-deck';
+  let peer = MODE === 'presenter' ? window.opener : null;
+  const LOAD_ID = Math.random().toString(36).slice(2);
+  let linkedId = null;
+  function sendToPeer(data) {
+    if (peer && !peer.closed) peer.postMessage(Object.assign({ deck: MSG }, data), '*');
+  }
+  function openPresenter() {
+    const url = location.href.split('#')[0].split('?')[0] + '?presenter#' + (idx + 1);
+    peer = window.open(url, 'iapi-presenter', 'popup,width=1280,height=800');
+  }
+  window.addEventListener('message', (e) => {
+    const d = e.data;
+    if (!d || d.deck !== MSG) return;
+    if (d.type === 'state') setState(d.idx, d.revealed, false);
+    else if (d.type === 'timer') setTimer(d.start, false);
+    else if (d.type === 'hello' && MODE === 'audience' && d.id !== linkedId) {
+      // A presenter window opened or reloaded: hand it the current slide and timer.
+      peer = e.source; linkedId = d.id;
+      sendToPeer({ type: 'sync', idx, revealed: revealedBySlide.get(idx) || 0, start: timerStart });
+    }
+    else if (d.type === 'sync') {
+      // Follow the slide window's position. Keep whichever timer is running,
+      // so reloading either window never resets it.
+      setState(d.idx, d.revealed, false);
+      if (d.start !== null) setTimer(d.start, false);
+      else if (timerStart !== null) sendToPeer({ type: 'timer', start: timerStart });
+    }
+  });
+
+  let pFrames, pTimer, pClock, pCount, pSection, pNotes, pStep;
+  if (MODE === 'embed') document.body.classList.add('embed');
+  if (MODE === 'presenter') {
+    document.body.classList.add('presenter');
+    document.title = 'Presenter · ' + document.title;
+    const base = location.href.split('#')[0].split('?')[0] + '?embed';
+    const wrap = document.createElement('div');
+    wrap.id = 'presenter';
+    wrap.innerHTML =
+      '<div id="p-bar"><span class="p-count"></span><span class="p-section"></span>' +
+      (peer ? '' : '<span class="p-link">Not linked to a slide window. Press P in the deck to open this view.</span>') +
+      '<span class="p-clock"></span><span class="p-timer"></span></div>' +
+      '<div class="p-col"><div class="p-label">Now <span class="dim p-step"></span></div>' +
+      '<div class="p-frame" id="p-now"><iframe tabindex="-1" src="' + base + '#1"></iframe></div></div>' +
+      '<div class="p-col"><div class="p-label">Next</div>' +
+      '<div class="p-frame" id="p-next"><iframe tabindex="-1" src="' + base + '#2"></iframe><div class="p-end" hidden>End of deck</div></div>' +
+      '<div class="p-label">Notes</div><div id="p-notes"></div></div>';
+    document.body.appendChild(wrap);
+    pFrames = { now: wrap.querySelector('#p-now'), next: wrap.querySelector('#p-next') };
+    pTimer = wrap.querySelector('.p-timer'); pClock = wrap.querySelector('.p-clock');
+    pCount = wrap.querySelector('.p-count'); pSection = wrap.querySelector('.p-section');
+    pNotes = wrap.querySelector('#p-notes'); pStep = wrap.querySelector('.p-step');
+    const fit = () => Object.values(pFrames).forEach(f => {
+      f.querySelector('iframe').style.transform = 'scale(' + (f.clientWidth / 1920) + ')';
+    });
+    new ResizeObserver(fit).observe(wrap);
+    Object.values(pFrames).forEach(f => f.querySelector('iframe').addEventListener('load', renderPresenter));
+    sendToPeer({ type: 'hello', id: LOAD_ID });
+    setInterval(() => sendToPeer({ type: 'hello', id: LOAD_ID }), 2000);
+    setTimer(null, false);
+  }
+  function previewShow(frame, i, revealed) {
+    const win = frame.querySelector('iframe').contentWindow;
+    if (win) win.postMessage({ deck: MSG, type: 'state', idx: i, revealed }, '*');
+  }
+  function renderPresenter() {
+    if (!pFrames) return;
+    const slide = slides[idx];
+    const steps = fragSteps(slide).length;
+    const revealed = revealedBySlide.get(idx) || 0;
+    pCount.textContent = (idx + 1) + ' / ' + slides.length;
+    const eyebrow = slide.querySelector('.eyebrow');
+    pSection.textContent = eyebrow ? eyebrow.textContent.replace(/\s+/g, ' ').trim() : '';
+    pStep.textContent = steps ? '· build step ' + revealed + ' of ' + steps : '';
+    pNotes.textContent = slide.dataset.notes || '(no notes)';
+    previewShow(pFrames.now, idx, revealed);
+    const last = idx >= slides.length - 1;
+    pFrames.next.querySelector('.p-end').hidden = !last;
+    pFrames.next.querySelector('iframe').style.visibility = last ? 'hidden' : '';
+    if (!last) previewShow(pFrames.next, idx + 1, fragSteps(slides[idx + 1]).length);
   }
 
   const fromHash = parseInt(location.hash.slice(1), 10);

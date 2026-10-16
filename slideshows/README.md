@@ -21,9 +21,16 @@ cut to fit.
 
 ## Presenting
 
-- **← / → / space / click** — navigate; slides with build steps reveal one piece per press
+- **← / → / space / Page Up / Page Down** — navigate; slides with build steps reveal one
+  piece per press. Navigation is keyboard-only (a clicker works), so clicks never move slides
 - **Type a slide number + Enter** — jump straight to a slide (Esc cancels)
-- **N** — toggle speaker notes overlay
+- **O** (or click the slide counter) — slide outline grouped by section; click a slide to jump
+- **P** — presenter view in a second window: current slide, next slide, notes, timer, and
+  clock. Put it on your laptop screen and the deck on the projector, then drive from either
+  window; they stay in sync, and reloading either one reconnects
+- **N** — toggle the speaker notes overlay (shows on the projector too; use **P** instead
+  when mirroring)
+- **?** — list every control
 - **T** — start/stop the elapsed timer (start it at 0:00 of the session; the run
   sheet's checkpoint gates are measured against it)
 - **Home / End** — first / last slide; the URL hash (`#27`) deep-links and survives reload
