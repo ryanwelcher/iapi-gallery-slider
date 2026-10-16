@@ -342,6 +342,7 @@ npm install      <span class="c"># safe to re-run</span>
 <section class="slide" data-type="t" data-notes="Step through one section per keypress, one sentence each on why it exists in the build order. Then the take-home. This is the map they'll recognize at every eyebrow.">
   <div class="eyebrow">Section 1 · Welcome &amp; Setup</div>
   <h2>The arc</h2>
+  <p class="dim">Sections 1, 2, and 4 cover setup, a tour of the starter, and an Interactivity API primer. These are the ones you build.</p>
   <div class="dir-rows">
     <div class="dir" data-frag="1">
       <div><div class="name">Section 3 · Editor controls</div></div>
@@ -412,7 +413,7 @@ npm install      <span class="c"># safe to re-run</span>
       <ul>
         <li><code>viewScriptModule</code> is front-end only, loaded as an ES module</li>
         <li>Three attributes drive the Inspector controls we build in Section 3</li>
-        <li><span class="amber">⚑</span> <code>speed</code> is a <strong>string</strong>. Remember that, because we have to convert it to a number before doing math with it in Section 8</li>
+        <li><span class="amber">⚑</span> <code>speed</code> is a <strong>string</strong>, since that's what <code>NumberControl</code> hands back. Remember that, because we have to convert it to a number before doing math with it in Section 8</li>
       </ul>
     </div>
     <pre class="code">{
@@ -526,6 +527,7 @@ store( 'iapi-gallery', {
         <li><code>useInnerBlocksProps</code> + <code>allowedBlocks</code> limits it to Image, Cover, and Media &amp; Text</li>
         <li>Watch the packages. <code>InspectorControls</code> is <em>block-editor</em>; the controls are <em>components</em></li>
         <li><code>attributes</code> / <code>setAttributes</code> read and write what block.json declared</li>
+        <li><code>NumberControl</code> still ships under its <code>__experimental</code> name. That's the current public import, so it's fine to use</li>
       </ul>
     </div>
     <pre class="code">import { useBlockProps, useInnerBlocksProps,
@@ -546,7 +548,7 @@ import { PanelBody, ToggleControl,
     <dt>Mission</dt><dd>Editor preview + a "Slider Controls" Inspector panel</dd>
     <dt>Where</dt><dd><code>workshop-outline/section-3.md</code>, all steps</dd>
     <dt>Files</dt><dd><code>src/edit.js</code></dd>
-    <dt>Done when</dt><dd>Block inserts with the inner-block area restricted to the 3 types; both toggles work; Slide Duration appears only when Autoplay is on</dd>
+    <dt>Done when</dt><dd>Block inserts with the inner-block area restricted to the 3 types; both toggles work; Slide Duration (the <code>speed</code> control) appears only when Autoplay is on</dd>
     <dt>Rescue</dt><dd><code>code-reference/section-3/src/edit.js</code></dd>
     <dt>Done early?</dt><dd>Open the code editor view of the post and watch your attribute values serialize into the block comment</dd>
   </dl>
@@ -622,6 +624,32 @@ nums
   <p class="big-say" style="margin-top: 2.5vh;" data-frag="3">Directives work the same way: you describe <strong>what the UI should be for a given state</strong>, never how to update the DOM step by step.</p>
 </section>
 
+<section class="slide" data-type="t" data-notes="Same split as the last slide, now with a real button and counter. The right side is exactly what they write in Section 5, so don't explain the directives yet. Just let them see how much code disappears.">
+  <div class="eyebrow">Section 4 · IAPI Primer</div>
+  <h2>Same idea, in the DOM</h2>
+  <div class="split even">
+    <div data-frag="1">
+      <pre class="code"><span class="c">// imperative: the HOW</span>
+let current = 1;
+nextButton.addEventListener( 'click', () =&gt; {
+    current++;
+    counter.textContent = current;
+} );</pre>
+      <p class="dim" style="margin-top: 1.2vh;">You change the value, then you update the DOM yourself.</p>
+    </div>
+    <div data-frag="2">
+      <pre class="code"><span class="c">&lt;!-- declarative: the WHAT --&gt;</span>
+&lt;button data-wp-on--click="actions.nextImage"&gt;
+&lt;p data-wp-text="context.currentSlide"&gt;&lt;/p&gt;
+
+<span class="c">// view.js</span>
+nextImage() { getContext().currentSlide++; }</pre>
+      <p class="dim" style="margin-top: 1.2vh;">You change the value. The directives keep the DOM in sync.</p>
+    </div>
+  </div>
+  <p class="big-say" style="margin-top: 2.5vh;" data-frag="3">That right-hand side is what you'll build in <strong>Section 5</strong>.</p>
+</section>
+
 <section class="slide" data-type="t" data-notes="THE mindset sentence. Also: mutability is allowed. Unlike frameworks that force immutability, ctx.currentSlide++ just works and reactivity still fires.">
   <div class="eyebrow">Section 4 · IAPI Primer <span class="clock">· ★ the mindset</span></div>
   <h2>Reactivity</h2>
@@ -689,31 +717,32 @@ nums
   <div class="grid2">
     <div class="card" data-frag="1">
       <h3>Global state <span class="dim" style="text-transform: none; letter-spacing: 0;">· when blocks share or sync data</span></h3>
-      <pre class="code mini">wp_interactivity_state( 'storeName', array(
-    'text' => __( 'This is the server side rendered text.' ),
+      <pre class="code mini">wp_interactivity_state( 'iapi-gallery', array(
+    'imageIndex' => '1/3',
 ) );</pre>
       <span class="file-tag">render.php</span>
     </div>
     <div class="card" data-frag="2">
       <h3>Local context <span class="dim" style="text-transform: none; letter-spacing: 0;">· when each instance is independent</span></h3>
       <pre class="code mini">&lt;div &lt;?php echo wp_interactivity_data_wp_context(
-    array( 'counter' => 0, 'isOpen' => true )
+    array( 'currentSlide' => 1, 'totalSlides' => 3 )
 ); ?&gt;&gt;
-<span class="c">&lt;!-- outputs: data-wp-context='{"counter":0,"isOpen":true}' --&gt;</span></pre>
+<span class="c">&lt;!-- outputs: data-wp-context='{"currentSlide":1,"totalSlides":3}' --&gt;</span></pre>
       <span class="file-tag">render.php</span>
     </div>
     <div class="card" style="border-color: var(--amber);" data-frag="3">
       <h3 style="color: var(--amber);">Derived state <span class="dim" style="text-transform: none; letter-spacing: 0;">· when a value can be calculated</span></h3>
       <pre class="code mini">state: {
-    get ucText() {
-        return state.text.toUpperCase();
+    get imageIndex() {
+        const ctx = getContext();
+        return `${ ctx.currentSlide }/${ ctx.totalSlides }`;
     },
 },</pre>
       <span class="file-tag">view.js</span>
     </div>
     <div class="card" data-frag="4">
       <h3>Config <span class="dim" style="text-transform: none; letter-spacing: 0;">· static, never triggers updates</span></h3>
-      <pre class="code mini">wp_interactivity_config( 'storeName', array(
+      <pre class="code mini">wp_interactivity_config( 'iapi-gallery', array(
     'nonce' => wp_create_nonce( 'my_plugin_action' ),
 ) );
 <span class="c">// view.js: const { nonce } = getConfig();</span></pre>
@@ -795,7 +824,7 @@ store( '<mark>iapi-gallery</mark>', { … } );</pre>
     <dt>Mission</dt><dd>The next button bumps a counter on the page</dd>
     <dt>Where</dt><dd><code>workshop-outline/section-5.md</code>, steps 1–5</dd>
     <dt>Files</dt><dd><code>src/render.php</code> · <code>src/view.js</code></dd>
-    <dt>Done when</dt><dd>Counter renders "1" · next bumps it 2 · 3 · 4 <strong>and keeps going past 3 (that's expected!)</strong> · prev is inert · no console errors</dd>
+    <dt>Done when</dt><dd>Counter renders "1" · next bumps it 2 · 3 · 4 <strong>and keeps going past the last slide (3). That's expected!</strong> · prev is inert · no console errors</dd>
     <dt>Rescue</dt><dd><code>code-reference/section-5/</code></dd>
     <dt>Done early?</dt><dd>Wire up the prev button yourself. You're starting Section 6 early</dd>
   </dl>

@@ -55,7 +55,7 @@ Timing references the run sheet in `facilitator-notes.md`.
 
 ### Slide 9 [T] — `src/block.json`
 - Highlighted lines: `supports.interactivity: true`, `viewScriptModule`, three attributes
-- Flag now: `speed` is `"type": "string"` — "remember that — we convert it to a number before doing math with it in Section 8"
+- Flag now: `speed` is `"type": "string"` because `NumberControl` hands back a string — "remember that — we convert it to a number before doing math with it in Section 8"
 
 ### Slide 10 [T] — **The opt-in pair** ★ recurring motif
 - Two-panel diagram: `supports.interactivity: true` (loads the engine) ⇄ `data-wp-interactive` (gives it a place to bind)
@@ -102,7 +102,7 @@ Timing references the run sheet in `facilitator-notes.md`.
 
 ---
 
-## Section 4 — IAPI Primer (0:31–0:39 · slides 18–26, all [T])
+## Section 4 — IAPI Primer (0:31–0:39 · slides 18–27, all [T])
 
 Nine fast beats, content drawn from the "From Static to Dynamic" talk.
 
@@ -119,47 +119,51 @@ Nine fast beats, content drawn from the "From Static to Dynamic" talk.
 - Side-by-side code: imperative sum-the-evens loop (the *how*) vs `.filter().reduce()` (the *what*)
 - "Directives work the same way: describe what the UI should be for a given state — never how to update the DOM step by step"
 
-### Slide 21 [T] — Reactivity ★ the mindset
+### Slide 21 [T] — Same idea, in the DOM
+- Side-by-side code: imperative `addEventListener` + `textContent` counter vs the `data-wp-on--click` / `data-wp-text` version with a one-line `nextImage` action
+- Payoff line: the right-hand side is what they build in Section 5
+
+### Slide 22 [T] — Reactivity ★ the mindset
 - When state changes the UI updates automatically; each directive declares a *relationship* between an attribute and a piece of state
 - Mutation is allowed — you don't have to treat anything as immutable; `ctx.currentSlide++` just works and reactivity still fires
 - The sentence: **"the state updates the UI — not the other way around"**
 
-### Slide 22 [T] — The round-trip loop ★ reused in Section 5
+### Slide 23 [T] — The round-trip loop ★ reused in Section 5
 - Circular diagram: directive reads store → event fires action → action mutates context → directives re-render
 - "Every section from here is this loop with more parts"
 
-### Slide 23 [T] — Anatomy of a directive
+### Slide 24 [T] — Anatomy of a directive
 - `data-wp-bind--hidden---id` broken into four segments: `data-wp-` (standard HTML data-* attribute) · `bind` (directive name — what kind of relationship) · `--hidden` (parameter, two dashes — which event/attribute/property) · `---id` (optional unique ID, three dashes — lets the same directive appear more than once on one element)
 - "The `--parameter` pattern generalizes: any event, any attribute, any CSS property — and `---id` when you need the same one twice"
 
-### Slide 24 [T] — A directive for every need
+### Slide 25 [T] — A directive for every need
 - The full taxonomy in five groups: data providers (wp-interactive, wp-context) · attribute-based (wp-bind, wp-class, wp-style, wp-text) · event-based (wp-on + async/window/document variants) · programmatic (wp-init, wp-watch, wp-run) · looping (wp-each, wp-key, wp-each-child)
 - Today's seven highlighted in orange — show the toolbox shape, don't read the list
 
-### Slide 25 [T] — Four kinds of data ★ reused in Sections 6 and 7
-- 2×2 grid, one card per kind with a "when to use" rule and a code sample from the From Static to Dynamic talk: global state (`wp_interactivity_state()`) · local context (`wp_interactivity_data_wp_context()` + its rendered `data-wp-context` output) · derived state (the `ucText` getter) · config (`wp_interactivity_config()` / `getConfig()`), each tagged render.php / view.js
+### Slide 26 [T] — Four kinds of data ★ reused in Sections 6 and 7
+- 2×2 grid, one card per kind with a "when to use" rule and a slider-based code sample: global state (`wp_interactivity_state()`) · local context (`wp_interactivity_data_wp_context()` + its rendered `data-wp-context` output) · derived state (the `imageIndex` getter) · config (`wp_interactivity_config()` / `getConfig()`), each tagged render.php / view.js
 - The sentence that predicts every later bug: **"context is per-instance; state is shared and derived"**
 - The workshop uses the first three; config is the one to file away
 
-### Slide 26 [T] — The server's role
+### Slide 27 [T] — The server's role
 - No Node.js SSR — directives processed in plain PHP through the HTML API; browser gets fully rendered markup (performance + SEO); client hydrates rather than re-renders
 - `wp_interactivity_data_wp_context()` seeds context; `wp_interactivity_state()` seeds state
 - "The server paints the first frame; the client takes over without a flash — Section 7 proves this with a demo"
 
 ---
 
-## Section 5 — Hello, Store (0:39–0:49 · slides 27–30)
+## Section 5 — Hello, Store (0:39–0:49 · slides 28–31)
 
-### Slide 27 [T] — The smallest possible loop
-- Re-show slide 22's loop diagram, now with real names: `data-wp-on--click` → `actions.nextImage` → `ctx.currentSlide++` → `data-wp-text`
+### Slide 28 [T] — The smallest possible loop
+- Re-show slide 23's loop diagram, now with real names: `data-wp-on--click` → `actions.nextImage` → `ctx.currentSlide++` → `data-wp-text`
 - Closing note: that's two of the store's three slots already — `state` and `actions`; the third, `callbacks`, shows up in Section 8 (sets up the callbacks slide)
 
-### Slide 28 [T] — The namespace contract
+### Slide 29 [T] — The namespace contract
 - Fragment pair, highlighted: `data-wp-interactive='iapi-gallery'` ⇄ `store( 'iapi-gallery', … )`
 - "These must agree. Neither has to match the block name `iapi/gallery-slider`."
 - Speaker note: say it *before* they type — a namespace typo fails silently and is the #1 failure of the day
 
-### Slide 29 [P] — LAB: first round-trip
+### Slide 30 [P] — LAB: first round-trip
 - **Mission:** next button bumps a counter on the page
 - **Where:** `workshop-outline/section-5.md`, steps 1–5
 - **Files:** `src/render.php` · `src/view.js`
@@ -168,20 +172,20 @@ Nine fast beats, content drawn from the "From Static to Dynamic" talk.
 - **Done early?** wire up the prev button — starting Section 6 early
 - Speaker note: walk the room; check for silent-failure namespace typos and stopped watchers
 
-### Slide 30 [C] — Checkpoint · minute-50 gate
+### Slide 31 [C] — Checkpoint · minute-50 gate
 - Demo the working counter, including running past 3 — "that bug is Section 6's job"
 - Speaker note: **run-sheet checkpoint — if this slide isn't on screen by 0:50, engage cut lines (facilitator-notes.md)**
 
 ---
 
-## Section 6 — Sliding + Bounds (0:49–0:59 · slides 31–33)
+## Section 6 — Sliding + Bounds (0:49–0:59 · slides 32–34)
 
-### Slide 31 [T] — Derived state
-- Re-show slide 25 (four kinds of data), now filled in: `noPrevSlide`, `noNextSlide`, `imageIndex`, transform — all *computed from* `currentSlide`/`totalSlides`
+### Slide 32 [T] — Derived state
+- Re-show slide 26 (four kinds of data), now filled in: `noPrevSlide`, `noNextSlide`, `imageIndex`, transform — all *computed from* `currentSlide`/`totalSlides`
 - "Disable logic is derived, so it lives in state getters, not context. Getters re-run on every read — sync for free."
 - New directives, one line each: `data-wp-style--transform`, `data-wp-bind--disabled`
 
-### Slide 32 [P] — LAB: make it slide
+### Slide 33 [P] — LAB: make it slide
 - **Mission:** slides move, buttons gray out at the ends, counter reads "X/3"
 - **Where:** `workshop-outline/section-6.md`, all steps
 - **Files:** `src/view.js` · `src/render.php`
@@ -190,25 +194,25 @@ Nine fast beats, content drawn from the "From Static to Dynamic" talk.
 - **Done early?** add a 4th image — the counter breaks; that's next section's setup
 - Speaker note: watch for transform off-by-one (slide 1 = translateX(0)) and unitless getter returns
 
-### Slide 33 [C] — Checkpoint
+### Slide 34 [C] — Checkpoint
 - Demo: full slide-and-bounds behavior
 - "Still hardcoded `totalSlides: 3` — the server fixes that next"
 
 ---
 
-## Section 7 — Server-Side Directive Injection (0:59–1:12 · slides 34–37)
+## Section 7 — Server-Side Directive Injection (0:59–1:12 · slides 35–38)
 
-### Slide 34 [T] — The render filter + tag processor walk
+### Slide 35 [T] — The render filter + tag processor walk
 - Step diagram of the single-pass walk: land on wrapper → `set_bookmark` → count slide classes forward → `seek` back → `set_attribute( 'data-wp-context', … )`
 - `render_block_iapi/gallery-slider` — exact hook name on screen
 - Namespace inheritance callout: "we do NOT set `data-wp-interactive` on inner blocks — descendants inherit" (flash back to slide 10)
 
-### Slide 35 [T] — The hydration flash
+### Slide 36 [T] — The hydration flash
 - Two-frame visual: pre-hydration empty counter → hydrated "1/N"
 - Live demo on the projector with CPU 6× + Slow 4G throttling — "on your fast laptop you may never see it; real devices do"
 - The fix: whatever you pass to `wp_interactivity_state()` **must match what the client getter computes** on first paint
 
-### Slide 36 [P] — LAB: real slide counts, no flash
+### Slide 37 [P] — LAB: real slide counts, no flash
 - **Mission:** filter counts inner blocks and seeds context + state
 - **Where:** `workshop-outline/section-7.md`, steps 1–5
 - **Files:** `iapi-gallery-slider.php` · `src/render.php`
@@ -218,25 +222,25 @@ Nine fast beats, content drawn from the "From Static to Dynamic" talk.
 - **Done early?** throttle CPU + network in DevTools and try to catch the flash
 - Speaker note: sticking points — hook-name mismatch, `wp-block-image` (not `core/image`) in `$allowed_blocks`
 
-### Slide 37 [C] — Checkpoint
+### Slide 38 [C] — Checkpoint
 - Demo: add/remove an inner block in the editor, counter adapts
 - "The slider is now adaptive. Last piece in the room: autoplay."
 
 ---
 
-## Section 8 — Autoplay (1:12–1:25 · slides 38–41)
+## Section 8 — Autoplay (1:12–1:25 · slides 39–42)
 
-### Slide 38 [T] — Callbacks: the third slot
+### Slide 39 [T] — Callbacks: the third slot
 - Store diagram grows its third branch: `state` / `actions` / **`callbacks`**
 - `data-wp-init` fires at element initialization; returning a function *is* the cleanup registration
 - Why destructure `const { state, actions } = store(…)`: callbacks call actions directly from a rAF tick
 
-### Slide 39 [T] — `withScope` in one slide
+### Slide 40 [T] — `withScope` in one slide
 - Fragment: the rAF `update` tick wrapped in `withScope`
 - "A rAF tick runs outside the Interactivity scope — without the wrapper, `getContext()` and `state` are undefined"
 - The string-attribute payoff from slide 9: `Number( ctx.speed ) * 1000`
 
-### Slide 40 [P] — LAB: autoplay
+### Slide 41 [P] — LAB: autoplay
 - **Mission:** Autoplay toggle drives the slider at the chosen speed; loop cleans up
 - **Files:** `src/view.js` · `iapi-gallery-slider.php` · `src/render.php`
 - **Where:** `workshop-outline/section-8.md` — setup edits first, then **mid-lab checkpoint** (save/reload, behavior unchanged), then the callbacks block
@@ -245,31 +249,31 @@ Nine fast beats, content drawn from the "From Static to Dynamic" talk.
 - **Done early?** two sliders on one page at different speeds — proof context is per-instance
 - Speaker note: "autoplay doesn't start" → check the toggle in the Inspector *before* the code. Running late? This section demos well — see cut line 3.
 
-### Slide 41 [C] — Checkpoint
+### Slide 42 [C] — Checkpoint
 - Demo: autoplay at two different speeds; toggle off mid-run
 - "That's the complete slider."
 
 ---
 
-## Wrap-up (1:25–1:30 · slides 42–46, all [T])
+## Wrap-up (1:25–1:30 · slides 43–47, all [T])
 
-### Slide 42 [T] — The arc, revisited
+### Slide 43 [T] — The arc, revisited
 - Slide 6's arc with everything checked off: opt-in pair → round-trip → derived state → server seeding → lifecycle
 
-### Slide 43 [T] — Your take-home: Section 9
+### Slide 44 [T] — Your take-home: Section 9
 - Focus a11y (APG carousel pattern) · touch/swipe · continuous wrap
 - "Zero new IAPI primitives — you already know everything it needs"
 - `workshop-outline/section-9.md` + `code-reference/section-9/` as the answer key
 
-### Slide 44 [T] — Beyond today
+### Slide 45 [T] — Beyond today
 - Client-side navigation with `@wordpress/interactivity-router` — router regions swap page content in place, interactive state survives navigation
 - `wp-each` for dynamic lists from state arrays · `wp_interactivity_config()` / `getConfig()` for REST URLs and nonces
 - TypeScript support — typed stores and context (WP 6.9+)
 
-### Slide 45 [T] — Where to go next
+### Slide 46 [T] — Where to go next
 - Interactivity API reference on developer.wordpress.org · Block Editor Handbook
 - #core-interactivity-api on Make WordPress Slack
 
-### Slide 46 [T] — Thanks / Q&A
+### Slide 47 [T] — Thanks / Q&A
 - Repo URL + QR code · contact
 - Speaker note: likely questions are pre-gamed in the Q&A section of `facilitator-notes.md`
