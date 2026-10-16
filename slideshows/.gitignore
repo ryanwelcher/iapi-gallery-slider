@@ -1,0 +1,5 @@
+# Spacefast publish state, for every deck folder (90-minutes, 120-minutes, ...).
+# Each deck's .spacefast/space.json stays tracked: it links that folder to its own Space.
+**/.spacefast/state.json
+**/.spacefast-*
+**/.spacefast/.space-link-*.tmp
