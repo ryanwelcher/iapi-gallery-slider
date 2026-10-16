@@ -100,7 +100,12 @@
     margin: 0;
   }
   /* Shades of Purple token colors */
-  pre.code mark { background: none; color: #FF9D00; font-weight: 600; }
+  /* Highlighted code: a highlighter-pen box behind the text, normal syntax colors on top.
+     box-shadow pads the box without shifting the monospace columns. */
+  pre.code mark {
+    color: inherit; background: rgba(255, 157, 0, 0.2); border-radius: 3px;
+    box-shadow: 0 0 0 3px rgba(255, 157, 0, 0.2); -webkit-box-decoration-break: clone; box-decoration-break: clone;
+  }
   pre.code .c { color: #D7A9F5; }
   pre.code .tok-k { color: #FAD000; }
   pre.code .tok-s { color: #A5FF90; }
@@ -354,7 +359,7 @@
   <div class="eyebrow">Hello</div>
   <h2>Who am I?</h2>
   <div class="split" style="align-items: center;">
-    <ul>
+    <ul data-no-steps>
       <li>Developer Advocate at Automattic</li>
       <li>YouTube &amp; Twitch: <span class="amber">@ryanwelchercodes</span></li>
       <li>Most of what I do is build blocks in public, on streams, in tutorials, and at workshops like this one</li>
@@ -561,8 +566,8 @@ npm install      <span class="c"># safe to re-run</span>
     from <mark>'@wordpress/block-editor'</mark>;
 
 import { PanelBody,
-         <mark>__experimentalNumberControl
-             as NumberControl</mark> }
+         <mark>__experimentalNumberControl</mark>
+             <mark>as NumberControl</mark> }
     from <mark>'@wordpress/components'</mark>;
 
 import { SwitchControl }
@@ -1107,8 +1112,8 @@ return <mark>Number( ctx.speed )</mark> * 1000;</pre>
 
 <script>
   // Lightweight syntax coloring for the code blocks: strings green,
-  // keywords blue. Comments (.c) and amber highlights (<mark>) are
-  // already hand-marked, so we only touch plain text nodes.
+  // keywords blue. Comments (.c) are already hand-marked, so we only touch
+  // plain text nodes (including the text inside <mark> highlights).
   (function highlightCode() {
     const KEYWORDS = /\b(import|from|const|let|var|function|return|get|if|else|for|while|yield|new|true|false|null|array|echo|add_action|add_filter)\b/;
     const TOKEN = new RegExp("('[^']*'|\"[^\"]*\"|`[^`]*`)|" + KEYWORDS.source, 'g');
@@ -1133,7 +1138,7 @@ return <mark>Number( ctx.speed )</mark> * 1000;</pre>
     document.querySelectorAll('pre.code').forEach(function walk(el) {
       Array.from(el.childNodes).forEach(node => {
         if (node.nodeType === 3) processText(node);
-        else if (node.nodeType === 1 && !node.matches('mark, .c, .tok-s, .tok-k')) walk(node);
+        else if (node.nodeType === 1 && !node.matches('.c, .tok-s, .tok-k')) walk(node);
       });
     });
   })();
@@ -1155,11 +1160,12 @@ return <mark>Number( ctx.speed )</mark> * 1000;</pre>
     return [...new Set(Array.from(slide.querySelectorAll('[data-frag]'))
       .map(el => parseInt(el.dataset.frag, 10)))].sort((a, b) => a - b);
   }
-  // Bullet lists with 2+ items step through, except small lists inside cards.
+  // Bullet lists with 2+ items step through, except small lists inside cards
+  // and lists marked data-no-steps (shown all at once).
   slides.forEach(slide => {
     slide.stepItems = [];
     slide.querySelectorAll('ul').forEach(ul => {
-      if (ul.closest('.card')) return;
+      if (ul.closest('.card, [data-no-steps]')) return;
       const items = ul.querySelectorAll(':scope > li');
       if (items.length < 2) return;
       items.forEach(li => { li.classList.add('step-li'); slide.stepItems.push(li); });
