@@ -113,7 +113,7 @@ Five fast beats, content drawn from the "From Static to Dynamic" talk.
 ### Slide 16 [T] — Three kinds of data ★ reused in Sections 6 and 7
 - Three cards, each with a "when to use" rule and a slider-based code sample: global state (`wp_interactivity_state()` with a page-wide `isLightboxOpen` flag, labeled as an example that isn't in today's plugin) · local context (`wp_interactivity_data_wp_context()` + its rendered `data-wp-context` output) · derived state (the `imageIndex` getter, full width)
 - The sentence that predicts every later bug: **"context is per-instance; state is shared and derived"**
-- Config, the fourth kind, waits for slide 34 (Beyond today)
+- Config, the fourth kind, waits for slide 34 (Beyond this workshop)
 
 ---
 
@@ -235,12 +235,13 @@ Five fast beats, content drawn from the "From Static to Dynamic" talk.
 - "Zero new IAPI primitives — you already know everything it needs"
 - `workshop-outline/section-9.md` + `code-reference/section-9/` as the answer key
 
-### Slide 34 [T] — Beyond today
+### Slide 34 [T] — Beyond this workshop
+- Framing: everything on the left is already in WordPress; today's build just didn't need it
 - Client-side navigation with `@wordpress/interactivity-router` — router regions swap page content in place, interactive state survives navigation
 - `wp-each` for dynamic lists from state arrays · `wp_interactivity_config()` / `getConfig()` for REST URLs and nonces
 - `watch()` (WP 7.0) to react to state changes from store code, with no DOM element needed
 - TypeScript support for typed stores and context, with async action typing helpers new in WP 6.9
-- Card on the right, "Where to go next": Interactivity API reference on developer.wordpress.org · Block Editor Handbook · #core-interactivity-api on Make WordPress Slack
+- Card on the right, "Where to go next", each a link that opens in a new tab: Interactivity API docs (developer.wordpress.org) · Developer Blog tutorials (`/news/tag/interactivity-api/`) · release dev notes (`make.wordpress.org/core/tag/interactivity-api/`) · example blocks (`WordPress/block-development-examples`) · #core-interactivity-api on Make WordPress Slack
 
 ### Slide 35 [T] — Thanks / Q&A
 - Repo URL + QR code · contact

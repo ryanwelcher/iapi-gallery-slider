@@ -654,7 +654,7 @@ nextImage: () =&gt; {
   <p class="dim" data-frag="5">Today you'll use seven of them: <code>wp-interactive</code>, <code>wp-context</code>, <code>wp-bind</code>, <code>wp-style</code>, <code>wp-text</code>, <code>wp-on</code>, and <code>wp-init</code>. The rest are there when you need them.</p>
 </section>
 
-<section class="slide" data-type="t" data-notes="★ REUSED in Sections 6 and 7. The global-state card is a made-up example (one lightbox for the whole page); say so. Today's build uses wp_interactivity_state() for derived state in Section 7 instead. Config (REST URLs, nonces) is the fourth kind; it waits for the Beyond today slide. Say it out loud: two sliders on one page each carry their own context; one store serves them both. Read from the wrong branch and the value is undefined, or it's the other slider's. THE sentence: context is per-instance; state is shared and derived.">
+<section class="slide" data-type="t" data-notes="★ REUSED in Sections 6 and 7. The global-state card is a made-up example (one lightbox for the whole page); say so. Today's build uses wp_interactivity_state() for derived state in Section 7 instead. Config (REST URLs, nonces) is the fourth kind; it waits for the Beyond this workshop slide. Say it out loud: two sliders on one page each carry their own context; one store serves them both. Read from the wrong branch and the value is undefined, or it's the other slider's. THE sentence: context is per-instance; state is shared and derived.">
   <div class="eyebrow">Section 4 · IAPI Primer <span class="clock">· ★ the distinction</span></div>
   <h2>Three kinds of data</h2>
   <div class="grid2">
@@ -1007,9 +1007,9 @@ get transitionsSpeed() {
   </div>
 </section>
 
-<section class="slide" data-type="t" data-notes="Beyond the workshop: the parts of the API we didn't need today. Client-side navigation is the headline: router regions swap page content in place, state survives. Point, don't teach, then point at the links.">
+<section class="slide" data-type="t" data-notes="Everything on the left is already in WordPress; today's build just didn't need it. Client-side navigation is the headline: router regions swap page content in place, state survives. Point, don't teach, then point at the links. The Developer Blog tag has hands-on tutorials (light/dark toggle, Word Switcher); the Make Core tag has the dev note for every release, so that's where to look when a new version lands.">
   <div class="eyebrow">Wrap-up</div>
-  <h2>Beyond today</h2>
+  <h2>Beyond this workshop</h2>
   <div class="split" style="align-items: start;">
   <ul>
     <li><strong>Client-side navigation</strong> with <code>@wordpress/interactivity-router</code>. Router regions swap page content in place, and interactive state survives navigation</li>
@@ -1021,8 +1021,10 @@ get transitionsSpeed() {
     <div class="card">
       <h3>Where to go next</h3>
       <ul style="padding-left: 1.1em;">
-        <li>Interactivity API reference: <span class="amber" style="overflow-wrap: anywhere;">developer.wordpress.org/block-editor/reference-guides/interactivity-api/</span></li>
-        <li>Block Editor Handbook: <span class="amber">developer.wordpress.org/block-editor/</span></li>
+        <li>Interactivity API docs: <a class="amber repo-link" style="overflow-wrap: anywhere;" href="https://developer.wordpress.org/block-editor/reference-guides/interactivity-api/" target="_blank" rel="noopener">developer.wordpress.org/block-editor/reference-guides/interactivity-api/</a></li>
+        <li>Developer Blog tutorials: <a class="amber repo-link" style="overflow-wrap: anywhere;" href="https://developer.wordpress.org/news/tag/interactivity-api/" target="_blank" rel="noopener">developer.wordpress.org/news/tag/interactivity-api/</a></li>
+        <li>What changed in each release: <a class="amber repo-link" style="overflow-wrap: anywhere;" href="https://make.wordpress.org/core/tag/interactivity-api/" target="_blank" rel="noopener">make.wordpress.org/core/tag/interactivity-api/</a></li>
+        <li>Example blocks: <a class="amber repo-link" style="overflow-wrap: anywhere;" href="https://github.com/WordPress/block-development-examples" target="_blank" rel="noopener">github.com/WordPress/block-development-examples</a></li>
         <li><span class="amber">#core-interactivity-api</span> on Make WordPress Slack</li>
       </ul>
     </div>
