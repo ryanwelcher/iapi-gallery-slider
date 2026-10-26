@@ -107,7 +107,7 @@ Five fast beats, content drawn from the "From Static to Dynamic" talk.
 
 ### Slide 15 [T] — Anatomy of a directive
 - `data-wp-bind--hidden---id` broken into four segments: `data-wp-` (standard HTML data-* attribute) · `bind` (directive name — what kind of relationship) · `--hidden` (parameter, two dashes — which event/attribute/property) · `---id` (optional unique ID, three dashes — lets the same directive appear more than once on one element)
-- "The `--parameter` pattern generalizes: any event, any attribute, any CSS property — and `---id` when you need the same one twice"
+- "The `--parameter` pattern works the same way for any event, attribute, or CSS property. Add `---id` when you need the same one twice"
 - Closing line names the seven directives used today (wp-interactive, wp-context, wp-bind, wp-style, wp-text, wp-on, wp-init); the rest are there when you need them
 
 ### Slide 16 [T] — Three kinds of data ★ reused in Sections 6 and 7

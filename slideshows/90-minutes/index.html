@@ -573,7 +573,7 @@ import { __ } from '@wordpress/i18n';
       <p class="big-say">It's the <strong>standard</strong> way to add front-end interactivity to blocks, and it ships with Core.</p>
       <ul>
         <li>Instead of every plugin bringing its own JS (and loading duplicates of it), everyone uses one pattern</li>
-        <li>It works for a toggle button, and it works for live search, carts, and instant navigation</li>
+        <li>It works for a simple toggle, and it scales up to live search, carts, and instant navigation</li>
         <li>Directives are <code>data-wp-*</code> attributes that <strong>both the client and the server</strong> understand. That's what makes Section 7's no-flash first paint possible</li>
       </ul>
     </div>
@@ -650,7 +650,7 @@ nextImage: () =&gt; {
     <div class="card" data-frag="3"><h3 style="color: #FAD000;">--hidden</h3><p>The parameter (two dashes), which says <em>which</em> event, attribute, or CSS property</p></div>
     <div class="card" style="border-color: var(--green);" data-frag="4"><h3 style="color: var(--green);">---id</h3><p>Optional unique ID (three dashes) that lets the <em>same</em> directive appear more than once on one element</p></div>
   </div>
-  <p class="big-say" style="margin-top: 3vh;" data-frag="5">The <code>--parameter</code> pattern generalizes: <strong>any event, any attribute, any CSS property</strong>. Add <code>---id</code> when you need the same one twice.</p>
+  <p class="big-say" style="margin-top: 3vh;" data-frag="5">The <code>--parameter</code> pattern works the same way for <strong>any event, attribute, or CSS property</strong>. Add <code>---id</code> when you need the same one twice.</p>
   <p class="dim" data-frag="5">Today you'll use seven of them: <code>wp-interactive</code>, <code>wp-context</code>, <code>wp-bind</code>, <code>wp-style</code>, <code>wp-text</code>, <code>wp-on</code>, and <code>wp-init</code>. The rest are there when you need them.</p>
 </section>
 
@@ -776,9 +776,9 @@ store( '<mark>iapi-gallery</mark>', { … } );</pre>
   <div class="split">
     <div class="lead">
       <ul>
-        <li>Disable logic is <strong>derived</strong> from <code>currentSlide</code> / <code>totalSlides</code> → it lives in state, not context</li>
+        <li>Disable logic is <strong>derived</strong> from <code>currentSlide</code> and <code>totalSlides</code>, so it lives in state, not context</li>
         <li>Getters re-run on every read, so the UI stays in sync for free</li>
-        <li>A getter runs in the scope of the element reading it, so <code>getContext()</code> returns <em>that</em> slider's context. So one getter gives each slider its own answer</li>
+        <li>A getter runs in the scope of the element reading it, so <code>getContext()</code> returns <em>that</em> slider's context, and one getter gives each slider its own answer</li>
         <li>New directives: <code>data-wp-style--transform</code>, <code>data-wp-bind--disabled</code></li>
       </ul>
       <p class="dim">This is the three-kinds slide from the primer paying off.</p>
@@ -817,7 +817,7 @@ store( '<mark>iapi-gallery</mark>', { … } );</pre>
 <section class="slide" data-type="c" data-demo="demo · switch to Studio" data-notes="Checkpoint 6 is already live from the lab: Ctrl+Tab to the site and reload. Demo full slide-and-bounds. Tee up Section 7: 'still hardcoded totalSlides: 3, and the server fixes that next.'">
   <div class="eyebrow">Section 6 · Checkpoint</div>
   <h2>You should now have…</h2>
-  <p class="big-say">A real slider: slides move, ends stop, counter says <strong>"X/3"</strong>.</p>
+  <p class="big-say">You've got a real slider now. The slides move, they stop at the ends, and the counter says <strong>"X/3"</strong>.</p>
   <p class="big-say dim">Still hardcoded to 3 slides. The server fixes that next.</p>
 </section>
 
@@ -994,7 +994,7 @@ get transitionsSpeed() {
     <ul>
       <li><strong>Focus a11y</strong> using the APG carousel pattern (label the region, pause on focus)</li>
       <li><strong>Touch</strong> support for swiping between slides</li>
-      <li><strong>Continuous</strong> mode so the prev/next buttons wrap around the ends. Autoplay already loops on its own</li>
+      <li><strong>Continuous</strong> mode so the prev/next buttons wrap around the ends. Autoplay loops on its own</li>
     </ul>
     <div class="lead">
       <p class="big-say"><strong>There are no new IAPI primitives in it.</strong> You already know everything it needs.</p>
