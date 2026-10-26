@@ -376,13 +376,13 @@
   </div>
 </section>
 
-<section class="slide" data-type="t" data-demo="demo · Studio or Playground" data-notes="npm run checkpoint 9 before the session starts, so the opening demo is the finished slider. LIVE demo. Studio window is primary (slide, hit the ends, toggle autoplay, add a 4th image, show the count adapt). The Playground button is the embedded fallback: boots the finished slider on a populated post; needs network. This is the contract for the next 90 minutes.">
+<section class="slide" data-type="t" data-demo="demo · Studio or Playground" data-notes="npm run checkpoint 9 before the session starts, so the opening demo is the finished slider. LIVE demo. Studio window is primary (slide, hit the ends, toggle autoplay, add a 4th image, show the count adapt). The Playground button is the embedded fallback: boots the finished slider on a populated post; needs network. Each card names the section that builds it, so this doubles as the map they'll recognize at every eyebrow. Section 3 (editor controls) comes first; Section 9 is the take-home. This is the contract for the next 90 minutes.">
   <div class="eyebrow">The goal</div>
   <h2>What are we building?</h2>
   <div class="split">
     <div class="lead">
       <p class="big-say">A gallery slider that renders <strong>on the server</strong> and is fully interactive. <strong>No front-end framework.</strong></p>
-      <p class="dim">Watch for these four behaviors in the live demo. We build them in order.</p>
+      <p class="dim">Watch for these four behaviors in the live demo. We build them in order, after the editor controls in Section 3.</p>
       <div class="pg-launch">
         <button onclick="openPG(event)">▶ Boot it in Playground</button>
         <a href="https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/ryanwelcher/iapi-gallery-slider/demo/demo-blueprint.json" target="_blank" rel="noopener">open in new tab ↗</a>
@@ -390,10 +390,11 @@
       </div>
     </div>
     <div class="cols" style="flex-direction: column; gap: 1.4vh;">
-      <div class="card"><h3>Slides + bounds</h3><p>Prev/next move the track; buttons disable at the ends</p></div>
-      <div class="card"><h3>Adaptive</h3><p>Counter reads "1/4" because the server counted 4 blocks</p></div>
-      <div class="card"><h3>Autoplay</h3><p>Editor-chosen speed, cleans up after itself</p></div>
-      <div class="card"><h3>No flash</h3><p>First paint is already correct, so the counter doesn't flicker when the JS loads</p></div>
+      <div class="card"><h3>Slides + bounds <span class="dim" style="text-transform: none; letter-spacing: 0;">· Sections 5–6</span></h3><p>Prev/next move the track; buttons disable at the ends</p></div>
+      <div class="card"><h3>Adaptive <span class="dim" style="text-transform: none; letter-spacing: 0;">· Section 7</span></h3><p>Counter reads "1/4" because the server counted 4 blocks</p></div>
+      <div class="card"><h3>No flash <span class="dim" style="text-transform: none; letter-spacing: 0;">· Section 7</span></h3><p>First paint is already correct, so the counter doesn't flicker when the JS loads</p></div>
+      <div class="card"><h3>Autoplay <span class="dim" style="text-transform: none; letter-spacing: 0;">· Section 8</span></h3><p>Editor-chosen speed, cleans up after itself</p></div>
+      <p class="dim" style="margin: 0;">Section 9 (focus a11y, touch, continuous) is your take-home.</p>
     </div>
   </div>
 </section>
@@ -425,35 +426,6 @@ npm install      <span class="c"># safe to re-run</span>
     <div class="card" style="border-color: var(--green);"><h3 style="color: var(--green);">Checkpoints</h3><p>We sync up. I demo the result and you compare it with yours.</p></div>
   </div>
   <p class="big-say" style="margin-top: 3.5vh;"><code>code-reference/section-N/</code> is the rescue path, so <strong>falling behind is never fatal.</strong></p>
-</section>
-
-<section class="slide" data-type="t" data-notes="Step through one section per keypress, one sentence each on why it exists in the build order. Then the take-home. This is the map they'll recognize at every eyebrow.">
-  <div class="eyebrow">Section 1 · Welcome &amp; Setup</div>
-  <h2>The arc</h2>
-  <p class="dim">These are the sections where you write code. Everything else is setup, a quick tour, or me talking about the API.</p>
-  <div class="dir-rows">
-    <div class="dir" data-frag="1">
-      <div><div class="name">Section 3 · Editor Controls</div></div>
-      <div class="ex" style="white-space: normal; font-family: var(--body);">The Inspector panel and the three attributes every later section reads from</div>
-    </div>
-    <div class="dir" data-frag="2">
-      <div><div class="name">Section 5 · Hello, Store</div></div>
-      <div class="ex" style="white-space: normal; font-family: var(--body);">A button, an action, and a counter. This is the round-trip everything else sits on</div>
-    </div>
-    <div class="dir" data-frag="3">
-      <div><div class="name">Section 6 · Sliding + Bounds</div></div>
-      <div class="ex" style="white-space: normal; font-family: var(--body);">Derived state makes it actually move, and stop at the ends</div>
-    </div>
-    <div class="dir" data-frag="4">
-      <div><div class="name">Section 7 · Server-Side Injection</div></div>
-      <div class="ex" style="white-space: normal; font-family: var(--body);">PHP counts the real slides and paints a correct first frame with no flash</div>
-    </div>
-    <div class="dir" data-frag="5">
-      <div><div class="name">Section 8 · Autoplay</div></div>
-      <div class="ex" style="white-space: normal; font-family: var(--body);">Lifecycle callbacks drive it hands-free and clean up after themselves</div>
-    </div>
-  </div>
-  <p class="dim" style="margin-top: 2vh;" data-frag="6">Section 9 (focus a11y, touch, continuous) is your take-home. By then you'll have everything it needs.</p>
 </section>
 
 <!-- ===================== SECTION 2 ANATOMY 0:08–0:16 ===================== -->
@@ -507,7 +479,7 @@ npm install      <span class="c"># safe to re-run</span>
   </div>
 </section>
 
-<section class="slide" data-type="t" data-notes="★ RECURRING MOTIF. You will flash back to this slide during debugging moments all day. Miss the flag → runtime never loads. Miss the directive → runtime has nothing to bind to.">
+<section class="slide" data-type="t" data-notes="★ RECURRING MOTIF. You will flash back to this slide during debugging moments all day. Miss the flag → runtime never loads. Miss the directive → runtime has nothing to bind to. The render.php snippet is the starter as shipped: wrapper, slider-container, buttons, and the ONE directive already present.">
   <div class="eyebrow">Section 2 · Anatomy <span class="clock">· ★ remember this slide</span></div>
   <h2>The opt-in pair</h2>
   <div class="cols">
@@ -521,57 +493,24 @@ npm install      <span class="c"># safe to re-run</span>
       <h3 style="color: var(--amber);">render.php</h3>
       <p><code>data-wp-interactive="iapi-gallery"</code></p>
       <p class="dim">Gives the engine a place to bind. It marks where the Interactivity API takes over, and it ties every directive underneath it to the <code>iapi-gallery</code> namespace.</p>
+      <pre class="code mini"><span class="c">// trimmed: the starter's render.php</span>
+&lt;div &lt;?php echo wp_kses_data( … ); ?&gt;
+  <mark>data-wp-interactive='iapi-gallery'</mark>
+&gt;
+  &lt;div class="slider-container"&gt;…&lt;/div&gt;
+  &lt;div class="buttons"&gt;…&lt;/div&gt;
+&lt;/div&gt;</pre>
     </div>
   </div>
   <p class="big-say" style="margin-top: 3vh;" data-frag="3">If you miss the flag, the runtime never loads. If you miss the directive, it has nothing to bind to. <strong>You need both.</strong></p>
 </section>
 
-<section class="slide" data-type="t" data-notes="Wrapper, slider-container, prev/next buttons, and the ONE directive already present: the other half of the opt-in pair from the last slide. Flash back to the pair slide if it helps.">
-  <div class="eyebrow">Section 2 · Anatomy</div>
-  <h2><code style="font-size: 0.85em;">src/render.php</code></h2>
-  <div class="split" style="grid-template-columns: 4fr 7fr;">
-    <div class="lead">
-      <ul>
-        <li>The server-rendered markup: wrapper, <code>.slider-container</code>, prev/next buttons</li>
-        <li>One directive is already in place. It's <code>data-wp-interactive</code>, the other half of the opt-in pair we just saw</li>
-      </ul>
-    </div>
-    <pre class="code">&lt;div &lt;?php echo wp_kses_data( <mark data-step-mark="1">get_block_wrapper_attributes()</mark> ); ?&gt;
-  <mark data-step-mark="2">data-wp-interactive='iapi-gallery'</mark>
-&gt;
-  &lt;div <mark data-step-mark="1">class="slider-container"</mark>&gt;
-    &lt;?php echo wp_kses_post( $content ); ?&gt;
-  &lt;/div&gt;
-  &lt;div <mark data-step-mark="1">class="buttons"</mark>&gt;
-    &lt;button aria-label="go to previous slide"&gt;&amp;lt;&lt;/button&gt;
-    &lt;p&gt;1/3&lt;/p&gt;
-    &lt;button aria-label="go to next slide"&gt;&amp;gt;&lt;/button&gt;
-  &lt;/div&gt;
-&lt;/div&gt;</pre>
-  </div>
-</section>
-
 <!-- ===================== SECTION 3 EDITOR CONTROLS 0:16–0:31 ===================== -->
 
-<section class="slide" data-type="t" data-notes="Say it explicitly: no Interactivity API in this section. We're building the attributes the IAPI sections will read.">
+<section class="slide" data-type="t" data-notes="Say it explicitly: no Interactivity API in this section. We're building the attributes the IAPI sections will read. The import-map callout is the #1 sticking point. InspectorControls comes from block-editor, SwitchControl from the newer @wordpress/ui, and the rest from components. If anyone asks: ToggleControl is the older version, and WordPress now recommends SwitchControl. Alias syntax for NumberControl on screen so nobody has to guess. The panel code is step 4 of section-3.md, trimmed to the Autoplay switch; the conditional NumberControl is the Slide Duration field.">
   <div class="eyebrow">Section 3 · Editor Controls <span class="clock">· 0:16–0:31</span></div>
-  <h2>What Section 3 is (and isn't)</h2>
-  <div class="split">
-    <div class="lead">
-      <p class="big-say"><strong>This section is all block editor. There's no Interactivity API in it at all.</strong></p>
-      <p>We're building the Inspector controls that drive the three attributes, so the IAPI sections have something to read.</p>
-    </div>
-    <div class="cols" style="flex-direction: column; gap: 1.4vh;">
-      <div class="card"><h3>continuous</h3><p><code>SwitchControl</code> that lets the prev/next buttons wrap around the ends (used in Section 9)</p></div>
-      <div class="card"><h3>autoplay</h3><p><code>SwitchControl</code> that drives Section 8's requestAnimationFrame loop</p></div>
-      <div class="card"><h3>speed</h3><p><code>NumberControl</code>, rendered <em>only when autoplay is on</em></p></div>
-    </div>
-  </div>
-</section>
-
-<section class="slide" data-type="t" data-notes="The import-map callout is the #1 sticking point. InspectorControls comes from block-editor, SwitchControl from the newer @wordpress/ui, and the rest from components. If anyone asks: ToggleControl is the older version, and WordPress now recommends SwitchControl. Alias syntax for NumberControl on screen so nobody has to guess. The panel code is step 4 of section-3.md, trimmed to the Autoplay switch; the conditional NumberControl is the Slide Duration field.">
-  <div class="eyebrow">Section 3 · Editor Controls</div>
   <h2>The pieces</h2>
+  <p class="dim">This section is all block editor, with no Interactivity API at all. We're building the Inspector controls for <code>continuous</code>, <code>autoplay</code>, and <code>speed</code>, so the IAPI sections have something to read.</p>
   <div class="split">
     <div class="lead">
       <ul>
@@ -626,7 +565,7 @@ import { __ } from '@wordpress/i18n';
 
 <!-- ===================== SECTION 4 PRIMER 0:31–0:39 ===================== -->
 
-<section class="slide" data-type="t" data-notes="Laptops closed. The primer is a talk. Core already trusts this API: Search, Query Loop, Navigation, File, Image lightbox all use it.">
+<section class="slide" data-type="t" data-notes="Laptops closed. The primer is a talk. Core already trusts this API: Search, Query Loop, Navigation, File, Image lightbox all use it. Under the hood it's Preact + Signals on the client and the HTML Tag Processor on the server, with no Node SSR, if anyone asks. Land the last bullet: the directives being legible to BOTH sides is what makes the server-seeding story in Section 7 possible.">
   <div class="eyebrow">Section 4 · IAPI Primer <span class="clock">· 0:31–0:39</span></div>
   <h2>What is the Interactivity API?</h2>
   <div class="split">
@@ -635,7 +574,7 @@ import { __ } from '@wordpress/i18n';
       <ul>
         <li>Instead of every plugin bringing its own JS (and loading duplicates of it), everyone uses one pattern</li>
         <li>It works for a toggle button, and it works for live search, carts, and instant navigation</li>
-        <li>Blocks can share state, so "add to cart" in one block updates a separate cart block automatically</li>
+        <li>Directives are <code>data-wp-*</code> attributes that <strong>both the client and the server</strong> understand. That's what makes Section 7's no-flash first paint possible</li>
       </ul>
     </div>
     <div class="card" style="border-color: var(--amber); height: 100%;">
@@ -651,19 +590,8 @@ import { __ } from '@wordpress/i18n';
   </div>
 </section>
 
-<section class="slide" data-type="t" data-notes="One beat per card. The directives being legible to BOTH sides is what makes the server-seeding story in section 7 possible.">
-  <div class="eyebrow">Section 4 · IAPI Primer</div>
-  <h2>Under the hood</h2>
-  <div class="cols">
-    <div class="card" data-frag="1"><h3>Preact + Signals</h3><p>Hydration (taking over the server's HTML in the browser), client logic, and client-side navigation. It's tiny, and you never touch it directly.</p></div>
-    <div class="card" data-frag="2"><h3>HTML directives</h3><p><code>data-wp-*</code> attributes that <strong>both the client and the server</strong> understand.</p></div>
-    <div class="card" data-frag="3"><h3>HTML Tag Processor</h3><p>Server-side logic in plain PHP. There's no Node.js SSR anywhere in the stack.</p></div>
-  </div>
-  <p class="big-say" style="margin-top: 3vh;" data-frag="4">The trick is that both the client <strong>and</strong> the server can read the directives, and that's what makes Section 7's no-flash first paint possible.</p>
-</section>
-
-<section class="slide" data-type="t" data-notes="The mindset shift. Imperative is micromanaging every move; declarative describes the result. The right side is exactly what they write in Section 5, so don't explain the directives yet. Just let them see how much code disappears.">
-  <div class="eyebrow">Section 4 · IAPI Primer</div>
+<section class="slide" data-type="t" data-notes="THE mindset slide. Imperative is micromanaging every move; declarative describes the result. The right side is exactly what they write in Section 5, so don't explain the directives yet. Just let them see how much code disappears. Then land the sentence: the state updates the UI, not the other way around.">
+  <div class="eyebrow">Section 4 · IAPI Primer <span class="clock">· ★ the mindset</span></div>
   <h2>Declarative, not imperative</h2>
   <div class="split even code-pair">
     <div data-frag="1">
@@ -689,25 +617,8 @@ nextImage: () =&gt; {
     </div>
   </div>
   <div data-frag="3" style="margin-top: 2.5vh;">
-    <p class="big-say">Directives work the same way: you describe <strong>what the UI should be for a given state</strong>, never how to update the DOM step by step.</p>
-    <p class="dim">That right-hand side is what you'll build in Section 5.</p>
-  </div>
-</section>
-
-<section class="slide" data-type="t" data-notes="THE mindset sentence. Also: mutability is allowed. Unlike frameworks that force immutability, ctx.currentSlide++ just works and reactivity still fires.">
-  <div class="eyebrow">Section 4 · IAPI Primer <span class="clock">· ★ the mindset</span></div>
-  <h2>Reactivity</h2>
-  <div class="split">
-    <div class="lead">
-      <ul>
-        <li>When state changes, the UI updates <strong>automatically</strong>, so you never manually touch the DOM</li>
-        <li>Each directive declares a <strong>relationship</strong> between an attribute and a piece of state</li>
-        <li>Mutation is allowed. You don't have to treat anything as immutable. <code>ctx.currentSlide++</code> just works, and reactivity still fires. (<code>ctx</code> is the block's <em>context</em>, its per-instance data. More on that in a few slides.)</li>
-      </ul>
-    </div>
-    <div class="card" style="border-color: var(--amber);">
-      <p class="big-say" style="margin: 0; font-size: clamp(30px, calc(var(--u) * 2.917), 56px); line-height: 1.2;"><strong>The state updates the UI</strong>, not the other way around.</p>
-    </div>
+    <p class="big-say"><strong>The state updates the UI</strong>, not the other way around.</p>
+    <p class="dim">You describe what the UI should be for a given state, never how to update the DOM step by step. That right-hand side is what you'll build in Section 5.</p>
   </div>
 </section>
 
@@ -788,13 +699,13 @@ wp_interactivity_state(
 
 <!-- ===================== SECTION 5 HELLO, STORE 0:39–0:49 ===================== -->
 
-<section class="slide" data-type="t" data-notes="Re-show the loop with real names filled in. This is the smallest possible version of everything we build today.">
+<section class="slide" data-type="t" data-notes="Re-show the loop with real names filled in. This is the smallest possible version of everything we build today. Point at ctx.currentSlide++: mutation is allowed. Unlike frameworks that force immutability, it just works and reactivity still fires.">
   <div class="eyebrow">Section 5 · Hello, Store <span class="clock">· 0:39–0:49</span></div>
   <h2>The smallest possible loop</h2>
   <div class="cycle">
     <div class="node" data-frag="1"><b>data-wp-on--click</b><span>next button</span></div>
     <div class="node" data-frag="2"><b>actions.nextImage</b><span>in the store</span></div>
-    <div class="node" data-frag="3"><b>ctx.currentSlide++</b><span>context mutates</span></div>
+    <div class="node" data-frag="3"><b>ctx.currentSlide++</b><span>just mutate it</span></div>
     <div class="node" data-frag="4"><b>data-wp-text</b><span>counter re-renders</span></div>
   </div>
   <div class="cycle-back" data-frag="4">⟲ same loop as the primer, with real names now</div>
@@ -1068,7 +979,7 @@ get transitionsSpeed() {
 
 <!-- ===================== WRAP 1:25–1:30 ===================== -->
 
-<section class="slide" data-type="t" data-notes="The arc slide from the opening, everything checked off. Name each concept as you sweep across.">
+<section class="slide" data-type="t" data-notes="The build order from the opening demo, everything checked off. Name each concept as you sweep across.">
   <div class="eyebrow">Wrap-up <span class="clock">· 1:25–1:30</span></div>
   <h2>The arc, revisited</h2>
   <div class="cycle" style="grid-template-columns: repeat(5, 1fr);">
