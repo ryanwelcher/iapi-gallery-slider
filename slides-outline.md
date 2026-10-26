@@ -64,6 +64,7 @@ Timing references the run sheet in `facilitator-notes.md`.
 ## Section 3 — Editor Controls (0:16–0:31 · slides 9–11)
 
 ### Slide 9 [T] — The pieces
+- Speaker note: *this is the pre-planned cut, decide here at 0:16*. Running late? Then demo the finished panel for 3 min, point at the snapshot, jump to slide 12
 - Lead line under the title: "This section is all block editor, with no Interactivity API at all. We're building the Inspector controls for `continuous`, `autoplay`, and `speed`, so the IAPI sections have something to read."
 - `useBlockProps` / `useInnerBlocksProps` + `allowedBlocks` (Image, Cover, Media & Text)
 - `InspectorControls` + `PanelBody` + `SwitchControl` (from `@wordpress/ui`) + `__experimentalNumberControl as NumberControl`
@@ -77,7 +78,6 @@ Timing references the run sheet in `facilitator-notes.md`.
 - **Done when:** block inserts with inner-block area restricted to the 3 types; toggles + conditional number control work
 - **⏱ 10 min** · behind? `code-reference/section-3/src/edit.js`
 - **Done early?** open the post's code editor view and watch the attributes serialize into the block comment
-- Speaker note: *this is the pre-planned cut* — running late, demo the finished panel for 3 min, point at the snapshot, jump to slide 12
 
 ### Slide 11 [C] — Checkpoint
 - Demo: insert block, toggle Autoplay, watch Slide Duration appear

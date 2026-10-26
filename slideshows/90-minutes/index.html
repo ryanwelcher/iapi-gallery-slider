@@ -507,7 +507,7 @@ npm install      <span class="c"># safe to re-run</span>
 
 <!-- ===================== SECTION 3 EDITOR CONTROLS 0:16–0:31 ===================== -->
 
-<section class="slide" data-type="t" data-notes="Say it explicitly: no Interactivity API in this section. We're building the attributes the IAPI sections will read. The import-map callout is the #1 sticking point. InspectorControls comes from block-editor, SwitchControl from the newer @wordpress/ui, and the rest from components. If anyone asks: ToggleControl is the older version, and WordPress now recommends SwitchControl. Alias syntax for NumberControl on screen so nobody has to guess. The panel code is step 4 of section-3.md, trimmed to the Autoplay switch; the conditional NumberControl is the Slide Duration field.">
+<section class="slide" data-type="t" data-notes="PRE-PLANNED CUT, decide now (0:16): running late? Demo the finished panel for 3 minutes, point at the snapshot, then jump to slide 12. Otherwise: say it explicitly, no Interactivity API in this section. We're building the attributes the IAPI sections will read. The packages callout is the #1 sticking point. InspectorControls comes from block-editor, SwitchControl from the newer @wordpress/ui, and the rest from components. If anyone asks: ToggleControl is the older version, and WordPress now recommends SwitchControl. Alias syntax for NumberControl on screen so nobody has to guess. The panel code is step 4 of section-3.md, trimmed to the Autoplay switch; the conditional NumberControl is the Slide Duration field.">
   <div class="eyebrow">Section 3 · Editor Controls <span class="clock">· 0:16–0:31</span></div>
   <h2>The pieces</h2>
   <p class="dim">This section is all block editor, with no Interactivity API at all. We're building the Inspector controls for <code>continuous</code>, <code>autoplay</code>, and <code>speed</code>, so the IAPI sections have something to read.</p>
@@ -543,7 +543,7 @@ import { __ } from '@wordpress/i18n';
   </div>
 </section>
 
-<section class="slide" data-type="p" data-notes="While they work: npm run checkpoint 3, so it's built before the checkpoint slide. PRE-PLANNED CUT: running late? Demo the finished panel 3 min, point at the snapshot, jump ahead 2 slides to the primer. Decide by 0:16.">
+<section class="slide" data-type="p" data-notes="While they work: npm run checkpoint 3, so it's built before the checkpoint slide.">
   <div class="eyebrow">Section 3 · Lab <span class="clock">· ⏱ 10 min</span></div>
   <h2>Build <code style="font-family: var(--mono); font-size: 0.8em;">edit.js</code></h2>
   <dl class="lab-grid">
@@ -638,7 +638,7 @@ nextImage: () =&gt; {
   </div>
 </section>
 
-<section class="slide" data-type="t" data-notes="Read the directive like a sentence, left to right: data-wp prefix, directive name, parameter after the double dash. The -- pattern generalizes to any event, attribute, or CSS property.">
+<section class="slide" data-type="t" data-notes="Read the directive like a sentence, left to right: data-wp prefix, directive name, parameter after the double dash, then the optional ---id after three dashes (new in 6.9), so the same directive can appear twice on one element. The -- pattern generalizes to any event, attribute, or CSS property.">
   <div class="eyebrow">Section 4 · IAPI Primer</div>
   <h2>Anatomy of a directive</h2>
   <div style="font-family: var(--mono); font-size: clamp(22px, calc(var(--u) * 2.396), 46px); font-weight: 600; margin: 2vh 0 3vh;">
@@ -748,7 +748,7 @@ store( '<mark>iapi-gallery</mark>', { … } );</pre>
   </div>
 </section>
 
-<section class="slide" data-type="p" data-notes="While they work: npm run checkpoint 5, so it's built before the checkpoint slide. Walk the room. Silent failure = namespace typo. Console error = watcher not running, stale build. Counter blank = they wrote state.currentSlide instead of context.currentSlide.">
+<section class="slide" data-type="p" data-notes="While they work: npm run checkpoint 5, so it's built before the checkpoint slide. Walk the room. Silent failure = namespace typo. Nothing changes after an edit = watcher not running. Console error = typo in view.js, check the line it points to. Counter blank = they wrote state.currentSlide instead of context.currentSlide.">
   <div class="eyebrow">Section 5 · Lab <span class="clock">· ⏱ 7 min</span></div>
   <h2>First round-trip</h2>
   <dl class="lab-grid">
@@ -878,7 +878,7 @@ wp_interactivity_state(
   </div>
 </section>
 
-<section class="slide" data-type="p" data-notes="While they work: npm run checkpoint 7, so it's built before the checkpoint slide. Sticking points: hook-name mismatch; class names are wp-block-image, NOT core/image. PHP is live, with no watcher on that side.">
+<section class="slide" data-type="p" data-notes="While they work: npm run checkpoint 7, so it's built before the checkpoint slide. Sticking points: hook-name mismatch; class names are wp-block-image, NOT core/image. The plugin file is live with no build step, but src/render.php still goes through the watcher, so npm run start has to be running.">
   <div class="eyebrow">Section 7 · Lab <span class="clock">· ⏱ 8 min</span></div>
   <h2>Real counts, no flash</h2>
   <dl class="lab-grid">
@@ -965,7 +965,7 @@ get transitionsSpeed() {
   <div class="lab-warn">⚑ Setup edits first (<code>autoplay</code> and <code>speed</code> into the PHP context, then prep <code>view.js</code>), then save + reload. Behavior should be <em>unchanged</em> before you add the callbacks block.</div>
 </section>
 
-<section class="slide" data-type="c" data-demo="demo · switch to Studio" data-notes="Checkpoint 8 is already live from the lab: Ctrl+Tab to the site and reload. Afterwards, npm run checkpoint reset. Demo autoplay at two speeds; toggle off mid-run. 'That's the complete slider.'">
+<section class="slide" data-type="c" data-demo="demo · switch to Studio" data-notes="Checkpoint 8 is already live from the lab: Ctrl+Tab to the site and reload. Afterwards, run npm run checkpoint 9 so the finished slider is ready for Q&A, and run npm run checkpoint reset after the session. Demo autoplay at two speeds; toggle off mid-run. 'That's the complete slider.'">
   <div class="eyebrow">Section 8 · Checkpoint</div>
   <h2>You should now have…</h2>
   <p class="big-say">Toggle Autoplay on → it runs at your speed. Toggle off → it stops, cleanly.</p>

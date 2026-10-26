@@ -25,7 +25,7 @@ Present with a mirrored display, and keep everything in one full-screen browser 
 2. Before the session, run `npm run checkpoint 9`. The opening demo then shows the finished slider.
 3. While each lab runs, run `npm run checkpoint <N>` for that section (3, 5, 6, 7, 8), so it's built by the checkpoint slide. Each lab slide's speaker notes say which one, and each section below repeats it.
 4. Press **Ctrl+Tab** to go to the site and reload it. Press **Ctrl+Shift+Tab** to go back to the deck. The deck stays on the same slide and build step.
-5. After the last checkpoint, run `npm run checkpoint reset` to put the plugin back to the starter.
+5. After the last checkpoint, run `npm run checkpoint 9` so the finished slider is ready for Q&A. After the session, run `npm run checkpoint reset` to put the plugin back to the starter.
 
 The script builds `code-reference/section-<N>/` straight into `build/` and swaps in that section's `iapi-gallery-slider.php`. It never touches `src/`. **Don't run `npm run start` on the demo machine during the session**, because the watcher rebuilds `build/` from `src/` and undoes the checkpoint.
 
@@ -178,7 +178,7 @@ If the wheels come off early (wifi, Studio installs), the floor is: Sections 1â€
 
 **Goal:** `callbacks` + `data-wp-init` start a rAF loop when the Autoplay toggle is on; `withScope` keeps ticks inside the IAPI scope; returned cleanup cancels the frame.
 
-**Your demo site:** run `npm run checkpoint 8` during the lab, then Ctrl+Tab and reload at the checkpoint. Run `npm run checkpoint reset` after the session.
+**Your demo site:** run `npm run checkpoint 8` during the lab, then Ctrl+Tab and reload at the checkpoint. Afterwards, run `npm run checkpoint 9` for Q&A, and `npm run checkpoint reset` after the session.
 
 **Talking points:**
 - Use the section's built-in **mid-section checkpoint**: after the four `view.js` setup edits, save/reload and confirm nothing changed before writing the callbacks block. Cheap insurance against compound errors.
