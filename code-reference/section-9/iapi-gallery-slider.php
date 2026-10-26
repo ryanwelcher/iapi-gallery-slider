@@ -87,7 +87,7 @@ function iapi_gallery_slider_inject_context( $block_content, $block ) {
 	// Seed derived state so the first paint matches what the client getters
 	// compute. Each closure runs once per slider against that slider's own
 	// context. Continuous mode keeps both ends navigable from first paint,
-	// so noPrevSlide returns false when the continuous flag is on.
+	// so noPrevSlide and noNextSlide return false when the continuous flag is on.
 	wp_interactivity_state(
 		'iapi-gallery',
 		array(
@@ -97,6 +97,13 @@ function iapi_gallery_slider_inject_context( $block_content, $block ) {
 					return false;
 				}
 				return 1 === $ctx['currentSlide'];
+			},
+			'noNextSlide' => function () {
+				$ctx = wp_interactivity_get_context();
+				if ( $ctx['continuous'] ) {
+					return false;
+				}
+				return $ctx['currentSlide'] === $ctx['totalSlides'];
 			},
 			'imageIndex'  => function () {
 				$ctx = wp_interactivity_get_context();

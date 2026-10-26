@@ -202,13 +202,17 @@ A focus ring is the only cue keyboard users get that they've arrived somewhere. 
    );
    ```
 
-   **b.** Update the `noPrevSlide` closure in the `wp_interactivity_state()` call we added in Section 7. When continuous is on, the prev button should be enabled from first paint, so the closure returns `false` before it checks the slide. It's the same line you're about to add to the client getter in step 2a. Before/after:
+   **b.** Update the `noPrevSlide` and `noNextSlide` closures in the `wp_interactivity_state()` call we added in Section 7. When continuous is on, both buttons should be enabled from first paint, so each closure returns `false` before it checks the slide. It's the same check you're about to add to the client getters in steps 2a and 2b. Before/after:
 
    ```php
    // Before (end of Section 7, unchanged through Section 8):
    'noPrevSlide' => function () {
        $ctx = wp_interactivity_get_context();
        return 1 === $ctx['currentSlide'];
+   },
+   'noNextSlide' => function () {
+       $ctx = wp_interactivity_get_context();
+       return $ctx['currentSlide'] === $ctx['totalSlides'];
    },
 
    // After:
@@ -218,6 +222,13 @@ A focus ring is the only cue keyboard users get that they've arrived somewhere. 
            return false;
        }
        return 1 === $ctx['currentSlide'];
+   },
+   'noNextSlide' => function () {
+       $ctx = wp_interactivity_get_context();
+       if ( $ctx['continuous'] ) {
+           return false;
+       }
+       return $ctx['currentSlide'] === $ctx['totalSlides'];
    },
    ```
 2. In `src/view.js`, four edits: two getters in the `state` block and two actions in the `actions` block. All four exist already; you're modifying them in place.

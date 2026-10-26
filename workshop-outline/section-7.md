@@ -74,7 +74,7 @@ This is the section where the slider becomes adaptive to whatever inner blocks t
 5. Add a `wp_interactivity_state()` call just before the `$slides->set_attribute(...)` line at the end of the function:
 
    ```php
-   // Seed derived state so the first paint has the correct disabled button
+   // Seed derived state so the first paint has the correct disabled buttons
    // and counter, with no flash. Each closure mirrors its client getter and
    // runs once per slider against that slider's own context, so two sliders
    // on one page each get their own values.
@@ -84,6 +84,10 @@ This is the section where the slider becomes adaptive to whatever inner blocks t
            'noPrevSlide' => function () {
                $ctx = wp_interactivity_get_context();
                return 1 === $ctx['currentSlide'];
+           },
+           'noNextSlide' => function () {
+               $ctx = wp_interactivity_get_context();
+               return $ctx['currentSlide'] === $ctx['totalSlides'];
            },
            'imageIndex'  => function () {
                $ctx = wp_interactivity_get_context();

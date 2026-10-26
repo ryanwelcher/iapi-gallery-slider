@@ -754,6 +754,7 @@ wp_interactivity_state(
     'iapi-gallery',
     array(
         'noPrevSlide' =&gt; function () { … },
+        'noNextSlide' =&gt; function () { … },
         'imageIndex'  =&gt; function () { … },
     )
 );</pre>
@@ -953,6 +954,10 @@ wp_interactivity_state(
         'noPrevSlide' =&gt; function () {
             $ctx = wp_interactivity_get_context();
             return 1 === $ctx['currentSlide'];
+        },
+        'noNextSlide' =&gt; function () {
+            $ctx = wp_interactivity_get_context();
+            return $ctx['currentSlide'] === $ctx['totalSlides'];
         },
         'imageIndex'  =&gt; function () {
             $ctx = wp_interactivity_get_context();

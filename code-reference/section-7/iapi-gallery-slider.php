@@ -74,7 +74,7 @@ function iapi_gallery_slider_inject_context( $block_content, $block ) {
 		'totalSlides'  => $total_slides,
 	);
 
-	// Seed derived state so the first paint has the correct disabled button
+	// Seed derived state so the first paint has the correct disabled buttons
 	// and counter, with no flash. Each closure mirrors its client getter and
 	// runs once per slider against that slider's own context, so two sliders
 	// on one page each get their own values.
@@ -84,6 +84,10 @@ function iapi_gallery_slider_inject_context( $block_content, $block ) {
 			'noPrevSlide' => function () {
 				$ctx = wp_interactivity_get_context();
 				return 1 === $ctx['currentSlide'];
+			},
+			'noNextSlide' => function () {
+				$ctx = wp_interactivity_get_context();
+				return $ctx['currentSlide'] === $ctx['totalSlides'];
 			},
 			'imageIndex'  => function () {
 				$ctx = wp_interactivity_get_context();
