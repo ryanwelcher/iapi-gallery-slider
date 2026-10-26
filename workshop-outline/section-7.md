@@ -93,9 +93,9 @@ This is the section where the slider becomes adaptive to whatever inner blocks t
    );
    ```
 
-   Two things to notice about these seed values:
-   - They're closures that mirror the getters in `src/view.js`. `wp_interactivity_get_context()` does on the server what `getContext()` does in the browser: it returns the context of the element being processed. Put `noPrevSlide` here next to `get noPrevSlide()` in `view.js` and it's the same logic in two languages. The contract is that the seeded value *must mirror what the client getter computes on first paint*. If they disagree, hydration will visibly snap the counter from one value to another, which is the flash we're trying to kill.
-   - Why not plain values like `'imageIndex' => "1/4"`? State is global, so it holds one value per page. That's fine for one slider. With two sliders, the last one rendered wins and the other one's counter snaps on hydration. A closure runs once for each element that reads it, so every slider gets its own answer. This works because our filter writes `data-wp-context` *before* WordPress processes the directives.
+   Notice a couple of things about these seed values.
+   - They're closures that match the getters in `src/view.js`. `wp_interactivity_get_context()` is basically the PHP version of `getContext()`. It hands you the context of whatever element WordPress is processing right now. Put `noPrevSlide` here next to `get noPrevSlide()` in `view.js` and it's the same logic in two languages. The contract is that the seeded value *must mirror what the client getter computes on first paint*. If they disagree, hydration will visibly snap the counter from one value to another, which is the flash we're trying to kill.
+   - Why not plain values like `'imageIndex' => "1/4"`? State is global, so it only holds one value per page. That's fine with one slider, but add a second one and the last one rendered wins, so the other slider's counter snaps on hydration. A closure runs once for each element that reads it, so every slider gets its own answer. This works because our filter writes `data-wp-context` *before* WordPress processes the directives.
 
    Reload. Flash gone.
 
