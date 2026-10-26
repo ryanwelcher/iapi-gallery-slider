@@ -111,7 +111,7 @@ Five fast beats, content drawn from the "From Static to Dynamic" talk.
 - Closing line names the seven directives used today (wp-interactive, wp-context, wp-bind, wp-style, wp-text, wp-on, wp-init); the rest are there when you need them
 
 ### Slide 16 [T] — Three kinds of data ★ reused in Sections 6 and 7
-- Three cards, each with a "when to use" rule and a slider-based code sample: global state (`wp_interactivity_state()`, trimmed to the Section 7 closures) · local context (`wp_interactivity_data_wp_context()` + its rendered `data-wp-context` output) · derived state (the `imageIndex` getter, full width)
+- Three cards, each with a "when to use" rule and a slider-based code sample: global state (`wp_interactivity_state()` with a page-wide `isLightboxOpen` flag, labeled as an example that isn't in today's plugin) · local context (`wp_interactivity_data_wp_context()` + its rendered `data-wp-context` output) · derived state (the `imageIndex` getter, full width)
 - The sentence that predicts every later bug: **"context is per-instance; state is shared and derived"**
 - Config, the fourth kind, waits for slide 34 (Beyond today)
 
@@ -200,7 +200,6 @@ Five fast beats, content drawn from the "From Static to Dynamic" talk.
 ## Section 8 — Autoplay (1:12–1:25 · slides 28–31)
 
 ### Slide 28 [T] — Callbacks: the third part
-- First bullet: the Section 7 filter now also passes `autoplay` and `speed` into context, so the store can read the editor's settings
 - Store diagram grows its third branch: `state` / `actions` / **`callbacks`**
 - `data-wp-init` fires at element initialization; returning a function *is* the cleanup registration
 - Why destructure `const { state, actions } = store(…)`: callbacks call actions directly from a rAF tick
@@ -213,7 +212,8 @@ Five fast beats, content drawn from the "From Static to Dynamic" talk.
 ### Slide 30 [P] — LAB: autoplay
 - **Mission:** Autoplay toggle drives the slider at the chosen speed; loop cleans up
 - **Files:** `src/view.js` · `iapi-gallery-slider.php` · `src/render.php`
-- **Where:** `workshop-outline/section-8.md` — setup edits first, then **mid-lab checkpoint** (save/reload, behavior unchanged), then the callbacks block
+- **Where:** `workshop-outline/section-8.md`
+- **⚑ line:** setup edits first (`autoplay` and `speed` into the PHP context, then prep `view.js`), then save + reload with behavior unchanged, then the callbacks block
 - **Done when:** autoplay advances and wraps; toggling off stops it; no leaked frames
 - **⏱ 9 min** · behind? `code-reference/section-8/`
 - **Done early?** two sliders on one page at different speeds — proof context is per-instance
@@ -238,7 +238,8 @@ Five fast beats, content drawn from the "From Static to Dynamic" talk.
 ### Slide 34 [T] — Beyond today
 - Client-side navigation with `@wordpress/interactivity-router` — router regions swap page content in place, interactive state survives navigation
 - `wp-each` for dynamic lists from state arrays · `wp_interactivity_config()` / `getConfig()` for REST URLs and nonces
-- TypeScript support — typed stores and context (WP 6.9+)
+- `watch()` (WP 7.0) to react to state changes from store code, with no DOM element needed
+- TypeScript support for typed stores and context, with async action typing helpers new in WP 6.9
 - Card on the right, "Where to go next": Interactivity API reference on developer.wordpress.org · Block Editor Handbook · #core-interactivity-api on Make WordPress Slack
 
 ### Slide 35 [T] — Thanks / Q&A

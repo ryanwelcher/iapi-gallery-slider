@@ -654,22 +654,20 @@ nextImage: () =&gt; {
   <p class="dim" data-frag="5">Today you'll use seven of them: <code>wp-interactive</code>, <code>wp-context</code>, <code>wp-bind</code>, <code>wp-style</code>, <code>wp-text</code>, <code>wp-on</code>, and <code>wp-init</code>. The rest are there when you need them.</p>
 </section>
 
-<section class="slide" data-type="t" data-notes="★ REUSED in Sections 6 and 7. Config (REST URLs, nonces) is the fourth kind; it waits for the Beyond today slide. Say it out loud: two sliders on one page each carry their own context; one store serves them both. Read from the wrong branch and the value is undefined, or it's the other slider's. THE sentence: context is per-instance; state is shared and derived.">
+<section class="slide" data-type="t" data-notes="★ REUSED in Sections 6 and 7. The global-state card is a made-up example (one lightbox for the whole page); say so. Today's build uses wp_interactivity_state() for derived state in Section 7 instead. Config (REST URLs, nonces) is the fourth kind; it waits for the Beyond today slide. Say it out loud: two sliders on one page each carry their own context; one store serves them both. Read from the wrong branch and the value is undefined, or it's the other slider's. THE sentence: context is per-instance; state is shared and derived.">
   <div class="eyebrow">Section 4 · IAPI Primer <span class="clock">· ★ the distinction</span></div>
   <h2>Three kinds of data</h2>
   <div class="grid2">
     <div class="card" data-frag="1">
-      <h3>Global state <span class="dim" style="text-transform: none; letter-spacing: 0;">· when blocks share data, or the server seeds a value</span></h3>
-      <pre class="code mini"><span class="c">// trimmed</span>
+      <h3>Global state <span class="dim" style="text-transform: none; letter-spacing: 0;">· when the whole page shares one value</span></h3>
+      <pre class="code mini"><span class="c">// example, not in today's plugin</span>
 wp_interactivity_state(
     'iapi-gallery',
     array(
-        'noPrevSlide' =&gt; function () { … },
-        'noNextSlide' =&gt; function () { … },
-        'imageIndex'  =&gt; function () { … },
+        'isLightboxOpen' =&gt; false,
     )
 );</pre>
-      <span class="file-tag">iapi-gallery-slider.php · Section 7</span>
+      <span class="file-tag">PHP · one value for every slider on the page</span>
     </div>
     <div class="card" data-frag="2">
       <h3>Local context <span class="dim" style="text-transform: none; letter-spacing: 0;">· when each instance is independent</span></h3>
@@ -825,7 +823,7 @@ store( '<mark>iapi-gallery</mark>', { … } );</pre>
 
 <!-- ===================== SECTION 7 SERVER-SIDE 0:59–1:12 ===================== -->
 
-<section class="slide" data-type="t" data-notes="The bookmark/seek walk is the star. Exact hook name on screen. And the inheritance point. We do NOT set data-wp-interactive on inner blocks; flash back to the opt-in pair slide.">
+<section class="slide" data-type="t" data-notes="The bookmark/seek walk is the star. Exact hook name on screen; it includes our block name, so it never runs for any other block. And the inheritance point. We do NOT set data-wp-interactive on inner blocks; flash back to the opt-in pair slide.">
   <div class="eyebrow">Section 7 · Server-Side Injection <span class="clock">· 0:59–1:12</span></div>
   <h2>The render filter walk</h2>
   <p class="dim" style="margin-top: -1vh;">The count is still hardcoded to 3. On the server, the filter sees the real inner blocks, so it can count them.</p>
@@ -843,8 +841,7 @@ store( '<mark>iapi-gallery</mark>', { … } );</pre>
   'iapi_gallery_slider_inject_context',
   10, 2
 );</pre>
-      <p style="margin-top: 1.5vh;">The filter counts the slides inside the slider. Because the hook name includes our block name, it never runs for any other block.</p>
-      <p class="dim">We do <strong>not</strong> set <code>data-wp-interactive</code> on inner blocks. Descendants inherit the wrapper's namespace. ★</p>
+      <p class="dim" style="margin-top: 1.5vh;">We do <strong>not</strong> set <code>data-wp-interactive</code> on inner blocks. Descendants inherit the wrapper's namespace. ★</p>
     </div>
   </div>
 </section>
@@ -914,14 +911,13 @@ wp_interactivity_state(
   </div>
   <div class="split" style="margin-top: 3vh;" data-frag="3">
     <ul>
-      <li>The Section 7 filter now also passes <code>autoplay</code> and <code>speed</code> into context, so the store can read the editor's settings</li>
       <li><code>data-wp-init</code> fires when the element initializes. We add <code>data-wp-init="callbacks.initSlideShow"</code> to the wrapper in <code>render.php</code></li>
       <li><strong>Returning a function</strong> from a callback <em>is</em> the cleanup registration, and it runs when the element leaves the DOM</li>
       <li>Inside a callback you're in plain JS, so you can't look up <code>actions.nextImage</code> by name the way a directive does. Destructure <code>store()</code> to get real references</li>
     </ul>
     <pre class="code"><span class="c">// store() returns the object you passed —</span>
 <span class="c">// with the getters live</span>
-const { <mark data-step-mark="4">state, actions</mark> } =
+const { <mark data-step-mark="3">state, actions</mark> } =
     store( 'iapi-gallery', { … } );</pre>
   </div>
 </section>
@@ -933,7 +929,6 @@ const { <mark data-step-mark="4">state, actions</mark> } =
     <div class="lead">
       <p class="big-say">A <code>requestAnimationFrame</code> tick runs <strong>outside the Interactivity scope</strong>. Without the wrapper, <code>getContext()</code> and <code>state</code> are undefined.</p>
       <p class="big-say">Remember the <code>speed</code> <strong>string</strong> from Section 2? Convert it to a number before you multiply.</p>
-      <p class="dim">Why <code>requestAnimationFrame</code> and not <code>setInterval</code>? It lines up with the browser's repaint and pauses when the tab is hidden. <code>setInterval</code> keeps firing in the background.</p>
     </div>
     <pre class="code">let start = null;
 let rafId = null;
@@ -961,13 +956,13 @@ get transitionsSpeed() {
   <h2>Autoplay</h2>
   <dl class="lab-grid">
     <dt>Mission</dt><dd>The Autoplay toggle drives the slider at the chosen speed; the loop cleans up after itself</dd>
-    <dt>Where</dt><dd><a class="repo-link" href="https://github.com/ryanwelcher/iapi-gallery-slider/blob/trunk/workshop-outline/section-8.md" target="_blank" rel="noopener"><code>workshop-outline/section-8.md</code></a>. Do the setup edits first: add <code>autoplay</code> and <code>speed</code> to the context in PHP, then prep <code>view.js</code>. Add the callbacks block last</dd>
+    <dt>Where</dt><dd><a class="repo-link" href="https://github.com/ryanwelcher/iapi-gallery-slider/blob/trunk/workshop-outline/section-8.md" target="_blank" rel="noopener"><code>workshop-outline/section-8.md</code></a></dd>
     <dt>Files</dt><dd><code>src/view.js</code> · <code>iapi-gallery-slider.php</code> · <code>src/render.php</code></dd>
     <dt>Done when</dt><dd>Autoplay advances and wraps · toggling off stops it · no leaked frames</dd>
     <dt>Rescue</dt><dd><a class="repo-link" href="https://github.com/ryanwelcher/iapi-gallery-slider/tree/trunk/code-reference/section-8" target="_blank" rel="noopener"><code>code-reference/section-8/</code></a></dd>
     <dt>Done early?</dt><dd>Two sliders on one page at different speeds, which proves that context is per-instance</dd>
   </dl>
-  <div class="lab-warn">⚑ Mid-lab checkpoint: after the setup edits, save + reload. Behavior should be <em>unchanged</em> before you add the callbacks block.</div>
+  <div class="lab-warn">⚑ Setup edits first (<code>autoplay</code> and <code>speed</code> into the PHP context, then prep <code>view.js</code>), then save + reload. Behavior should be <em>unchanged</em> before you add the callbacks block.</div>
 </section>
 
 <section class="slide" data-type="c" data-demo="demo · switch to Studio" data-notes="Checkpoint 8 is already live from the lab: Ctrl+Tab to the site and reload. Afterwards, npm run checkpoint reset. Demo autoplay at two speeds; toggle off mid-run. 'That's the complete slider.'">
@@ -1020,7 +1015,8 @@ get transitionsSpeed() {
     <li><strong>Client-side navigation</strong> with <code>@wordpress/interactivity-router</code>. Router regions swap page content in place, and interactive state survives navigation</li>
     <li><strong>wp-each</strong> to render dynamic lists straight from state arrays</li>
     <li><strong>Config</strong> with <code>wp_interactivity_config()</code> / <code>getConfig()</code> for REST URLs and nonces</li>
-    <li><strong>TypeScript support</strong> for typed stores and context (WP 6.9+)</li>
+    <li><strong>watch()</strong> (WP 7.0) to react to state changes from store code, with no DOM element needed</li>
+    <li><strong>TypeScript support</strong> for typed stores and context, with async action typing helpers new in WP 6.9</li>
   </ul>
     <div class="card">
       <h3>Where to go next</h3>
