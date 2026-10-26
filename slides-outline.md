@@ -126,7 +126,7 @@ Seven fast beats, content drawn from the "From Static to Dynamic" talk.
 - Closing line names the seven directives used today (wp-interactive, wp-context, wp-bind, wp-style, wp-text, wp-on, wp-init); the rest are there when you need them
 
 ### Slide 21 [T] — Three kinds of data ★ reused in Sections 6 and 7
-- Three cards, each with a "when to use" rule and a slider-based code sample: global state (`wp_interactivity_state()`) · local context (`wp_interactivity_data_wp_context()` + its rendered `data-wp-context` output) · derived state (the `imageIndex` getter, full width)
+- Three cards, each with a "when to use" rule and a slider-based code sample: global state (`wp_interactivity_state()`, trimmed to the Section 7 closures) · local context (`wp_interactivity_data_wp_context()` + its rendered `data-wp-context` output) · derived state (the `imageIndex` getter, full width)
 - The sentence that predicts every later bug: **"context is per-instance; state is shared and derived"**
 - Config, the fourth kind, waits for slide 39 (Beyond today)
 
@@ -193,6 +193,7 @@ Seven fast beats, content drawn from the "From Static to Dynamic" talk.
 - Two-frame visual: pre-hydration empty counter → hydrated "1/N"
 - Live demo on the projector with CPU 6× + Slow 4G throttling — "on your fast laptop you may never see it; real devices do"
 - The fix: whatever you pass to `wp_interactivity_state()` **must match what the client getter computes** on first paint
+- The fix's code: `wp_interactivity_state()` closures that call `wp_interactivity_get_context()`, so each slider gets its own first-paint values (plain values are global, and with two sliders the last one rendered wins)
 
 ### Slide 31 [P] — LAB: real slide counts, no flash
 - **Mission:** filter counts inner blocks and seeds context + state

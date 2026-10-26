@@ -202,26 +202,23 @@ A focus ring is the only cue keyboard users get that they've arrived somewhere. 
    );
    ```
 
-   **b.** Update the `wp_interactivity_state()` call we added in Section 7. When continuous is on, the prev button should be enabled from first paint — so seed `noPrevSlide` as the inverse of continuous. Before/after:
+   **b.** Update the `noPrevSlide` closure in the `wp_interactivity_state()` call we added in Section 7. When continuous is on, the prev button should be enabled from first paint, so the closure returns `false` before it checks the slide. It's the same line you're about to add to the client getter in step 2a. Before/after:
 
    ```php
    // Before (end of Section 7, unchanged through Section 8):
-   wp_interactivity_state(
-       'iapi-gallery',
-       array(
-           'noPrevSlide' => true,
-           'imageIndex'  => "{$context['currentSlide']}/{$context['totalSlides']}",
-       )
-   );
+   'noPrevSlide' => function () {
+       $ctx = wp_interactivity_get_context();
+       return 1 === $ctx['currentSlide'];
+   },
 
    // After:
-   wp_interactivity_state(
-       'iapi-gallery',
-       array(
-           'noPrevSlide' => ! $context['continuous'],
-           'imageIndex'  => "{$context['currentSlide']}/{$context['totalSlides']}",
-       )
-   );
+   'noPrevSlide' => function () {
+       $ctx = wp_interactivity_get_context();
+       if ( $ctx['continuous'] ) {
+           return false;
+       }
+       return 1 === $ctx['currentSlide'];
+   },
    ```
 2. In `src/view.js`, four edits: two getters in the `state` block and two actions in the `actions` block. All four exist already; you're modifying them in place.
 

@@ -749,11 +749,12 @@ nextImage: () =&gt; {
   <div class="grid2">
     <div class="card" data-frag="1">
       <h3>Global state <span class="dim" style="text-transform: none; letter-spacing: 0;">· when blocks share data, or the server seeds a value</span></h3>
-      <pre class="code mini">wp_interactivity_state(
+      <pre class="code mini"><span class="c">// trimmed</span>
+wp_interactivity_state(
     'iapi-gallery',
     array(
-        'noPrevSlide' =&gt; true,
-        'imageIndex'  =&gt; …,
+        'noPrevSlide' =&gt; function () { … },
+        'imageIndex'  =&gt; function () { … },
     )
 );</pre>
       <span class="file-tag">iapi-gallery-slider.php · Section 7</span>
@@ -936,7 +937,7 @@ store( '<mark>iapi-gallery</mark>', { … } );</pre>
   </div>
 </section>
 
-<section class="slide" data-type="t" data-demo="demo · Studio + DevTools throttling" data-notes="Still on checkpoint 6: that version has the flash, which is the point. LIVE demo on the projector: CPU 6x + Slow 4G, hard reload. Empty counter, then '1/N' snaps in. On their fast laptops they may never see it; real devices do. Then the fix and the contract.">
+<section class="slide" data-type="t" data-demo="demo · Studio + DevTools throttling" data-notes="Still on checkpoint 6: that version has the flash, which is the point. LIVE demo on the projector: CPU 6x + Slow 4G, hard reload. Empty counter, then '1/N' snaps in. On their fast laptops they may never see it; real devices do. Then the fix and the contract. Why closures: state is global, one value per page. Plain values work for one slider, but with two the last one rendered wins. Each closure reads its own slider's context, the PHP twin of getContext().">
   <div class="eyebrow">Section 7 · Server-Side Injection</div>
   <h2>The hydration flash</h2>
   <div class="split" style="grid-template-columns: 1fr 2.6fr;">
@@ -945,12 +946,18 @@ store( '<mark>iapi-gallery</mark>', { … } );</pre>
       <div class="card" style="border-color: var(--green);"><h3 style="color: var(--green);">frame 2 · hydrated</h3><p style="font-family: var(--mono);">‹ &nbsp;1/4&nbsp; ›<br><span class="dim">counter: filled</span></p></div>
     </div>
     <div class="lead">
-      <pre class="code"><span class="c">// the fix: seed state server-side</span>
+      <pre class="code"><span class="c">// the fix: seed derived state server-side, per slider</span>
 wp_interactivity_state(
     'iapi-gallery',
     array(
-        'noPrevSlide' =&gt; true,
-        'imageIndex'  =&gt; "{$context['currentSlide']}/{$context['totalSlides']}",
+        'noPrevSlide' =&gt; function () {
+            $ctx = wp_interactivity_get_context();
+            return 1 === $ctx['currentSlide'];
+        },
+        'imageIndex'  =&gt; function () {
+            $ctx = wp_interactivity_get_context();
+            return "{$ctx['currentSlide']}/{$ctx['totalSlides']}";
+        },
     )
 );</pre>
       <p class="big-say" style="margin-top: 1.5vh;">Whatever you pass to <code>wp_interactivity_state()</code> has to match <strong>what the client getter computes</strong> on first paint. If they disagree, hydration visibly snaps the counter.</p>

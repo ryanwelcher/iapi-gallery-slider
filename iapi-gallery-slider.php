@@ -3,7 +3,7 @@
  * Plugin Name:       IAPI Gallery Slider
  * Description:       An interactive block with the Interactivity API
  * Version:           1.0.0
- * Requires at least: 6.4
+ * Requires at least: 6.6
  * Requires PHP:      7.0
  * Author:            Ryan Welcher
  * License:           GPL-2.0-or-later

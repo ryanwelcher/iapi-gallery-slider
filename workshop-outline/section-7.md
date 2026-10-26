@@ -4,7 +4,7 @@
 
 ## Goal
 
-Stop hardcoding `totalSlides`. Use a `render_block_*` filter with `WP_HTML_Tag_Processor` to count the inner blocks at render time and seed the wrapper's `data-wp-context` with the real number. Then use `wp_interactivity_state()` to seed initial global state so the first paint matches the interactive state with no client-side flash.
+Stop hardcoding `totalSlides`. Use a `render_block_*` filter with `WP_HTML_Tag_Processor` to count the inner blocks at render time and seed the wrapper's `data-wp-context` with the real number. Then use `wp_interactivity_state()` with closures to compute derived state on the server so the first paint matches the interactive state with no client-side flash.
 
 This is the section where the slider becomes adaptive to whatever inner blocks the editor placed in it.
 
@@ -14,7 +14,7 @@ This is the section where the slider becomes adaptive to whatever inner blocks t
 - `WP_HTML_Tag_Processor` — `next_tag`, `class_list`, `set_attribute`.
 - `set_bookmark` / `seek` / `release_bookmark` — single-pass walk that returns to the wrapper after counting.
 - **Namespace inheritance.** `data-wp-interactive` is declared once on the wrapper; every descendant resolves directives against that namespace. We do *not* call `set_attribute( 'data-wp-interactive', … )` on inner blocks. Setting it again would be redundant and would suggest (incorrectly) that every interactive element needs its own namespace declaration.
-- `wp_interactivity_state()` — seeding global state to avoid client-side flash. Different from `wp_interactivity_data_wp_context()`: state is shared across instances; context is per-instance.
+- `wp_interactivity_state()` with closures: server-side derived state to avoid client-side flash. State is shared across instances and context is per-instance, so each closure calls `wp_interactivity_get_context()` (the PHP twin of `getContext()`) to read the context of the slider being rendered. Needs WordPress 6.6 or later.
 
 ## Steps
 
@@ -74,20 +74,28 @@ This is the section where the slider becomes adaptive to whatever inner blocks t
 5. Add a `wp_interactivity_state()` call just before the `$slides->set_attribute(...)` line at the end of the function:
 
    ```php
-   // Seed initial global state to match what the client getters would compute,
-   // so the first paint has the correct disabled button and counter — no flash.
+   // Seed derived state so the first paint has the correct disabled button
+   // and counter, with no flash. Each closure mirrors its client getter and
+   // runs once per slider against that slider's own context, so two sliders
+   // on one page each get their own values.
    wp_interactivity_state(
        'iapi-gallery',
        array(
-           'noPrevSlide' => true,
-           'imageIndex'  => "{$context['currentSlide']}/{$context['totalSlides']}",
+           'noPrevSlide' => function () {
+               $ctx = wp_interactivity_get_context();
+               return 1 === $ctx['currentSlide'];
+           },
+           'imageIndex'  => function () {
+               $ctx = wp_interactivity_get_context();
+               return "{$ctx['currentSlide']}/{$ctx['totalSlides']}";
+           },
        )
    );
    ```
 
    Two things to notice about these seed values:
-   - `noPrevSlide => true` is hardcoded because first paint is always on slide 1, so the prev button must start disabled. The client getter will recompute on every render after hydration.
-   - `imageIndex` is built from the same `$context` values we just assembled. The contract here is that the seeded value *must mirror what the client getter computes on first paint* — if they disagree, hydration will visibly snap the counter from one value to another, which is the flash we're trying to kill.
+   - They're closures that mirror the getters in `src/view.js`. `wp_interactivity_get_context()` does on the server what `getContext()` does in the browser: it returns the context of the element being processed. Put `noPrevSlide` here next to `get noPrevSlide()` in `view.js` and it's the same logic in two languages. The contract is that the seeded value *must mirror what the client getter computes on first paint*. If they disagree, hydration will visibly snap the counter from one value to another, which is the flash we're trying to kill.
+   - Why not plain values like `'imageIndex' => "1/4"`? State is global, so it holds one value per page. That's fine for one slider. With two sliders, the last one rendered wins and the other one's counter snaps on hydration. A closure runs once for each element that reads it, so every slider gets its own answer. This works because our filter writes `data-wp-context` *before* WordPress processes the directives.
 
    Reload. Flash gone.
 

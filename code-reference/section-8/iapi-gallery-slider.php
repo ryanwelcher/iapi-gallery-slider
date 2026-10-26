@@ -3,7 +3,7 @@
  * Plugin Name:       IAPI Gallery Slider
  * Description:       An interactive block with the Interactivity API
  * Version:           1.0.0
- * Requires at least: 6.4
+ * Requires at least: 6.6
  * Requires PHP:      7.0
  * Author:            Ryan Welcher
  * License:           GPL-2.0-or-later
@@ -36,8 +36,8 @@ add_action( 'init', 'iapi_gallery_slider_block_init' );
 
 /**
  * Filter the rendered block to count inner slide blocks, seed the wrapper's
- * data-wp-context with the real slide total, and seed initial global state so
- * the slider's first paint matches its interactive state (no client-side flash).
+ * data-wp-context with the real slide total, and seed server-side derived state
+ * so the slider's first paint matches its interactive state (no client-side flash).
  *
  * @param string $block_content The rendered block markup.
  * @param array  $block         The parsed block, including attributes.
@@ -83,13 +83,21 @@ function iapi_gallery_slider_inject_context( $block_content, $block ) {
 		)
 	);
 
-	// Seed initial global state to match what the client getters would compute,
-	// so the first paint has the correct disabled button and counter — no flash.
+	// Seed derived state so the first paint has the correct disabled button
+	// and counter, with no flash. Each closure mirrors its client getter and
+	// runs once per slider against that slider's own context, so two sliders
+	// on one page each get their own values.
 	wp_interactivity_state(
 		'iapi-gallery',
 		array(
-			'noPrevSlide' => true,
-			'imageIndex'  => "{$context['currentSlide']}/{$context['totalSlides']}",
+			'noPrevSlide' => function () {
+				$ctx = wp_interactivity_get_context();
+				return 1 === $ctx['currentSlide'];
+			},
+			'imageIndex'  => function () {
+				$ctx = wp_interactivity_get_context();
+				return "{$ctx['currentSlide']}/{$ctx['totalSlides']}";
+			},
 		)
 	);
 

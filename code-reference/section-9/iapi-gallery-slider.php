@@ -3,7 +3,7 @@
  * Plugin Name:       IAPI Gallery Slider
  * Description:       An interactive block with the Interactivity API
  * Version:           1.0.0
- * Requires at least: 6.4
+ * Requires at least: 6.6
  * Requires PHP:      7.0
  * Author:            Ryan Welcher
  * License:           GPL-2.0-or-later
@@ -36,8 +36,8 @@ add_action( 'init', 'iapi_gallery_slider_block_init' );
 
 /**
  * Filter the rendered block to count inner slide blocks, seed the wrapper's
- * data-wp-context with the real slide total, and seed initial global state so
- * the slider's first paint matches its interactive state (no client-side flash).
+ * data-wp-context with the real slide total, and seed server-side derived state
+ * so the slider's first paint matches its interactive state (no client-side flash).
  *
  * @param string $block_content The rendered block markup.
  * @param array  $block         The parsed block, including attributes.
@@ -84,14 +84,24 @@ function iapi_gallery_slider_inject_context( $block_content, $block ) {
 		)
 	);
 
-	// Seed initial global state to match what the client getters would
-	// compute. Continuous mode keeps both ends navigable from first paint,
-	// so noPrevSlide tracks the inverse of the continuous flag.
+	// Seed derived state so the first paint matches what the client getters
+	// compute. Each closure runs once per slider against that slider's own
+	// context. Continuous mode keeps both ends navigable from first paint,
+	// so noPrevSlide returns false when the continuous flag is on.
 	wp_interactivity_state(
 		'iapi-gallery',
 		array(
-			'noPrevSlide' => ! $context['continuous'],
-			'imageIndex'  => "{$context['currentSlide']}/{$context['totalSlides']}",
+			'noPrevSlide' => function () {
+				$ctx = wp_interactivity_get_context();
+				if ( $ctx['continuous'] ) {
+					return false;
+				}
+				return 1 === $ctx['currentSlide'];
+			},
+			'imageIndex'  => function () {
+				$ctx = wp_interactivity_get_context();
+				return "{$ctx['currentSlide']}/{$ctx['totalSlides']}";
+			},
 		)
 	);
 
