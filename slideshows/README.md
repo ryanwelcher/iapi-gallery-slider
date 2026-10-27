@@ -44,6 +44,10 @@ root directory set to that folder before the first build runs.
 - **N**: toggle the speaker notes overlay (shows on the projector too; use **P** instead
   when mirroring)
 - **?**: list every control
+- **Download .pptx / Save as PDF** (buttons in the **?** panel): export every slide with all
+  its build steps showing. The .pptx has one image per slide plus the speaker notes, and opens in
+  Google Slides (upload it to Drive), Keynote, or PowerPoint. The PDF uses the print dialog
+  (choose "Save as PDF"). The .pptx export needs the deck served over http(s), not opened as a file
 - **T**: start/stop the elapsed timer (start it at 0:00 of the session; the run
   sheet's checkpoint gates are measured against it)
 - **Home / End**: first / last slide; the URL hash (`#27`) deep-links and survives reload

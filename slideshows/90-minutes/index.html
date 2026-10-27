@@ -220,7 +220,7 @@
     font-family: var(--mono); font-size: clamp(11px, calc(var(--u) * 0.781), 15px);
     letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600;
     color: var(--green); border: 1.5px solid var(--green);
-    border-radius: 999px; padding: 0.7vh 1.1vw;
+    border-radius: 999px; padding: 0.7vh 1.1vw; white-space: nowrap;
   }
   /* Playground launcher + overlay */
   .pg-launch { display: flex; align-items: center; gap: 1.2vw; flex-wrap: wrap; margin-top: 1.5vh; }
@@ -299,6 +299,14 @@
   #keys th, #keys td { text-align: left; vertical-align: top; padding: 6px 0; border-top: 1px solid var(--line); line-height: 1.4; }
   #keys th { font-family: var(--mono); font-weight: 600; color: var(--amber); white-space: nowrap; padding-right: 20px; font-size: 14px; }
   #keys td { color: var(--ink-dim); }
+  #keys .export { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+  #keys .export button {
+    font-family: var(--mono); font-size: 14px; font-weight: 600;
+    color: var(--pause-ink); background: var(--amber); border: none; border-radius: 6px;
+    padding: 8px 14px; cursor: pointer;
+  }
+  #keys .export button:disabled { opacity: 0.6; cursor: progress; }
+  #export-status { font-family: var(--mono); font-size: 13px; color: var(--ink-dim); }
   #notes .tag { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 4px; }
   /* Presenter view (P opens it in a second window, ?presenter) and the slide
      previews inside it (?embed). */
@@ -350,6 +358,15 @@
   .step-li.li-hidden { opacity: 0; visibility: hidden; }
   .step-li.li-faded { opacity: 0.35; }
   @media (prefers-reduced-motion: reduce) { #progress { transition: none; } [data-frag], .step-li { transition: none; } }
+  /* Save as PDF (or Ctrl/Cmd+P): every slide, fully built, one per 16:9 page. */
+  @media print {
+    @page { size: 1920px 1080px; margin: 0; }
+    html, body { height: auto; margin: 0; overflow: visible; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body > :not(#deck), .pg-launch { display: none !important; }
+    .slide { display: flex !important; position: relative; width: 100vw; height: 100vh; box-sizing: border-box; }
+    .slide:not(:last-child) { break-after: page; }
+    *, *::before, *::after { transition: none !important; }
+  }
 </style>
 </head>
 <body>
@@ -1066,7 +1083,12 @@ get transitionsSpeed() {
   <tr><th>P</th><td>Presenter view in a second window: current and next slide, notes, timer. Drive the deck from either window</td></tr>
   <tr><th>?</th><td>This panel</td></tr>
   <tr><th>#28 in the URL</th><td>Open the deck at that slide</td></tr>
-</table></div>
+</table>
+<div class="export">
+  <button type="button" id="export-pptx">Download .pptx</button>
+  <button type="button" id="export-pdf">Save as PDF</button>
+  <span id="export-status"></span>
+</div></div>
 <div id="help">← → navigate · type a number + Enter to jump · O outline · N notes · T timer · P presenter view · ? all controls</div>
 <div id="jump"><span id="jump-num"></span><small>Enter to jump · Esc to cancel</small></div>
 
@@ -1432,6 +1454,75 @@ get transitionsSpeed() {
     pFrames.next.querySelector('iframe').style.visibility = last ? 'hidden' : '';
     if (!last) previewShow(pFrames.next, idx + 1, fragSteps(slides[idx + 1]).length);
   }
+
+  // ---- Export ---------------------------------------------------------
+  // Download .pptx loads this file again with ?embed in a hidden 1920x1080
+  // frame, turns each fully built slide into an image, and saves a .pptx
+  // with one image per slide and the speaker notes. Both libraries load
+  // only on click. The deck has to be served over http(s), not file://.
+  // Save as PDF prints every slide fully built (see @media print).
+  const EXPORT_LIBS = {
+    image: 'https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.js',
+    pptx: 'https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js',
+  };
+  const exportStatus = document.getElementById('export-status');
+  function loadScript(win, src) {
+    return new Promise((resolve, reject) => {
+      const s = win.document.createElement('script');
+      s.src = src;
+      s.onload = resolve;
+      s.onerror = () => reject(new Error('could not load ' + src));
+      win.document.head.appendChild(s);
+    });
+  }
+  async function exportPptx(btn) {
+    btn.disabled = true;
+    const frame = document.createElement('iframe');
+    frame.style.cssText = 'position:fixed;left:-10000px;top:0;width:1920px;height:1080px;border:0';
+    frame.src = location.href.split('#')[0].split('?')[0] + '?embed#1';
+    try {
+      exportStatus.textContent = 'Loading…';
+      await Promise.all([
+        new Promise(resolve => { frame.onload = resolve; document.body.appendChild(frame); }),
+        window.PptxGenJS ? null : loadScript(window, EXPORT_LIBS.pptx),
+      ]);
+      const win = frame.contentWindow;
+      await loadScript(win, EXPORT_LIBS.image);
+      await win.document.fonts.ready;
+      win.document.head.insertAdjacentHTML('beforeend', '<style>*, *::before, *::after { transition: none !important; }</style>');
+      const frameSlides = win.document.querySelectorAll('.slide');
+      // Embed the web fonts once instead of on every slide.
+      const fontEmbedCSS = await win.htmlToImage.getFontEmbedCSS(win.document.body);
+      const pptx = new PptxGenJS();
+      pptx.layout = 'LAYOUT_16x9';
+      pptx.title = document.title;
+      for (let i = 0; i < frameSlides.length; i++) {
+        exportStatus.textContent = 'Slide ' + (i + 1) + ' of ' + frameSlides.length + '…';
+        win.setState(i, win.fragSteps(frameSlides[i]).length, false);
+        const data = await win.htmlToImage.toPng(frameSlides[i], { width: 1920, height: 1080, pixelRatio: 1, fontEmbedCSS });
+        const page = pptx.addSlide();
+        page.addImage({ data, x: 0, y: 0, w: '100%', h: '100%' });
+        if (slides[i].dataset.notes) page.addNotes(slides[i].dataset.notes);
+      }
+      exportStatus.textContent = 'Saving…';
+      await pptx.writeFile({ fileName: (document.title.replace(/[\\/:*?"<>|]/g, '').trim() || 'slides') + '.pptx' });
+      exportStatus.textContent = 'Downloaded.';
+    } catch (err) {
+      exportStatus.textContent = 'Export failed: ' + err.message;
+    } finally {
+      frame.remove();
+      btn.disabled = false;
+    }
+  }
+  document.getElementById('export-pptx').addEventListener('click', (e) => exportPptx(e.currentTarget));
+  document.getElementById('export-pdf').addEventListener('click', () => {
+    keysEl.classList.remove('on');
+    window.print();
+  });
+  // Printing shows every build step; afterwards the current slide goes back
+  // to where it was. Other slides reset when they're next shown.
+  window.addEventListener('beforeprint', () => slides.forEach(s => applyFrags(s, fragSteps(s).length)));
+  window.addEventListener('afterprint', () => applyFrags(slides[idx], revealedBySlide.get(idx) || 0));
 
   const fromHash = parseInt(location.hash.slice(1), 10);
   show(isNaN(fromHash) ? 0 : fromHash - 1, isNaN(fromHash) ? 'fwd' : 'back');
