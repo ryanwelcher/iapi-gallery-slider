@@ -5,7 +5,7 @@
 Three recurring slide types:
 
 - **[T] Talk track** — theory, diagrams, annotated fragments. You narrate; laptops can be closed.
-- **[P] Pause slide** — distinctive background. Mission / file pointer / done-when / timebox / rescue path. Stays up for the whole lab block.
+- **[P] Pause slide** — distinctive background. Mission / file pointer / done-when / timebox / where to find the code if stuck. Stays up for the whole lab block.
 - **[C] Checkpoint** — "you should now have…" + live demo of the working result on the projector. The pacing valve: anyone unfinished catches up via snapshot while you demo.
 
 Timing references the run sheet in `facilitator-notes.md`.
@@ -37,7 +37,7 @@ Timing references the run sheet in `facilitator-notes.md`.
 ### Slide 5 [T] — How today works
 - Talk tracks (watch) → pause slides (you code) → checkpoints (we sync)
 - `workshop-outline/section-N.md` is your hands-on script; code from the files, not the screen
-- **`code-reference/section-N/` is the rescue path — falling behind is never fatal**
+- **Stuck? The finished code for every section is in `code-reference/section-N/`**
 
 ---
 
@@ -111,16 +111,17 @@ Five fast beats, content drawn from the "From Static to Dynamic" talk.
 - Closing line names the seven directives used today (wp-interactive, wp-context, wp-bind, wp-style, wp-text, wp-on, wp-init); the rest are there when you need them
 
 ### Slide 16 [T] — Three kinds of data ★ reused in Sections 6 and 7
-- Three cards, each with a "when to use" rule and a slider-based code sample: global state (`wp_interactivity_state()` with a page-wide `isLightboxOpen` flag, labeled as an example that isn't in today's plugin) · local context (`wp_interactivity_data_wp_context()` + its rendered `data-wp-context` output) · derived state (the `imageIndex` getter, full width)
-- The sentence that predicts every later bug: **"context is per-instance; state is shared and derived"**
+- Three cards, each saying who the data belongs to, with a slider-based code sample: global state (`wp_interactivity_state()` with a page-wide `isLightboxOpen` flag, labeled as an example that isn't in today's plugin) · local context (`wp_interactivity_data_wp_context()` + its rendered `data-wp-context` output) · derived state (the `imageIndex` getter, full width)
+- The sentence that predicts every later bug: **"Global state belongs to all instances. Context belongs to each instance. Derived state can be created from both."**
 - Config, the fourth kind, waits for slide 34 (Beyond this workshop)
 
 ---
 
 ## Section 5 — Hello, Store (0:39–0:49 · slides 17–20)
 
-### Slide 17 [T] — The smallest possible loop
-- Re-show slide 14's loop diagram, now with real names: `data-wp-on--click` → `actions.nextImage` → `ctx.currentSlide++` → `data-wp-text`
+### Slide 17 [T] — The loop in a real implementation
+- Code examples (`render.php` and `view.js`) on screen from the start
+- Then step through slide 14's loop diagram one box per press, now with real names: `data-wp-on--click` → `actions.nextImage` → `ctx.currentSlide++` → `data-wp-text`
 - Mutation is allowed: the `ctx.currentSlide++` node reads "just mutate it"; speaker note says unlike frameworks that force immutability, it just works and reactivity still fires
 - Closing note: that's two of the store's three parts already — `state` and `actions`; the third, `callbacks`, shows up in Section 8 (sets up the callbacks slide)
 

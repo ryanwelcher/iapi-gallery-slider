@@ -420,21 +420,21 @@
   <div class="eyebrow">Section 1 · Welcome &amp; Setup <span class="clock">· 0:00–0:08</span></div>
   <h2>Setup check</h2>
   <div class="split even">
-    <ul>
+    <ul data-no-steps>
       <li>A <strong>WordPress Studio</strong> site created from <code>blueprint.json</code>. Studio is a free desktop app that runs WordPress sites on your laptop</li>
       <li><strong>IAPI Gallery Slider</strong> plugin active</li>
       <li><strong>Node 20 via NVM</strong> (recommended): <code>nvm use</code> reads the repo's <code>.nvmrc</code>. No NVM? <code>node -v</code> should show v20 or newer</li>
       <li><strong>Editor open on the plugin folder</strong>. Everything today lives in it, including the <code>workshop-outline/</code> section files and the <code>code-reference/</code> snapshots</li>
       <li class="dim">Stuck? <a class="amber repo-link" href="https://github.com/ryanwelcher/iapi-gallery-slider" target="_blank" rel="noopener">github.com/ryanwelcher/iapi-gallery-slider</a> has a Playground fallback in the README</li>
     </ul>
-    <pre class="code"><mark data-step-mark="4">cd wp-content/plugins/iapi-gallery-slider</mark>
-<mark data-step-mark="3">nvm use</mark>          <span class="c"># reads .nvmrc (Node 20)</span>
+    <pre class="code"><mark>cd wp-content/plugins/iapi-gallery-slider</mark>
+<mark>nvm use</mark>          <span class="c"># reads .nvmrc (Node 20)</span>
 npm install      <span class="c"># safe to re-run</span>
 <mark>npm run start</mark>    <span class="c"># leave running ALL session</span></pre>
   </div>
 </section>
 
-<section class="slide" data-type="t" data-notes="Land the rescue path hard, now, before anyone needs it. Falling behind is never fatal.">
+<section class="slide" data-type="t" data-notes="Tell them now, before anyone needs it: if you get stuck, the finished code for every section is in code-reference.">
   <div class="eyebrow">Section 1 · Welcome &amp; Setup</div>
   <h2>How today works</h2>
   <div class="cols">
@@ -442,7 +442,7 @@ npm install      <span class="c"># safe to re-run</span>
     <div class="card" style="border-color: var(--amber);"><h3 style="color: var(--amber);">Orange slides</h3><p>You code, from <code>workshop-outline/section-N.md</code>, right there in your plugin folder. Follow the file, not the screen.</p></div>
     <div class="card" style="border-color: var(--green);"><h3 style="color: var(--green);">Checkpoints</h3><p>We sync up. I demo the result and you compare it with yours.</p></div>
   </div>
-  <p class="big-say" style="margin-top: 3.5vh;"><code>code-reference/section-N/</code> is the rescue path, so <strong>falling behind is never fatal.</strong></p>
+  <p class="big-say" style="margin-top: 3.5vh;"><strong>Stuck?</strong> The finished code for every section is in <code>code-reference/section-N/</code>.</p>
 </section>
 
 <!-- ===================== SECTION 2 ANATOMY 0:08–0:16 ===================== -->
@@ -568,7 +568,7 @@ import { __ } from '@wordpress/i18n';
     <dt>Where</dt><dd><a class="repo-link" href="https://github.com/ryanwelcher/iapi-gallery-slider/blob/trunk/workshop-outline/section-3.md" target="_blank" rel="noopener"><code>workshop-outline/section-3.md</code></a>, all steps</dd>
     <dt>Files</dt><dd><code>src/edit.js</code></dd>
     <dt>Done when</dt><dd>Block inserts with the inner-block area restricted to the 3 types; both toggles work; Slide Duration (the <code>speed</code> control) appears only when Autoplay is on</dd>
-    <dt>Rescue</dt><dd><a class="repo-link" href="https://github.com/ryanwelcher/iapi-gallery-slider/blob/trunk/code-reference/section-3/src/edit.js" target="_blank" rel="noopener"><code>code-reference/section-3/src/edit.js</code></a></dd>
+    <dt>Stuck?</dt><dd><a class="repo-link" href="https://github.com/ryanwelcher/iapi-gallery-slider/blob/trunk/code-reference/section-3/src/edit.js" target="_blank" rel="noopener"><code>code-reference/section-3/src/edit.js</code></a></dd>
     <dt>Done early?</dt><dd>Open the code editor view of the post and watch your attribute values serialize into the block comment</dd>
   </dl>
 </section>
@@ -634,7 +634,7 @@ nextImage: () =&gt; {
     </div>
   </div>
   <div data-frag="3" style="margin-top: 2.5vh;">
-    <p class="big-say"><strong>The state updates the UI</strong>, not the other way around.</p>
+    <p class="big-say" style="font-size: clamp(30px, calc(var(--u) * 3), 58px); text-align: center; padding: 1.8vh 1.5vw; border: 2px solid var(--amber); border-radius: 12px; margin-bottom: 1.5vh;"><strong>The state updates the UI</strong>, not the other way around.</p>
     <p class="dim">You describe what the UI should be for a given state, never how to update the DOM step by step. That right-hand side is what you'll build in Section 5.</p>
   </div>
 </section>
@@ -671,12 +671,12 @@ nextImage: () =&gt; {
   <p class="dim" data-frag="5">Today you'll use seven of them: <code>wp-interactive</code>, <code>wp-context</code>, <code>wp-bind</code>, <code>wp-style</code>, <code>wp-text</code>, <code>wp-on</code>, and <code>wp-init</code>. The rest are there when you need them.</p>
 </section>
 
-<section class="slide" data-type="t" data-notes="★ REUSED in Sections 6 and 7. The global-state card is a made-up example (one lightbox for the whole page); say so. Today's build uses wp_interactivity_state() for derived state in Section 7 instead. Config (REST URLs, nonces) is the fourth kind; it waits for the Beyond this workshop slide. Say it out loud: two sliders on one page each carry their own context; one store serves them both. Read from the wrong branch and the value is undefined, or it's the other slider's. THE sentence: context is per-instance; state is shared and derived.">
+<section class="slide" data-type="t" data-notes="★ REUSED in Sections 6 and 7. The global-state card is a made-up example (one lightbox for the whole page); say so. Today's build uses wp_interactivity_state() for derived state in Section 7 instead. Config (REST URLs, nonces) is the fourth kind; it waits for the Beyond this workshop slide. Say it out loud: two sliders on one page each carry their own context; one store serves them both. Read from the wrong branch and the value is undefined, or it's the other slider's. THE sentence: global state belongs to all instances, context belongs to each instance, and derived state can be created from both.">
   <div class="eyebrow">Section 4 · IAPI Primer <span class="clock">· ★ the distinction</span></div>
   <h2>Three kinds of data</h2>
   <div class="grid2">
     <div class="card" data-frag="1">
-      <h3>Global state <span class="dim" style="text-transform: none; letter-spacing: 0;">· when the whole page shares one value</span></h3>
+      <h3>Global state <span class="dim" style="text-transform: none; letter-spacing: 0;">· belongs to all instances</span></h3>
       <pre class="code mini"><span class="c">// example, not in today's plugin</span>
 wp_interactivity_state(
     'iapi-gallery',
@@ -687,7 +687,7 @@ wp_interactivity_state(
       <span class="file-tag">PHP · one value for every slider on the page</span>
     </div>
     <div class="card" data-frag="2">
-      <h3>Local context <span class="dim" style="text-transform: none; letter-spacing: 0;">· when each instance is independent</span></h3>
+      <h3>Local context <span class="dim" style="text-transform: none; letter-spacing: 0;">· belongs to each instance</span></h3>
       <pre class="code mini">$context = array(
     'currentSlide' =&gt; 1,
     'totalSlides'  =&gt; 3,
@@ -699,7 +699,7 @@ wp_interactivity_state(
       <span class="file-tag">render.php</span>
     </div>
     <div class="card" style="border-color: var(--amber); grid-column: 1 / -1;" data-frag="3">
-      <h3 style="color: var(--amber);">Derived state <span class="dim" style="text-transform: none; letter-spacing: 0;">· when a value can be calculated</span></h3>
+      <h3 style="color: var(--amber);">Derived state <span class="dim" style="text-transform: none; letter-spacing: 0;">· can be created from global state and context</span></h3>
       <pre class="code mini">state: {
     get imageIndex() {
         const ctx = getContext();
@@ -709,22 +709,15 @@ wp_interactivity_state(
       <span class="file-tag">view.js</span>
     </div>
   </div>
-  <p class="big-say" style="margin-top: 2.5vh;" data-frag="5"><strong>Context belongs to each instance. State is shared, and it can be derived.</strong></p>
+  <p class="big-say" style="margin-top: 2.5vh;" data-frag="5"><strong>Global state</strong> belongs to all instances. <strong>Context</strong> belongs to each instance. <strong>Derived state</strong> can be created from both.</p>
 </section>
 
 <!-- ===================== SECTION 5 HELLO, STORE 0:39–0:49 ===================== -->
 
-<section class="slide" data-type="t" data-notes="Re-show the loop with real names filled in. This is the smallest possible version of everything we build today. Point at ctx.currentSlide++: mutation is allowed. Unlike frameworks that force immutability, it just works and reactivity still fires.">
+<section class="slide" data-type="t" data-notes="The code is on screen from the start. Each → reveals one box of the loop, so walk the code as you go: click, action, mutation, re-render. This is the smallest possible version of everything we build today. Point at ctx.currentSlide++: mutation is allowed. Unlike frameworks that force immutability, it just works and reactivity still fires.">
   <div class="eyebrow">Section 5 · Hello, Store <span class="clock">· 0:39–0:49</span></div>
-  <h2>The smallest possible loop</h2>
-  <div class="cycle">
-    <div class="node" data-frag="1"><b>data-wp-on--click</b><span>next button</span></div>
-    <div class="node" data-frag="2"><b>actions.nextImage</b><span>in the store</span></div>
-    <div class="node" data-frag="3"><b>ctx.currentSlide++</b><span>just mutate it</span></div>
-    <div class="node" data-frag="4"><b>data-wp-text</b><span>counter re-renders</span></div>
-  </div>
-  <div class="cycle-back" data-frag="4">⟲ same loop as the primer, with real names now</div>
-  <div class="split even code-pair" style="margin-top: 2.5vh;" data-frag="5">
+  <h2>The loop in a real implementation</h2>
+  <div class="split even code-pair" style="margin-top: 2.5vh;">
     <pre class="code tight"><span class="c">&lt;!-- render.php, as rendered (trimmed) --&gt;</span>
 &lt;div data-wp-interactive='iapi-gallery'
      <mark>data-wp-context</mark>='{"currentSlide":1,"totalSlides":3}'&gt;
@@ -747,6 +740,13 @@ store( 'iapi-gallery', {
 } );</pre>
   </div>
   <p class="dim" style="margin-top: 1.5vh;">That's two of the store's three parts already: <code>state</code> and <code>actions</code>. The third one, <code>callbacks</code>, shows up in Section 8.</p>
+  <div class="cycle">
+    <div class="node" data-frag="1"><b>data-wp-on--click</b><span>next button</span></div>
+    <div class="node" data-frag="2"><b>actions.nextImage</b><span>in the store</span></div>
+    <div class="node" data-frag="3"><b>ctx.currentSlide++</b><span>just mutate it</span></div>
+    <div class="node" data-frag="4"><b>data-wp-text</b><span>counter re-renders</span></div>
+  </div>
+  <div class="cycle-back" data-frag="4">⟲ same loop as the primer, with real names now</div>
 </section>
 
 <section class="slide" data-type="t" data-notes="Say this BEFORE they type: a namespace typo fails SILENTLY. No error, just nothing. It's the #1 failure of the day. Neither string has to match the block name iapi/gallery-slider.">
@@ -773,7 +773,7 @@ store( '<mark>iapi-gallery</mark>', { … } );</pre>
     <dt>Where</dt><dd><a class="repo-link" href="https://github.com/ryanwelcher/iapi-gallery-slider/blob/trunk/workshop-outline/section-5.md" target="_blank" rel="noopener"><code>workshop-outline/section-5.md</code></a>, steps 1–5</dd>
     <dt>Files</dt><dd><code>src/render.php</code> · <code>src/view.js</code></dd>
     <dt>Done when</dt><dd>Counter renders "1" · next bumps it 2 · 3 · 4 <strong>and keeps going past the last slide (3). That's expected!</strong> · prev is inert · no console errors</dd>
-    <dt>Rescue</dt><dd><a class="repo-link" href="https://github.com/ryanwelcher/iapi-gallery-slider/tree/trunk/code-reference/section-5" target="_blank" rel="noopener"><code>code-reference/section-5/</code></a></dd>
+    <dt>Stuck?</dt><dd><a class="repo-link" href="https://github.com/ryanwelcher/iapi-gallery-slider/tree/trunk/code-reference/section-5" target="_blank" rel="noopener"><code>code-reference/section-5/</code></a></dd>
     <dt>Done early?</dt><dd>Wire up the prev button yourself. You're starting Section 6 early</dd>
   </dl>
 </section>
@@ -798,7 +798,6 @@ store( '<mark>iapi-gallery</mark>', { … } );</pre>
         <li>A getter runs in the scope of the element reading it, so <code>getContext()</code> returns <em>that</em> slider's context, and one getter gives each slider its own answer</li>
         <li>New directives: <code>data-wp-style--transform</code>, <code>data-wp-bind--disabled</code></li>
       </ul>
-      <p class="dim">This is the three-kinds slide from the primer paying off.</p>
     </div>
     <pre class="code tight">state: {
     <mark data-step-mark="2">get</mark> <mark data-step-mark="1">noPrevSlide</mark>() {
@@ -826,7 +825,7 @@ store( '<mark>iapi-gallery</mark>', { … } );</pre>
     <dt>Where</dt><dd><a class="repo-link" href="https://github.com/ryanwelcher/iapi-gallery-slider/blob/trunk/workshop-outline/section-6.md" target="_blank" rel="noopener"><code>workshop-outline/section-6.md</code></a>, all steps</dd>
     <dt>Files</dt><dd><code>src/view.js</code> · <code>src/render.php</code></dd>
     <dt>Done when</dt><dd>Prev <em>and</em> next both work · disabled at each end · the transform animates</dd>
-    <dt>Rescue</dt><dd><a class="repo-link" href="https://github.com/ryanwelcher/iapi-gallery-slider/tree/trunk/code-reference/section-6" target="_blank" rel="noopener"><code>code-reference/section-6/</code></a></dd>
+    <dt>Stuck?</dt><dd><a class="repo-link" href="https://github.com/ryanwelcher/iapi-gallery-slider/tree/trunk/code-reference/section-6" target="_blank" rel="noopener"><code>code-reference/section-6/</code></a></dd>
     <dt>Done early?</dt><dd>Add a 4th image and the counter breaks. That's exactly what the next section fixes</dd>
   </dl>
 </section>
@@ -903,7 +902,7 @@ wp_interactivity_state(
     <dt>Where</dt><dd><a class="repo-link" href="https://github.com/ryanwelcher/iapi-gallery-slider/blob/trunk/workshop-outline/section-7.md" target="_blank" rel="noopener"><code>workshop-outline/section-7.md</code></a>, steps 1–5</dd>
     <dt>Files</dt><dd><code>iapi-gallery-slider.php</code> · <code>src/render.php</code></dd>
     <dt>Done when</dt><dd>Adding a 4th block makes the counter read "X/4" with no flash</dd>
-    <dt>Rescue</dt><dd><a class="repo-link" href="https://github.com/ryanwelcher/iapi-gallery-slider/tree/trunk/code-reference/section-7" target="_blank" rel="noopener"><code>code-reference/section-7/</code></a></dd>
+    <dt>Stuck?</dt><dd><a class="repo-link" href="https://github.com/ryanwelcher/iapi-gallery-slider/tree/trunk/code-reference/section-7" target="_blank" rel="noopener"><code>code-reference/section-7/</code></a></dd>
     <dt>Done early?</dt><dd>Throttle CPU + network in DevTools and try to catch the flash yourself</dd>
   </dl>
   <div class="lab-warn">⚠ Don't reload between steps 1 and 3. Until the filter is registered there's no context, and the console will yell.</div>
@@ -976,7 +975,7 @@ get transitionsSpeed() {
     <dt>Where</dt><dd><a class="repo-link" href="https://github.com/ryanwelcher/iapi-gallery-slider/blob/trunk/workshop-outline/section-8.md" target="_blank" rel="noopener"><code>workshop-outline/section-8.md</code></a></dd>
     <dt>Files</dt><dd><code>src/view.js</code> · <code>iapi-gallery-slider.php</code> · <code>src/render.php</code></dd>
     <dt>Done when</dt><dd>Autoplay advances and wraps · toggling off stops it · no leaked frames</dd>
-    <dt>Rescue</dt><dd><a class="repo-link" href="https://github.com/ryanwelcher/iapi-gallery-slider/tree/trunk/code-reference/section-8" target="_blank" rel="noopener"><code>code-reference/section-8/</code></a></dd>
+    <dt>Stuck?</dt><dd><a class="repo-link" href="https://github.com/ryanwelcher/iapi-gallery-slider/tree/trunk/code-reference/section-8" target="_blank" rel="noopener"><code>code-reference/section-8/</code></a></dd>
     <dt>Done early?</dt><dd>Two sliders on one page at different speeds, which proves that context is per-instance</dd>
   </dl>
   <div class="lab-warn">⚑ Setup edits first (<code>autoplay</code> and <code>speed</code> into the PHP context, then prep <code>view.js</code>), then save + reload. Behavior should be <em>unchanged</em> before you add the callbacks block.</div>
@@ -1136,8 +1135,9 @@ get transitionsSpeed() {
   // Build steps. [data-frag="N"] elements reveal in numeric order first,
   // then each bullet list steps one item at a time, then one last step shows
   // the whole list at full strength. Forward reveals the next step before
-  // leaving the slide; backward un-reveals; arriving from the right (or by
-  // hash or the outline) shows everything.
+  // leaving the slide; backward un-reveals; arriving from the right shows
+  // everything. Jumps (slide number, outline, Home/End, URL hash) start the
+  // slide at its first step.
   function fragNums(slide) {
     return [...new Set(Array.from(slide.querySelectorAll('[data-frag]'))
       .map(el => parseInt(el.dataset.frag, 10)))].sort((a, b) => a - b);
@@ -1238,8 +1238,7 @@ get transitionsSpeed() {
   };
 
   // Type a slide number, press Enter to jump (Esc cancels). Jumped-to
-  // slides arrive fully revealed so a mid-talk jump never lands on a
-  // half-built diagram.
+  // slides start at their first build step.
   const jumpEl = document.getElementById('jump');
   const jumpNum = document.getElementById('jump-num');
   let jumpBuffer = '';
@@ -1288,7 +1287,7 @@ get transitionsSpeed() {
   outlineEl.addEventListener('click', (e) => {
     const b = e.target.closest('button[data-i]');
     if (!b) return;
-    show(+b.dataset.i, 'back');
+    show(+b.dataset.i, 'fwd');
     toggleOutline(false);
   });
   counter.addEventListener('click', () => toggleOutline());
@@ -1317,7 +1316,7 @@ get transitionsSpeed() {
     if (jumpBuffer) {
       if (e.key === 'Enter') {
         const n = parseInt(jumpBuffer, 10);
-        if (n >= 1 && n <= slides.length) show(n - 1, 'back');
+        if (n >= 1 && n <= slides.length) show(n - 1, 'fwd');
       } else if (e.key === 'Backspace') {
         jumpBuffer = jumpBuffer.slice(0, -1);
         updateJump();
@@ -1330,7 +1329,7 @@ get transitionsSpeed() {
     if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); forward(); }
     else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); backward(); }
     else if (e.key === 'Home') { show(0, 'fwd'); }
-    else if (e.key === 'End') { show(slides.length - 1, 'back'); }
+    else if (e.key === 'End') { show(slides.length - 1, 'fwd'); }
     else if (e.key === 'n' || e.key === 'N') { notes.classList.toggle('on'); }
     else if (e.key === 't' || e.key === 'T') { toggleTimer(); }
     else if (e.key === 'o' || e.key === 'O') { toggleOutline(true); }
@@ -1525,7 +1524,7 @@ get transitionsSpeed() {
   window.addEventListener('afterprint', () => applyFrags(slides[idx], revealedBySlide.get(idx) || 0));
 
   const fromHash = parseInt(location.hash.slice(1), 10);
-  show(isNaN(fromHash) ? 0 : fromHash - 1, isNaN(fromHash) ? 'fwd' : 'back');
+  show(isNaN(fromHash) ? 0 : fromHash - 1, 'fwd');
 
   setTimeout(() => { help.style.display = 'none'; }, 8000);
 </script>

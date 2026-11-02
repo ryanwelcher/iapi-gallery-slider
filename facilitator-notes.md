@@ -36,7 +36,7 @@ The script builds `code-reference/section-<N>/` straight into `build/` and swaps
 The session runs from slides (see `slides-outline.md`), not live copy-paste. Three slide types repeat all day:
 
 - **Talk tracks [T]** — theory on slides; you narrate, laptops closed. All the "just me talking" theory (opt-in pair, round-trip loop, context-vs-state, `withScope`) lives on a slide you can point at — and flash back to during debugging moments.
-- **Pause slides [P]** — one per coding section, distinctive background, stays on screen for the whole lab: mission, `workshop-outline/section-N.md` pointer, done-when checklist, timebox, snapshot rescue path. While it's up, you walk the room (the sticking-point lists below are for exactly this).
+- **Pause slides [P]** — one per coding section, distinctive background, stays on screen for the whole lab: mission, `workshop-outline/section-N.md` pointer, done-when checklist, timebox, where to find the snapshot if stuck. While it's up, you walk the room (the sticking-point lists below are for exactly this).
 - **Checkpoints [C]** — after each lab you demo the working result on the projector; anyone unfinished copies the snapshot and rejoins. This is the pacing valve.
 
 Slides never carry copy-paste code — attendees type from the section files, which show full cumulative code. Slides show fragments for explanation only.
