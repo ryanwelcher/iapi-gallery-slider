@@ -27,6 +27,7 @@ To avoid wifi bottlenecks on the day, please complete this **before you arrive**
 
 ## Documentation & References
 
+-   [Workshop slides](https://building-interactive-blocks-with-the-interactivity-api.space.fast/#1)
 -   [Interactivity API docs](https://developer.wordpress.org/block-editor/reference-guides/interactivity-api/)
 -   [@wordpress/interactivity package](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-interactivity/)
 -   [Block Editor Handbook](https://developer.wordpress.org/block-editor/)
