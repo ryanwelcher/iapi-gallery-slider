@@ -222,7 +222,7 @@ Five fast beats, content drawn from the "From Static to Dynamic" talk.
 
 ### Slide 31 [C] — Checkpoint
 - Demo: autoplay at two different speeds; toggle off mid-run
-- "That's the complete slider."
+- "That's the slider we set out to build today."
 
 ---
 
