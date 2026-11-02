@@ -170,9 +170,9 @@ Five fast beats, content drawn from the "From Static to Dynamic" talk.
 
 ## Section 7 — Server-Side Directive Injection (0:59–1:12 · slides 24–27)
 
-### Slide 24 [T] — The render filter + tag processor walk
-- Opens with the why: the count is still hardcoded to 3, and on the server the filter sees the real inner blocks
-- Step diagram of the single-pass walk: land on wrapper → `set_bookmark` → count slide classes forward → `seek` back → `set_attribute( 'data-wp-context', … )`
+### Slide 24 [T] — Count the slides with `WP_HTML_Tag_Processor`
+- Opens with the why: the count is still hardcoded to 3, and the filter gets the rendered HTML, so the Tag Processor can count the real slides
+- Five steps next to the trimmed filter code: find wrapper → `set_bookmark` → count slide blocks forward → `seek` back → `set_attribute( 'data-wp-context', … )`
 - `render_block_iapi/gallery-slider` — exact hook name on screen
 - Namespace inheritance callout: "we do NOT set `data-wp-interactive` on inner blocks — descendants inherit" (flash back to slide 8)
 

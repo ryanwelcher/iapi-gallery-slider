@@ -841,25 +841,37 @@ store( '<mark>iapi-gallery</mark>', { … } );</pre>
 
 <section class="slide" data-type="t" data-notes="The bookmark/seek walk is the star. Exact hook name on screen; it includes our block name, so it never runs for any other block. And the inheritance point. We do NOT set data-wp-interactive on inner blocks; flash back to the opt-in pair slide.">
   <div class="eyebrow">Section 7 · Server-Side Injection <span class="clock">· 0:59–1:12</span></div>
-  <h2>The render filter walk</h2>
-  <p class="dim" style="margin-top: -1vh;">The count is still hardcoded to 3. On the server, the filter sees the real inner blocks, so it can count them.</p>
+  <h2>Count the slides with <code>WP_HTML_Tag_Processor</code></h2>
+  <p class="dim" style="margin-top: -1vh;">The count is still hardcoded to 3. The <code>render_block_iapi/gallery-slider</code> filter gets the block's rendered HTML, so the Tag Processor can walk it and count the real slides.</p>
   <div class="split even">
     <div class="steps">
-      <div class="step"><div>Land on the wrapper with <code>next_tag()</code></div></div>
-      <div class="step"><div><code>set_bookmark( 'main' )</code></div></div>
-      <div class="step"><div>Scan forward, counting slide classes</div></div>
-      <div class="step"><div><code>seek( 'main' )</code> to jump back</div></div>
-      <div class="step"><div><code>set_attribute( 'data-wp-context', … )</code> with the real count</div></div>
+      <div class="step"><div>Find the slider wrapper with <code>next_tag()</code></div></div>
+      <div class="step"><div>Bookmark it with <code>set_bookmark()</code></div></div>
+      <div class="step"><div>Walk the tags after it and count the slide blocks</div></div>
+      <div class="step"><div>Jump back to the wrapper with <code>seek()</code></div></div>
+      <div class="step"><div>Write the real count with <code>set_attribute()</code></div></div>
     </div>
-    <div class="lead">
-      <pre class="code">add_filter(
-  '<mark>render_block_iapi/gallery-slider</mark>',
-  'iapi_gallery_slider_inject_context',
-  10, 2
-);</pre>
-      <p class="dim" style="margin-top: 1.5vh;">We do <strong>not</strong> set <code>data-wp-interactive</code> on inner blocks. Descendants inherit the wrapper's namespace. ★</p>
-    </div>
+    <pre class="code tight"><span class="c">// iapi-gallery-slider.php, trimmed</span>
+$slides = new WP_HTML_Tag_Processor( $block_content );
+
+$slides-&gt;<mark>next_tag</mark>( array(
+    'class_name' =&gt; 'wp-block-iapi-gallery-slider',
+) );
+$slides-&gt;<mark>set_bookmark</mark>( 'main' );
+
+while ( $slides-&gt;<mark>next_tag</mark>() ) {
+    <span class="c">// when class_list() contains a slide block's class:</span>
+    <mark>$total_slides++</mark>;
+}
+
+$slides-&gt;<mark>seek</mark>( 'main' );
+$slides-&gt;<mark>set_attribute</mark>(
+    'data-wp-context',
+    wp_json_encode( $context )
+);
+return $slides-&gt;get_updated_html();</pre>
   </div>
+  <p class="dim" style="margin-top: 1.5vh;">We do <strong>not</strong> set <code>data-wp-interactive</code> on inner blocks. Descendants inherit the wrapper's namespace. ★</p>
 </section>
 
 <section class="slide" data-type="t" data-demo="demo · Studio + DevTools throttling" data-notes="Still on checkpoint 6: that version has the flash, which is the point. LIVE demo on the projector: CPU 6x + Slow 4G, hard reload. Empty counter, then '1/N' snaps in. On their fast laptops they may never see it; real devices do. Then the fix and the contract. Why closures: state is global, one value per page. Plain values work for one slider, but with two the last one rendered wins. Each closure reads its own slider's context, the PHP twin of getContext().">
@@ -1027,7 +1039,7 @@ get transitionsSpeed() {
   <div class="eyebrow">Wrap-up</div>
   <h2>Beyond this workshop</h2>
   <div class="split" style="align-items: start;">
-  <ul>
+  <ul data-no-steps>
     <li><strong>Client-side navigation</strong> with <code>@wordpress/interactivity-router</code>. Router regions swap page content in place, and interactive state survives navigation</li>
     <li><strong>wp-each</strong> to render dynamic lists straight from state arrays</li>
     <li><strong>Config</strong> with <code>wp_interactivity_config()</code> / <code>getConfig()</code> for REST URLs and nonces</li>
